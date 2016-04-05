@@ -53,6 +53,7 @@ public class Maze {
             System.err.println("Error reading maze file path: " + fileName);
             e.printStackTrace();
         }
+
         /* input maze values
         * [0] maze size
         * [1] maze
@@ -69,7 +70,7 @@ public class Maze {
             e.printStackTrace();
         }
 
-        //Parsing dimensions of map
+        //getting map dimensions
         String[] dims = tokens[0].split("\\*");
         for (int i = 0; i < dims.length; i++)
         {
@@ -77,7 +78,7 @@ public class Maze {
         }
         System.out.println("dims: " + mazeDimensions[0]+ ", " + mazeDimensions[1]);
 
-        //Whole map
+        //creating map
         maze = new char [mazeDimensions[0]] [mazeDimensions[1]];
 
         for (int row = 0; row < mazeDimensions[0]; row++) {
@@ -97,26 +98,21 @@ public class Maze {
             }
             System.out.println();
         }
-        //------------------------
 
-
-        //Player/Ms. Pacman position, split as {P, #1, , #2}
+        //getting player/Ms. Pacman position, split as {P, #1, , #2}
         String [] postmp = tokens[2].split("[\\[\\]]");
         this.mspacPos[0] = Integer.parseInt(postmp[1]);
         this.mspacPos[1] = Integer.parseInt(postmp[3]);
         System.out.println("P:" + mspacPos[0]+ "," + mspacPos[1]);
-        //------------------------------------------------
 
-
-
-        //Parsing ghosts
+        //parsing ghosts
         for(Integer i = 0; i < tokens[3].length();i++)
         {
-            //Getting total number of ghosts based on number of Gs in .map file
+            //total number of ghosts based on number of Gs in .map file
             if(tokens[3].charAt(i) == 'G')
                 this.ghostNum++;
         }
-        //Now they coordinates
+        //ghosts spawning coordinates
         this.ghostsPos = new int[ghostNum][2];
         for (int i = 1; i <= ghostNum; i++) {
 
@@ -129,7 +125,5 @@ public class Maze {
             System.out.print(ghostsPos[i][1]);
             System.out.println();
         }
-        //--------------------------------------------------------
     }
-
 }

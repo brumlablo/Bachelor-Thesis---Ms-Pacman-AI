@@ -7,17 +7,15 @@ import java.awt.*;
 /**
  * Created by babu on 3.3.16.
  */
-public class GameFrame extends JFrame {
-    public GameFrame(){
-        start();
-    }
+public class GameWindow extends JFrame {
 
-    private void start() {
+    public GameWindow(final int width, final int height) {
         //add(new Board());
         setTitle("IBP: Ms Pacman Demo");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(380, 380);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(width, height);
         setLocationRelativeTo(null);
         setVisible(true);
+        setResizable(false);
     }
 }

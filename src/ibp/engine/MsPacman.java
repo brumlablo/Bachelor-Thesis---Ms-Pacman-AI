@@ -1,6 +1,6 @@
 package ibp.engine;
 
-import ibp.gui.GameFrame;
+import ibp.gui.GameWindow;
 import java.awt.*;
 
 
@@ -12,8 +12,8 @@ public class MsPacman {
 
             @Override
             public void run() {
-                //GameFrame game = new GameFrame();
-                //game.setVisible(true);
+                GameWindow game = new GameWindow(Globals.width, Globals.height);
+                game.setVisible(true);
                 Maze m = new Maze("data/maps/2011.map");
             }
         });
