@@ -10,31 +10,56 @@ public class Globals {
     final static int height = 400;
 
     //  consts
-    public enum mazeTile {
+    public enum tileType {
         NONE(0), WALL(1), PILL(2), POWERPILL(3), GHOST(4), MSPAC(5);
 
-        mazeTile(int i) {
-        }
+    private int num;
+    private tileType(int value) {
+        this.num = value;
+    }
+
+    public int getNum() {
+        return num;
+    }
+
     }
 
     public enum ghostState {
         RAND(1), CHASE(2), SCATTER(3), AFRAID(4);
 
-        ghostState(int i) {
+        private int num;
+        private ghostState(int value) {
+            this.num = value;
+        }
+
+        public int getNum() {
+            return num;
         }
     }
 
     public enum mspacState {
         MANUAL(1), LEARN(2), AI(3);
 
-        mspacState(int i) {
+        private int num;
+        private mspacState(int value) {
+            this.num = value;
+        }
+
+        public int getNum() {
+            return num;
         }
     }
 
     public enum actions {
         LEFT(1), UP(2), RIGHT(3), DOWN(4);
 
-        actions(int i) {
+        private int num;
+        private actions(int value) {
+            this.num = value;
+        }
+
+        public int getNum() {
+            return num;
         }
     }
 

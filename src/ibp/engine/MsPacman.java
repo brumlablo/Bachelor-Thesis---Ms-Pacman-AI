@@ -14,7 +14,14 @@ public class MsPacman {
             public void run() {
                 GameWindow game = new GameWindow(Globals.width, Globals.height);
                 game.setVisible(true);
-                Maze m = new Maze("data/maps/2011.map");
+                Maze m = Maze.createMaze("data/maps/2011.map");
+                System.out.println("----------------------chvile pravdy--------------------------");
+                for (int row = 0; row < m.mazeDimensions[0]; row++) {
+                    for (int col = 0; col < m.mazeDimensions[1]; col++) {
+                        System.out.print(m.mazeBoard[row][col].type);
+                    }
+                    System.out.println();
+                }
             }
         });
     }

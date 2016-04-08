@@ -1,5 +1,7 @@
 package ibp.engine;
 
+import ibp.engine.Globals.*;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -16,41 +18,33 @@ import java.util.regex.Pattern;
  */
 public class Maze {
 
-    private String mazeName = "";
-    private int [] mazeDimensions = new int[2];
-    private char [][] maze;
+    public String mazeName = "";
+    public int [] mazeDimensions = new int[2];
+    public char [][] mazeChar;
+    public Node [][] mazeBoard = null;
     private String mazePlan = "";
 
     /*agents positions*/
-    private int[] mspacPos = new int[2];
-    private int [][] ghostsPos;
-    private int ghostNum = 0;
+    public int[] mspacPos = new int[2];
+    public int [][] ghostsPos;
+    public int ghostNum = 0;
 
     /**
      * Maze constructor
-     * @param fileName
+     * @param fileName path to a file.map with the Maze info
      */
     public Maze(String fileName)
     {
         this.mazeName = fileName;
-        readMaze(this.mazeName);
-    }
-
-    /**
-     * Init Maze by reading selected Maze file.map
-     * @param fileName path to a file.map with the Maze info
-     */
-    private void readMaze(String fileName)
-    {
         String in = "";
-        try(Scanner s = new Scanner(new FileReader(fileName));)
+        try(Scanner s = new Scanner(new FileReader(mazeName));)
         {
              while(s.hasNext()){
                 in += s.next();
             }
         }
         catch (IOException | InputMismatchException e) {
-            System.err.println("Error reading maze file path: " + fileName);
+            System.err.println("Error reading maze file path: " + mazeName);
             e.printStackTrace();
         }
 
@@ -74,19 +68,29 @@ public class Maze {
         String[] dims = tokens[0].split("\\*");
         for (int i = 0; i < dims.length; i++)
         {
-            this.mazeDimensions[i] = Integer.parseInt(dims[i]);
+            try
+            {
+                this.mazeDimensions[i] = Integer.parseInt(dims[i]);
+            }
+            catch (Exception e)
+            {
+                System.err.println("Invalid format of maze dimensions: " + tokens[0]);
+                e.printStackTrace();
+            }
         }
         System.out.println("dims: " + mazeDimensions[0]+ ", " + mazeDimensions[1]);
 
         //creating map
-        maze = new char [mazeDimensions[0]] [mazeDimensions[1]];
+        //******************************TEST********************************************************//
+        mazeChar = new char [mazeDimensions[0]] [mazeDimensions[1]];
 
         for (int row = 0; row < mazeDimensions[0]; row++) {
             for (int col = 0; col < mazeDimensions[1]; col++) {
                 int index = (row*mazeDimensions[1]+col);
-                maze[row][col] = tokens[1].charAt(index);
+                mazeChar[row][col] = tokens[1].charAt(index);
             }
         }
+        //-------------------------------------------------------------------------------//
 
         this.mazePlan = tokens[1];
 
@@ -94,9 +98,9 @@ public class Maze {
         {
             for(int j = 0; j < mazeDimensions[1] ;j++)
             {
-                System.out.print(maze[i][j]);
+                //System.out.print(mazeChar[i][j]);
             }
-            System.out.println();
+            //System.out.println();
         }
 
         //getting player/Ms. Pacman position, split as {P, #1, , #2}
@@ -125,5 +129,51 @@ public class Maze {
             System.out.print(ghostsPos[i][1]);
             System.out.println();
         }
+    }
+
+    public static Maze createMaze(String fileName) {
+        Maze tmp = new Maze(fileName);
+        tmp.mazeBoard = new Node [tmp.mazeDimensions[0]][tmp.mazeDimensions[1]];
+        tileType t = null;
+        ArrayList <Integer> neighbours = new ArrayList <Integer> ();
+        ArrayList <Integer> successors = new ArrayList <Integer> ();
+
+        for (int row = 0; row < tmp.mazeDimensions[0]; row++) {
+            for (int col = 0; col < tmp.mazeDimensions[1]; col++) {
+                switch(tmp.mazeChar[row][col])
+                {
+                    case 'C':
+                        t = tileType.WALL;
+                        break;
+                    case 'T':
+                        t = tileType.WALL;
+                        break;
+                    case 'W':
+                        t = tileType.WALL;
+                        break;
+                    case '.':
+                        t = tileType.PILL;
+                        break;
+                    case ':':
+                        t = tileType.POWERPILL;
+                        break;
+                    case '/':
+                        t = tileType.NONE;
+                        break;
+                    case 'G':
+                        t = tileType.GHOST;
+                        break;
+                    case 'P':
+                        t = tileType.MSPAC;
+                        break;
+                    default:
+                        System.err.println("Error parsing mazeBoard string from file.");
+                        System.exit(1);
+                }
+                int index = (row*(tmp.mazeDimensions[1])+col);
+                tmp.mazeBoard[row][col] = new Node(row, col, index,t,neighbours,successors);
+            }
+        }
+        return tmp;
     }
 }
