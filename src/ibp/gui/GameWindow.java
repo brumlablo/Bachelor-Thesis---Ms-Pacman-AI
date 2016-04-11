@@ -1,36 +1,30 @@
 package ibp.gui;
 
 
+import ibp.engine.Globals.*;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Created by babu on 3.3.16.
  */
 public class GameWindow extends JFrame {
 
-    public GameWindow(final int width, final int height) {
-        //add(new Board());
-        setTitle("IBP: Ms Pacman Demo");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(width, height);
-        setLocationRelativeTo(null);
-        setVisible(true);
-        setResizable(false);
-        setBackground(Color.BLACK);
-    }
-}
+    public Graphics2D graphics2D;
+    private BufferedImage img;
+    private int width;
+    private int height;
 
-public class Visualize extends JFrame {
-
-    private static int mazeWidth;
-    private static int mazeHeight;
     // Arrays containing the items' data
     private ArrayList<ImageIcon> arrayItems = new ArrayList<ImageIcon>();
     private ArrayList<Integer> xPixel = new ArrayList<Integer>();
     private ArrayList<Integer> yPixel = new ArrayList<Integer>();
     private ArrayList<Integer> itemType = new ArrayList<Integer>();
     private ArrayList<Short> itemDirection = new ArrayList<Short>();
+
+    //Images needed
     private final ImageIcon imgPacUp = new ImageIcon("data/sprites/pac_up.gif");
     private final ImageIcon imgPacDown = new ImageIcon("data/sprites/pac_down.gif");
     private final ImageIcon imgPacLeft = new ImageIcon("data/sprites/pac_left.gif");
@@ -49,9 +43,49 @@ public class Visualize extends JFrame {
     private final ImageIcon imgEmpty = new ImageIcon("data/sprites/empty.gif");
     private final ImageIcon imgEmptyMark = new ImageIcon("data/sprites/empty_mark.gif");
 
-    // Visualisation storage variables
-    Image offScreenImage;
-    Graphics offScreenGraphics;
+    public GameWindow(final int w, final int h) {
+        this.width = w;
+        this.height = h;
+        //add(new Board());
+        setTitle("IBP: Ms Pacman Demo");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(width, height);
+        setLocationRelativeTo(null);
+        setVisible(true);
+        setResizable(false);
+        setBackground(Color.BLACK);
+    }
+
+    @Override
+    public void paint(Graphics g) {
+
+        int width = getWidth();
+        int height = getHeight();
+
+        if (img == null) {
+            img = createImage(width, height);
+            graphics2D = img.getGraphics();
+        }
+
+
+        // clear the off screen image
+        graphics2D.clearRect(0, 0, width + 1, height + 1);
+        graphics2D.setColor(Color.BLACK);
+        graphics2D.fillRect(Globals.itemWidth * mazeWidth, Globals.itemHeight * mazeHeight);
+
+        // draw your image off screen
+        for (int i = 0; i < arrayItems.size(); i++) {
+            try {
+                graphics2D.drawImage(arrayItems.get(i).getImage(), xPixel.get(i), yPixel.get(i), Globals.itemWidth, Globals.itemHeight, this);
+            } catch (IndexOutOfBoundsException e) {
+                // Don't draw images that don't exist. :)
+            }
+        }
+
+        // show the off screen image
+        g.drawImage(img, 0, 0, this);
+
+    }
 
     // Use an item's type and location to get the correct image. Some item types have a different image per moving direction.
     private Image properImage(int type, short direction) {
@@ -114,6 +148,10 @@ public class Visualize extends JFrame {
         this.dispose();
     }
 
+    public void update() {
+        repaint();
+    }
+
     // Calculate an item's pixel position based on its maze position, the screen offset and movefloat
     private int calculatePos(int pos1, int pos2, int multiply, int offset, double movefloat) {
         int floatpos;
@@ -147,10 +185,6 @@ public class Visualize extends JFrame {
         itemDirection.add(direction);
 
         return arrayItems.size() - 1;
-    }
-
-    public void updateVisualisation() {
-        repaint();
     }
 
     // Edit an existing item in the visualisation
@@ -199,36 +233,4 @@ public class Visualize extends JFrame {
         return itemType.get(itemid);
     }
 
-    @Override
-    public void paint(Graphics g) {
-
-        int width = getWidth();
-        int height = getHeight();
-
-        if (offScreenImage == null) {
-            offScreenImage = createImage(width, height);
-            offScreenGraphics = offScreenImage.getGraphics();
-        }
-
-
-        // clear the off screen image
-        offScreenGraphics.clearRect(0, 0, width + 1, height + 1);
-        offScreenGraphics.setColor(Color.BLACK);
-        offScreenGraphics.fillRect(xOffset, yOffset, Globals.itemWidth * mazeWidth, Globals.itemHeight * mazeHeight);
-
-        // draw your image off screen
-        for (int i = 0; i < arrayItems.size(); i++) {
-            try {
-                offScreenGraphics.drawImage(arrayItems.get(i).getImage(), xPixel.get(i), yPixel.get(i), Globals.itemWidth, Globals.itemHeight, this);
-            } catch (IndexOutOfBoundsException e) {
-                // Don't draw images that don't exist. :)
-            }
-        }
-
-
-
-
-        // show the off screen image
-        g.drawImage(offScreenImage, 0, 0, this);
-
-    }
+}

@@ -1,10 +1,13 @@
 package ibp.engine;
 
+import java.util.ArrayList;
+
 public class Game
 {
     public int timeout;
     public GameState initState;
-    public Agent [] agents;
+    public GameState actState;
+    public ArrayList<Agent> agents;
     private boolean isWin;
     private boolean isLost;
 
@@ -16,20 +19,18 @@ public class Game
         timeout = t;
     }
 
-    public MsPacman newGame (Maze lay, //pacmanAgent, ghostAgents, display, quiet = False, catchExceptions=False)
+    public GameState newGame (Maze m)
     {
-        agents.add(new Agent(0,(lay.mspacPos[0] * lay.mazeDimensions[1] + lay.mspacPos[1])));
+        agents.add(new Agent(0,(m.mspacPos[0] * m.mazeDimensions[1] + m.mspacPos[1])));
         int i;
-        for(i = 0, i < lay.ghostNum,i++)
+        for(i = 0, i < m.ghostNum,i++)
         {
-            agents.add(new Agent(i+1,(lay.initGhostsPos[0] * lay.mazeDimensions[1] + lay.initGhostsPos[1])));
+            agents.add(new Agent(i+1,(m.initGhostsPos[0] * m.mazeDimensions[1] + m.initGhostsPos[1])));
         }
 
-        initState = new GameState();
-        initState.initialize(lay, agents);
-        game = Game(agents);// display, self, catchExceptions = catchExceptions)
-        game.state = initState;
-        return game;
+        initState = new GameState(m,agents);
+        actState = initState;
+        return actState;
     }
 /*
     void process(GameState st,Game g)

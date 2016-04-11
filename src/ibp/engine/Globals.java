@@ -6,8 +6,12 @@ package ibp.engine;
 public class Globals {
 
     //canvas size
-    final static int width = 400;
-    final static int height = 400;
+    final static int mazeWidth = 400;
+    final static int mazeHeight = 400;
+
+    //single item size
+    public static int itemWidth = 16;
+    public static int itemHeight = 16;
 
     //  consts
     public enum tileType {

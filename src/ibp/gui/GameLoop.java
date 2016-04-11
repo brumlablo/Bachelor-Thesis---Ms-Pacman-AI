@@ -12,16 +12,11 @@ public class GameLoop extends JPanel implements Runnable{
     private Thread thread;
     private boolean running;
 
-    private int fps; //frames per second
-    private int tps; //ticks per second
-
     private int width;
     private int height;
 
     public Graphics2D graphics2D;
     private BufferedImage img;
-
-    public static double currentFps = 120D;
 
     public GameLoop(final int width, final int height) {
         this.width = width;
@@ -46,13 +41,6 @@ public class GameLoop extends JPanel implements Runnable{
     @Override
     public void run() {
         init();
-        long lastTime = System.nanoTime();
-        double nsPerTick = 10000000000D / currentFps;
-        int frames = 0;
-        int ticks = 0;
-        long lastTimer = System.currentTimeMillis();
-        double deltaTime = 0; //for speeding up the game
-
         while(running)
         {
             long now = System.nanoTime();
@@ -80,15 +68,6 @@ public class GameLoop extends JPanel implements Runnable{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-            if((System.currentTimeMillis() - lastTimer) >= 100)
-            {
-                lastTimer += 1000;
-                tps = frames;
-                fps = ticks;
-                frames = 0;
-                ticks = 0;
-            }
         }
     }
 
@@ -101,9 +80,6 @@ public class GameLoop extends JPanel implements Runnable{
     public void render() {
         graphics2D.clearRect(0,0,width,height);
         clear();
-    }
-
-    public void tick(double deltaTime) {
     }
 
     public void clear () {
