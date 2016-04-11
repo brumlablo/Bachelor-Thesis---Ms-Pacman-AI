@@ -50,17 +50,38 @@ public class Globals {
         }
     }
 
-    public enum actions {
+    public enum direction {
         LEFT(1), UP(2), RIGHT(3), DOWN(4);
 
         private int num;
-        private actions(int value) {
+        private direction(int value) {
             this.num = value;
         }
 
         public int getNum() {
             return num;
         }
+    }
+
+    public static direction reverseDirection(direction dir)
+    {
+        direction tmp = dir;
+        switch(dir)
+        {
+            case LEFT:
+                tmp = direction.RIGHT;
+                break;
+            case UP:
+                tmp = direction.DOWN;
+                break;
+            case RIGHT:
+                tmp = direction.LEFT;
+                break;
+            case DOWN:
+                tmp = direction.UP;
+                break;
+        }
+        return tmp;
     }
 
 }

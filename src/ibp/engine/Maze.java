@@ -2,16 +2,11 @@ package ibp.engine;
 
 import ibp.engine.Globals.*;
 
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
-import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by babu on 6.3.16.
@@ -20,13 +15,13 @@ public class Maze {
 
     public String mazeName = "";
     public int [] mazeDimensions = new int[2];
-    public char [][] mazeChar;
+    private char [][] mazeChar;
     public Node [][] mazeBoard = null;
     private String mazePlan = "";
 
     /*agents positions*/
     public int[] mspacPos = new int[2];
-    public int [][] ghostsPos;
+    public int [][] initGhostsPos;
     public int ghostNum = 0;
 
     /**
@@ -80,8 +75,7 @@ public class Maze {
         }
         System.out.println("dims: " + mazeDimensions[0]+ ", " + mazeDimensions[1]);
 
-        //creating map
-        //******************************TEST********************************************************//
+        //creating map of chars
         mazeChar = new char [mazeDimensions[0]] [mazeDimensions[1]];
 
         for (int row = 0; row < mazeDimensions[0]; row++) {
@@ -117,16 +111,16 @@ public class Maze {
                 this.ghostNum++;
         }
         //ghosts spawning coordinates
-        this.ghostsPos = new int[ghostNum][2];
+        this.initGhostsPos = new int[ghostNum][2];
         for (int i = 1; i <= ghostNum; i++) {
 
-            ghostsPos[i-1][0] = Integer.parseInt(tokens[3].split("G")[i].split("[\\[\\]]")[1]);
-            ghostsPos[i-1][1] = Integer.parseInt(tokens[3].split("G")[i].split("[\\[\\]]")[3]);
+            initGhostsPos[i-1][0] = Integer.parseInt(tokens[3].split("G")[i].split("[\\[\\]]")[1]);
+            initGhostsPos[i-1][1] = Integer.parseInt(tokens[3].split("G")[i].split("[\\[\\]]")[3]);
         }
 
         for (int i = 0; i < ghostNum; i ++) {
-            System.out.print(ghostsPos[i][0] + "-");
-            System.out.print(ghostsPos[i][1]);
+            System.out.print(initGhostsPos[i][0] + "-");
+            System.out.print(initGhostsPos[i][1]);
             System.out.println();
         }
     }
@@ -136,7 +130,6 @@ public class Maze {
         tmp.mazeBoard = new Node [tmp.mazeDimensions[0]][tmp.mazeDimensions[1]];
         tileType t = null;
         ArrayList <Integer> neighbours = new ArrayList <Integer> ();
-        ArrayList <Integer> successors = new ArrayList <Integer> ();
 
         for (int row = 0; row < tmp.mazeDimensions[0]; row++) {
             for (int col = 0; col < tmp.mazeDimensions[1]; col++) {
@@ -171,7 +164,7 @@ public class Maze {
                         System.exit(1);
                 }
                 int index = (row*(tmp.mazeDimensions[1])+col);
-                tmp.mazeBoard[row][col] = new Node(row, col, index,t,neighbours,successors);
+                tmp.mazeBoard[row][col] = new Node(row, col, index,t,neighbours);
             }
         }
         return tmp;
