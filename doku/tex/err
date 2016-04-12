@@ -1,0 +1,305 @@
+rm -f *.dvi *.log projekt.blg projekt.bbl projekt.toc *.aux projekt.out projekt.lof
+rm -f projekt.pdf
+rm -f *~
+pdflatex projekt
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Arch Linux) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+(./projekt.tex
+LaTeX2e <2015/10/01> patch level 2
+Babel <3.9m> and hyphenation patterns for 79 languages loaded.
+(./fitthesis.cls
+Document Class: fitthesis 2007/04/13 Sablona pro BP/DP
+(/usr/share/texmf-dist/tex/latex/base/report.cls
+Document Class: report 2014/09/29 v1.4h Standard LaTeX document class
+(/usr/share/texmf-dist/tex/latex/base/size11.clo))
+(/usr/share/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(/usr/share/texmf-dist/tex/latex/amsmath/amstext.sty
+(/usr/share/texmf-dist/tex/latex/amsmath/amsgen.sty))
+(/usr/share/texmf-dist/tex/latex/amsmath/amsbsy.sty)
+(/usr/share/texmf-dist/tex/latex/amsmath/amsopn.sty))
+(/usr/share/texmf-dist/tex/latex/amsfonts/amssymb.sty
+(/usr/share/texmf-dist/tex/latex/amsfonts/amsfonts.sty))
+(/usr/share/texmf-dist/tex/generic/babel/babel.sty
+(/usr/share/texmf-dist/tex/generic/babel-czech/czech.ldf
+(/usr/share/texmf-dist/tex/generic/babel/babel.def))
+(/usr/share/texmf-dist/tex/generic/babel-english/english.ldf))
+(/usr/share/texmf-dist/tex/latex/base/inputenc.sty
+(/usr/share/texmf-dist/tex/latex/base/utf8.def
+(/usr/share/texmf-dist/tex/latex/base/t1enc.dfu)
+(/usr/share/texmf-dist/tex/latex/base/ot1enc.dfu)
+(/usr/share/texmf-dist/tex/latex/base/omsenc.dfu)))
+(/usr/share/texmf-dist/tex/latex/graphics/graphicx.sty
+(/usr/share/texmf-dist/tex/latex/graphics/keyval.sty)
+(/usr/share/texmf-dist/tex/latex/graphics/graphics.sty
+(/usr/share/texmf-dist/tex/latex/graphics/trig.sty)
+(/usr/share/texmf-dist/tex/latex/latexconfig/graphics.cfg)
+(/usr/share/texmf-dist/tex/latex/pdftex-def/pdftex.def
+(/usr/share/texmf-dist/tex/generic/oberdiek/infwarerr.sty)
+(/usr/share/texmf-dist/tex/generic/oberdiek/ltxcmds.sty)))))
+(/usr/share/texmf-dist/tex/latex/base/fontenc.sty
+(/usr/share/texmf-dist/tex/cslatex/base/il2enc.def)
+(/usr/share/texmf-dist/tex/cslatex/base/il2cmr.fd))
+(/usr/share/texmf-dist/tex/latex/url/url.sty)
+(/usr/share/texmf-dist/tex/latex/graphics/color.sty
+(/usr/share/texmf-dist/tex/latex/latexconfig/color.cfg))
+(/usr/share/texmf-dist/tex/latex/hyperref/hyperref.sty
+(/usr/share/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty
+(/usr/share/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty))
+(/usr/share/texmf-dist/tex/generic/ifxetex/ifxetex.sty)
+(/usr/share/texmf-dist/tex/latex/oberdiek/auxhook.sty)
+(/usr/share/texmf-dist/tex/latex/oberdiek/kvoptions.sty)
+(/usr/share/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(/usr/share/texmf-dist/tex/latex/latexconfig/hyperref.cfg)
+(/usr/share/texmf-dist/tex/latex/hyperref/puenc.def))
+
+Package hyperref Message: Driver: hpdftex.
+
+(/usr/share/texmf-dist/tex/latex/hyperref/hpdftex.def
+(/usr/share/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty))
+No file projekt.aux.
+(/usr/share/texmf-dist/tex/context/base/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (/usr/share/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
+(/usr/share/texmf-dist/tex/latex/oberdiek/grfext.sty)
+(/usr/share/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg))
+(/usr/share/texmf-dist/tex/latex/hyperref/nameref.sty
+(/usr/share/texmf-dist/tex/generic/oberdiek/gettitlestring.sty))
+(/usr/share/texmf-dist/tex/cslatex/cspsfonts/il2phv.fd) [1{/var/lib/texmf/fonts
+/map/pdftex/updmap/pdftex.map}]
+<fig/vut-zp2.pdf, id=10, 109.40875pt x 109.40875pt> <use fig/vut-zp2.pdf>
+Overfull \hbox (109.58464pt too wide) in paragraph at lines 102--102
+[][] 
+<fig/fit-zp2.pdf, id=11, 120.45pt x 120.45pt> <use fig/fit-zp2.pdf>
+Overfull \hbox (109.58464pt too wide) in paragraph at lines 102--102
+[][] 
+[2 <./fig/vut-zp2.pdf> <./fig/fit-zp2.pdf>]
+
+LaTeX Font Warning: Font shape `IL2/cmr/m/n' in size <16> not available
+(Font)              size <17.28> substituted on input line 102.
+
+
+LaTeX Font Warning: Font shape `IL2/cmr/bx/n' in size <16> not available
+(Font)              size <17.28> substituted on input line 102.
+
+[3]
+
+LaTeX Font Warning: Font shape `IL2/cmr/m/n' in size <18> not available
+(Font)              size <17.28> substituted on input line 102.
+
+
+LaTeX Font Warning: Font shape `IL2/cmr/bx/n' in size <18> not available
+(Font)              size <17.28> substituted on input line 102.
+
+(/usr/share/texmf-dist/tex/latex/base/omscmr.fd) [4] (./obsah.texpdfTeX warning
+ (ext4): destination with the same identifier (name{page.1}) has been already u
+sed, duplicate ignored
+<to be read again> 
+                   \relax 
+l.1 \chapter
+            {Ãšvod} [1]
+Kapitola 1.
+pdfTeX warning (ext4): destination with the same identifier (name{page.2}) has 
+been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.5 \chapter
+            {Metody hranÃ­ her} [2]
+Kapitola 2.
+
+LaTeX Warning: Citation `AI1' on page 3 undefined on input line 11.
+
+
+LaTeX Warning: Reference `img:stavp' on page 3 undefined on input line 11.
+
+(/usr/share/texmf-dist/tex/latex/amsfonts/umsa.fd)
+(/usr/share/texmf-dist/tex/latex/amsfonts/umsb.fd)
+<img/statespace.png, id=41, 603.25375pt x 477.785pt> <use img/statespace.png>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+LaTeX Warning: Citation `AI1' on page 3 undefined on input line 25.
+
+pdfTeX warning (ext4): destination with the same identifier (name{page.3}) has 
+been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.28 \newpage
+              [3]
+Overfull \hbox (8.6098pt too wide) in paragraph at lines 35--36
+[]\IL2/cmr/bx/n/10.95 Prostorová slo¾i-tost \IL2/cmr/m/n/10.95 { Ko-lik dat je 
+nutno si ucho-vá-vat v pa-mìti v nej-hor¹ím/nejlep¹ím
+
+LaTeX Warning: Citation `AI1' on page 4 undefined on input line 39.
+
+
+LaTeX Warning: Reference `sec:racionalita' on page 4 undefined on input line 39
+.
+
+
+LaTeX Warning: Citation `AI1' on page 4 undefined on input line 41.
+
+pdfTeX warning (ext4): destination with the same identifier (name{page.4}) has 
+been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.42 \subsection
+                {Minimax} [4 <./img/statespace.png>]
+
+LaTeX Warning: Citation `AI1' on page 5 undefined on input line 43.
+
+
+LaTeX Warning: Citation `AI1' on page 5 undefined on input line 49.
+
+
+LaTeX Warning: Citation `mas' on page 5 undefined on input line 56.
+
+
+LaTeX Warning: Citation `mas' on page 5 undefined on input line 66.
+
+
+LaTeX Warning: Reference `img:expectimax' on page 5 undefined on input line 66.
+
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 56--67
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 56--67
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 56--67
+
+<img/expectimax.png, id=58, 719.68875pt x 514.92375pt>
+<use img/expectimax.png>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[5] [6 <./img/expectimax.png (PNG copy)>]
+Kapitola 3.
+
+LaTeX Warning: Citation `AI3' on page 7 undefined on input line 77.
+
+
+LaTeX Warning: Citation `AI3' on page 7 undefined on input line 79.
+
+
+LaTeX Warning: Citation `berkeley' on page 7 undefined on input line 92.
+
+
+LaTeX Warning: Citation `mas' on page 7 undefined on input line 92.
+
+
+LaTeX Warning: Citation `RLAprox' on page 7 undefined on input line 99.
+
+[7]
+
+LaTeX Warning: Citation `RLAprox' on page 8 undefined on input line 119.
+
+
+LaTeX Warning: Reference `sec:rl' on page 8 undefined on input line 129.
+
+
+LaTeX Warning: Reference `img:qvals' on page 8 undefined on input line 132.
+
+
+LaTeX Warning: Citation `mas' on page 8 undefined on input line 134.
+
+[8]
+
+LaTeX Warning: Reference `img:policy' on page 9 undefined on input line 142.
+
+<img/policy.png, id=104, 613.29124pt x 458.71375pt> <use img/policy.png>
+<img/qvals.png, id=105, 618.31pt x 464.73625pt> <use img/qvals.png>
+
+LaTeX Warning: Reference `img:mdptree' on page 9 undefined on input line 159.
+
+<img/mdptree.jpg, id=106, 615.29875pt x 310.15875pt> <use img/mdptree.jpg>
+[9 <./img/policy.png>] [10 <./img/qvals.png> <./img/mdptree.jpg>]
+
+LaTeX Warning: Citation `RLIntro' on page 11 undefined on input line 171.
+
+
+LaTeX Warning: Reference `img:learningagent' on page 11 undefined on input line
+ 171.
+
+<img/learningagent.png, id=123, 1010.77625pt x 371.3875pt>
+<use img/learningagent.png>
+
+LaTeX Warning: Citation `RLIntro' on page 11 undefined on input line 181.
+
+
+LaTeX Warning: Citation `RLIntro' on page 11 undefined on input line 204.
+
+[11 <./img/learningagent.png>]
+
+LaTeX Warning: Reference `img:policyeval' on page 12 undefined on input line 21
+6.
+
+<img/policyeval.jpg, id=138, 214.8025pt x 234.8775pt> <use img/policyeval.jpg>
+Overfull \hbox (17.67416pt too wide) in paragraph at lines 251--254
+[]\IL2/cmr/m/n/10.95 nav¹tiv nový uzel a ze vzorku $\OT1/cmr/bx/n/10.95 (\OML/c
+mm/b/it/10.95 s; a; s[]; r\OT1/cmr/bx/n/10.95 )$ \IL2/cmr/m/n/10.95 vy-poèti no
+-vou hod-notu jeho od-hadu $\OML/cmm/b/it/10.95 Q[]\OT1/cmr/bx/n/10.95 (\OML/cm
+m/b/it/10.95 s; a\OT1/cmr/bx/n/10.95 )$
+[12 <./img/policyeval.jpg>]
+
+LaTeX Warning: Citation `RLAprox' on page 13 undefined on input line 282.
+
+[13] [14]
+Kapitola 4.
+[15] [16]
+Kapitola 5.
+[17]
+Kapitola 6.
+[18] (./projekt.aux)
+
+Package rerunfilecheck Warning: File `projekt.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+
+LaTeX Font Warning: Size substitutions with differences
+(Font)              up to 1.28pt have occurred.
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) )
+(see the transcript file for additional information){/usr/share/texmf-dist/font
+s/enc/dvips/cs/xl2.enc}</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+bsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmbsy6.pfb
+></usr/share/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmbsy8.pfb></usr/sh
+are/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/share/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmex10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmmi10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb><
+/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/share/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmmib10.pfb></usr/share/texmf-dist/fonts/type1/public/am
+sfonts/cmextra/cmmib8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmr10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr
+/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmsy6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmsy8.pfb></usr/share/texmf-dist/fonts/type1/public/cs/csbx10.pfb></usr/sha
+re/texmf-dist/fonts/type1/public/cs/csbx12.pfb></usr/share/texmf-dist/fonts/typ
+e1/public/cs/csbx9.pfb></usr/share/texmf-dist/fonts/type1/public/cs/csr10.pfb><
+/usr/share/texmf-dist/fonts/type1/public/cs/csr6.pfb></usr/share/texmf-dist/fon
+ts/type1/public/cs/csr8.pfb></usr/share/texmf-dist/fonts/type1/public/cs/csr9.p
+fb></usr/share/texmf-dist/fonts/type1/public/cs/csti10.pfb></usr/share/texmf-di
+st/fonts/type1/urw/helvetic/uhvr8a.pfb>
+Output written on projekt.pdf (22 pages, 831088 bytes).
+Transcript written on projekt.log.
+bibtex projekt
+This is BibTeX, Version 0.99d (TeX Live 2015/Arch Linux)
+The top-level auxiliary file: projekt.aux
+I found no \bibdata command---while reading file projekt.aux
+I found no \bibstyle command---while reading file projekt.aux
+(There were 2 error messages)
+Makefile:11: recipe for target 'projekt.pdf' failed

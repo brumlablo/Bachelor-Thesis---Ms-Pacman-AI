@@ -31,12 +31,10 @@ class ReflexAgent(Agent):
 
     def getAction(self, gameState):
         """
-        You do not need to change this method, but you're welcome to.
-
         getAction chooses among the best options according to the evaluation function.
 
-        Just like in the previous project, getAction takes a GameState and returns
-        some Directions.X for some X in the set {North, South, West, East, Stop}
+        getAction takes a GameState and returns some Directions.X for some X in the
+        set {North, South, West, East, Stop}
         """
         # Collect legal moves and successor states
         legalMoves = gameState.getLegalActions()
@@ -45,9 +43,8 @@ class ReflexAgent(Agent):
         scores = [self.evaluationFunction(gameState, action) for action in legalMoves]
         bestScore = max(scores)
         bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
-        chosenIndex = random.choice(bestIndices) # Pick randomly among the best
 
-        "Add more of your code here if you want to"
+        chosenIndex = random.choice(bestIndices) # Pick randomly among the best
 
         return legalMoves[chosenIndex]
 
@@ -67,14 +64,39 @@ class ReflexAgent(Agent):
         to create a masterful evaluation function.
         """
         # Useful information you can extract from a GameState (pacman.py)
+
+        # Getting successor GameSate and all needed info
         successorGameState = currentGameState.generatePacmanSuccessor(action)
         newPos = successorGameState.getPacmanPosition()
-        newFood = successorGameState.getFood()
+        newFoodGrid = successorGameState.getFood().asList()
         newGhostStates = successorGameState.getGhostStates()
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
-        "*** YOUR CODE HERE ***"
-        return successorGameState.getScore()
+        # evaluation function value
+        value = 0
+
+        # DONT STOP
+        if action == Directions.STOP:
+            value -= 5
+
+        # FOOD
+        foodDists = []
+        for food in newFoodGrid:
+            foodDists.append(manhattanDistance(food,newPos))
+        foodDists.sort()
+
+        if len(foodDists) > 0:
+            value += foodDists[0] * (-2) # further the food is, lower the value is
+
+        # ACTIVE GHOSTS
+        for ghost in newGhostStates:
+            if ghost.scaredTimer > 0:
+                value += ghost.scaredTimer - manhattanDistance(ghost.getPosition(),newPos)
+            else:
+                value += manhattanDistance(ghost.getPosition(), newPos)
+
+        #print value
+        return value - 20 * successorGameState.getNumFood()
 
 def scoreEvaluationFunction(currentGameState):
     """
