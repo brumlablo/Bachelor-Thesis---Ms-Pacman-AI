@@ -1,0 +1,26 @@
+\select@language {czech}
+\contentsline {chapter}{\numberline {1}\IeC {\'U}vod}{2}{chapter.1}
+\contentsline {chapter}{\numberline {2}Metody hran\IeC {\'\i } her}{3}{chapter.2}
+\contentsline {section}{\numberline {2.1}Z\IeC {\'a}kladn\IeC {\'\i } pojmy}{3}{section.2.1}
+\contentsline {section}{\numberline {2.2}Hry}{4}{section.2.2}
+\contentsline {subsection}{\numberline {2.2.1}Minimax}{5}{subsection.2.2.1}
+\contentsline {subsection}{\numberline {2.2.2}AlfaBeta \IeC {\v R}ezy}{5}{subsection.2.2.2}
+\contentsline {subsection}{\numberline {2.2.3}Expectimax}{5}{subsection.2.2.3}
+\contentsline {chapter}{\numberline {3}U\IeC {\v c}\IeC {\'\i }c\IeC {\'\i } agent}{7}{chapter.3}
+\contentsline {section}{\numberline {3.1}Reaktivn\IeC {\'\i } agent}{7}{section.3.1}
+\contentsline {section}{\numberline {3.2}Racionalita}{7}{section.3.2}
+\contentsline {section}{\numberline {3.3}Markovsk\IeC {\'y} rozhodovac\IeC {\'\i } proces}{8}{section.3.3}
+\contentsline {subsection}{\numberline {3.3.1}Value iteration a Policy iteration}{8}{subsection.3.3.1}
+\contentsline {subsection}{\numberline {3.3.2}Q-hodnota}{9}{subsection.3.3.2}
+\contentsline {section}{\numberline {3.4}Strojov\IeC {\'e} u\IeC {\v c}en\IeC {\'\i }}{11}{section.3.4}
+\contentsline {subsection}{\numberline {3.4.1}Q-Learning}{12}{subsection.3.4.1}
+\contentsline {subsubsection}{Q-Learning postup}{13}{section*.5}
+\contentsline {subsection}{\numberline {3.4.2}Approximate Q-Learning}{13}{subsection.3.4.2}
+\contentsline {subsubsection}{Aproxima\IeC {\v c}n\IeC {\'\i } Q-learning postup}{14}{section*.6}
+\contentsline {chapter}{\numberline {4}Ms.Pacman}{15}{chapter.4}
+\contentsline {section}{\numberline {4.1}O h\IeC {\v r}e a d\IeC {\r u}vod jej\IeC {\'\i }ho v\IeC {\'y}b\IeC {\v e}ru}{15}{section.4.1}
+\contentsline {section}{\numberline {4.2}Pravidla}{15}{section.4.2}
+\contentsline {section}{\numberline {4.3}Klasifikace dema Ms.Pacman z hlediska Teorie her}{15}{section.4.3}
+\contentsline {chapter}{\numberline {5}N\IeC {\'a}vrh a pl\IeC {\'a}n pr\IeC {\'a}ce}{17}{chapter.5}
+\contentsline {section}{\numberline {5.1}Aproxima\IeC {\v c}n\IeC {\'\i } Q-Learning}{17}{section.5.1}
+\contentsline {chapter}{\numberline {6}Z\IeC {\'a}v\IeC {\v e}r}{18}{chapter.6}
