@@ -75,28 +75,29 @@ class ReflexAgent(Agent):
         # evaluation function value
         value = 0
 
-        # DONT STOP
-        if action == Directions.STOP:
-            value -= 5
-
         # FOOD
         foodDists = []
         for food in newFoodGrid:
             foodDists.append(manhattanDistance(food,newPos))
         foodDists.sort()
 
-        if len(foodDists) > 0:
-            value += foodDists[0] * (-2) # further the food is, lower the value is
+        if(len(foodDists) > 0):
+            value += foodDists[0] * (-1) # further the closest food is, lower the value is
 
+        # lesser the food, smaller the value
+        value -= (successorGameState.getNumFood() * 20)
         # ACTIVE GHOSTS
+        ghostDists = []
         for ghost in newGhostStates:
-            if ghost.scaredTimer > 0:
-                value += ghost.scaredTimer - manhattanDistance(ghost.getPosition(),newPos)
+            ghostD = manhattanDistance(ghost.getPosition(),newPos)
+            if ghost.scaredTimer > ghostD:
+                value +=  ghost.scaredTimer * 1.5 + ghostD * (-1)
             else:
-                value += manhattanDistance(ghost.getPosition(), newPos)
+                ghostDists.append(ghostD)
+        if(len(ghostDists) > 0):
+            value += ghostDists[0] # closer the closest ghost is, lower the value is
 
-        #print value
-        return value - 20 * successorGameState.getNumFood()
+        return value
 
 def scoreEvaluationFunction(currentGameState):
     """
@@ -139,7 +140,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
           and self.evaluationFunction.
 
           Here are some method calls that might be useful when implementing minimax.
-
+*
           gameState.getLegalActions(agentIndex):
             Returns a list of legal actions for an agent
             agentIndex=0 means Pacman, ghosts are >= 1
