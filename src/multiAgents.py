@@ -234,14 +234,15 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                 continue
 
             tmp = self.AlphaBeta(state.generateSuccessor(agentIndex, action), agentIndex + 1, depth,alpha, beta)
-            # returning tuple with action
+
+            # obtaining value
             if type(tmp) is tuple:
                 tmp = tmp[1]
 
             if tmp > value[1]:
                 value = (action, tmp)
 
-            if value[1] >= beta:
+            if value[1] > beta:
                 print "MAX PRUNE: ", value, " agent: ", agentIndex, "beta: ", beta
                 return value
 
@@ -268,7 +269,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
             if tmp < value[1]:
                 value = (action, tmp)
             # pruning
-            if value[1] <= alpha:
+            if value[1] < alpha:
                 print "MIN PRUNE: ", value, " agent: ", agentIndex, "alpha: ", alpha
                 return value
 
