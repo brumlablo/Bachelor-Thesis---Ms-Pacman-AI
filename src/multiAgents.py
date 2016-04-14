@@ -130,8 +130,8 @@ class MinimaxAgent(MultiAgentSearchAgent):
     def Minimax(self, state, agentIndex, depth):
 
         # new layer
-        if agentIndex >= self.agentsNum:
-            agentIndex = 0
+        if agentIndex == self.agentsNum:
+            agentIndex = self.index
             depth += 1
 
         # last layer or terminal node
@@ -148,7 +148,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
     def minimize(self, state, agentIndex, depth):
 
         # tuple (action,value)
-        value = ("", float("inf"))
+        value = ["", float("inf")]
         for action in state.getLegalActions(agentIndex):
             #if action == Directions.STOP:
             #    continue
@@ -167,7 +167,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
     def maximize(self, state, agentIndex, depth):
 
         # tuple (action,value)
-        value = ("", float("-inf"))
+        value = ["", float("-inf")]
         for action in state.getLegalActions(agentIndex):
             #if action == Directions.STOP:
             #    continue
@@ -210,8 +210,8 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
     def AlphaBeta(self, state, agentIndex, depth, alpha, beta):
 
         # new layer
-        if agentIndex >= self.agentsNum:
-            agentIndex = 0
+        if agentIndex == self.agentsNum:
+            agentIndex = self.index
             depth += 1
 
         # last layer or terminal node
@@ -228,7 +228,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
     def maximize(self, state, agentIndex, depth, alpha, beta):
 
         # tuple (action,value)
-        value = ("", float("-inf"))
+        value = ["", float("-inf")]
         for action in state.getLegalActions(agentIndex):
             if action == Directions.STOP:
                 continue
@@ -252,11 +252,10 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
             print "MAX FINAL ", value, " agent: ", agentIndex
         return value
 
-
     def minimize(self, state, agentIndex, depth, alpha, beta):
 
         # tuple (action,value)
-        value = ("", float("inf"))
+        value = ["", float("inf")]
         for action in state.getLegalActions(agentIndex):
             if action == Directions.STOP:
                 continue
@@ -290,8 +289,75 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
-      Your expectimax agent (question 4)
+      expectimax agent
     """
+
+    def Expectimax(self, state, agentIndex, depth):
+
+        # new layer
+        if agentIndex == self.agentsNum:
+            agentIndex = self.index
+            depth += 1
+
+        # last layer or terminal node
+        if state.isWin() or state.isLose() or depth == self.depth:
+            return self.evaluationFunction(state)
+
+        # ms. pacman
+        if agentIndex == self.index:
+            return self.maximize(state, agentIndex, depth)
+        # ghosts
+        else:
+            return self.chanceMinimize(state, agentIndex, depth)
+
+    def maximize(self, state, agentIndex, depth):
+
+        # tuple (action,value)
+        value = ["", float("-inf")]
+        for action in state.getLegalActions(agentIndex):
+            if action == Directions.STOP:
+                continue
+
+            tmp = self.Expectimax(state.generateSuccessor(agentIndex, action), agentIndex + 1, depth)
+            # getting value
+            if type(tmp) is tuple:
+                tmp = tmp[1]
+            # returning tuple with action
+            if tmp > value[1]:
+                value = (action, tmp)
+        print "max: ", value, " agent: ", agentIndex
+        return value
+
+    def chanceMinimize(self, state, agentIndex, depth):
+
+        # tuple (action,value)
+        expectedValue = ["", 0.0]
+        ghostActions = state.getLegalActions(agentIndex)
+
+        # ghost Actions probability
+        probability = {}
+        for action in ghostActions:
+            probability[action] = 1.0 / float(len(ghostActions))
+
+        # another way how to count probability...
+        probability2 = 1.0 / float(len(ghostActions))
+
+        if Directions.STOP in ghostActions:
+            ghostActions.remove(Directions.STOP)
+
+        for action in ghostActions:
+
+            tmp = self.Expectimax(state.generateSuccessor(agentIndex, action), agentIndex + 1, depth)
+            # getting value
+            if type(tmp) is tuple:
+                tmp = tmp[1]
+
+            # expected action and value
+            expectedValue[0] = action
+            expectedValue[1] += tmp * probability[action]
+
+        print "minexpval: ", expectedValue, " agent: ", agentIndex
+        return tuple(expectedValue)
 
     def getAction(self, gameState):
         """
@@ -300,8 +366,11 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
           All ghosts should be modeled as choosing uniformly at random from their
           legal moves.
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        self.agentsNum = gameState.getNumAgents()
+        value = self.Expectimax(gameState, self.index, 0)
+        print "FINAL VALUE: ",value[0]
+        return value[0]
+
 
 def betterEvaluationFunction(currentGameState):
     """
