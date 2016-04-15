@@ -444,7 +444,7 @@ def betterEvaluationFunction(currentGameState):
             nearestGhostD -= 5
         ghostFactor += nearestGhostD  # closer the closest ghost is, lower the value is
 
-    value = foodFactor + ghostFactor
+    value += foodFactor + ghostFactor
     print "ghostFactor: ", ghostFactor, "+ foodFactor: ", foodFactor, ") => FINALLY: ", value
     return value
 
