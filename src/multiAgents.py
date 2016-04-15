@@ -61,14 +61,13 @@ class ReflexAgent(Agent):
         newPos = successorGameState.getPacmanPosition()
         newFoodGrid = successorGameState.getFood().asList()
         newGhostStates = successorGameState.getGhostStates()
-        newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
         # evaluation function value
         value = 0
 
         # STOP ACTION
-        #if(action == Directions.STOP):
-        #    value -= 1
+        if(action == Directions.STOP):
+            value -= 5
 
         # FOOD distances
         foodDists = []
@@ -76,23 +75,35 @@ class ReflexAgent(Agent):
             foodDists.append(manhattanDistance(food,newPos))
         foodDists.sort()
 
+        # further the closest food is, lower the value is
         if(len(foodDists) > 0):
-            value += foodDists[0] * (-1) # further the closest food is, lower the value is
+            foodMin = foodDists[0]
+        else:
+            foodMin = float("inf")
 
-        # lesser the food, significantly smaller the value
-        value -= (successorGameState.getNumFood() * 20)
-        # ACTIVE GHOSTS distances
+        # lesser the food on board, smaller the value
+        value -= (successorGameState.getNumFood() * 15)
+
+        # successors score
+        value += successorGameState.getScore() * 15
+
+        # ACTIVE+SCARED GHOSTS distances
         ghostDists = []
         for ghost in newGhostStates:
             ghostD = manhattanDistance(ghost.getPosition(),newPos)
-            if ghost.scaredTimer > ghostD:
-                value +=  ghost.scaredTimer * 1.5 + ghostD * (-1)
+            if ghost.scaredTimer - ghostD > 0: # ms. pacman is able to catch ghost
+                value +=  ghost.scaredTimer * 10 + ghostD * (-1)
             else:
                 ghostDists.append(ghostD)
-        if(len(ghostDists) > 0):
-            value += ghostDists[0] # closer the closest ghost is, lower the value is
 
-        return value
+        if(len(ghostDists) > 0):
+            ghostDists.sort()
+            ghostMin = ghostDists[0] # closer the closest ghost is, lower the value is
+        else:
+            ghostMin = float("-inf")
+        finalValue = value + float(ghostMin)/float(foodMin)
+        print "value: ",value,"+ (ghostMin: ",ghostMin,"/foodMin: ",foodMin,") = >>>FINALLY: ",finalValue
+        return finalValue
 
 def scoreEvaluationFunction(currentGameState):
     """
@@ -325,7 +336,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
             # returning tuple with action
             if tmp > value[1]:
                 value = (action, tmp)
-        print "max: ", value, " agent: ", agentIndex
+        #print "max: ", value, " agent: ", agentIndex
         return value
 
     def chanceMinimize(self, state, agentIndex, depth):
@@ -339,7 +350,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         for action in ghostActions:
             probability[action] = 1.0 / float(len(ghostActions))
 
-        # another way how to count probability...
+        # another way how to count probability of ghosts actions...
         probability2 = 1.0 / float(len(ghostActions))
 
         if Directions.STOP in ghostActions:
@@ -354,9 +365,15 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
 
             # expected action and value
             expectedValue[0] = action
-            expectedValue[1] += tmp * probability[action]
-
-        print "minexpval: ", expectedValue, " agent: ", agentIndex
+            try:
+                expectedValue[1] += tmp * probability[action]
+            except:
+                # print "-----------------------PROBLEM!!!-------------------------"
+                # print "tmp: ",tmp,"probability[action]: ",probability[action],"ev[1]: ",expectedValue[1], "action: ",action, " agent: ", agentIndex, "depth: ", depth
+                # print "----------------------------------------------------------"
+                # exit()
+                pass
+        #print "minexpval: ", expectedValue, " agent: ", agentIndex
         return tuple(expectedValue)
 
     def getAction(self, gameState):
@@ -368,19 +385,77 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         """
         self.agentsNum = gameState.getNumAgents()
         value = self.Expectimax(gameState, self.index, 0)
-        print "FINAL VALUE: ",value[0]
+        #print "FINAL VALUE: ",value[0]
         return value[0]
 
 
 def betterEvaluationFunction(currentGameState):
     """
       Your extreme ghost-hunting, pellet-nabbing, food-gobbling, unstoppable
-      evaluation function (question 5).
+      evaluation function
 
       DESCRIPTION: <write something here so we know what you did>
     """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    if currentGameState.isWin():
+        return float("inf")
+
+    if currentGameState.isLose():
+        return float("-inf")
+
+    # getting all needed info
+    pos =  currentGameState.getPacmanPosition()
+    foodGrid = currentGameState.getFood().asList()
+    ghostStates = currentGameState.getGhostStates()
+    ghostScaredTimes = [ghostState.scaredTimer for ghostState in ghostStates]
+    capsules = currentGameState.getCapsules()
+
+    # evaluation function value
+    value = 0
+
+    # current score
+    value += scoreEvaluationFunction(currentGameState)
+
+    # lesser the food on board, smaller the value
+    #value -= currentGameState.getNumFood() * 10
+
+    # FOOD distances
+    foodDists = []
+    for food in foodGrid:
+        foodDists.append(manhattanDistance(food, pos))
+    foodDists.sort()
+
+    # CLOSEST FOOD - closer = better
+    if (len(foodDists) > 0):
+        foodFactor = foodDists[0]
+    else:
+        foodFactor = 10000
+    foodFactor = 1.0/float(foodFactor)
+
+    # DOTS left - lesser = better
+    foodFactor -= currentGameState.getNumFood()
+
+    # POWER PILLS - lesser = better
+    foodFactor -= len(currentGameState.getCapsules())
+
+    # GHOSTS distances and states
+    ghostFactor = 0
+    ghostDists = []
+    for ghost in ghostStates:
+        ghostD = manhattanDistance(pos, ghostState.getPosition())
+        if ghost.scaredTimer - ghostD > 0: # catchable ghost
+            ghostFactor += ghost.scaredTimer * 4 + ghostD * (-1)
+        ghostDists.append(ghostD)
+
+    if (len(ghostDists) > 0):
+        ghostDists.sort()
+        nearestGhostD = ghostDists[0]
+        if nearestGhostD < 4: # beware of too close ghost
+            nearestGhostD -= 5
+        ghostFactor += nearestGhostD  # closer the closest ghost is, lower the value is
+
+    value += foodFactor + ghostFactor
+    #print "ghostFactor: ", ghostFactor, "+ foodFactor: ", foodFactor, ") => FINALLY: ", value
+    return value
 
 # Abbreviation
 better = betterEvaluationFunction
