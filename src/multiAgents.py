@@ -350,7 +350,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         for action in ghostActions:
             probability[action] = 1.0 / float(len(ghostActions))
 
-        # another way how to count probability...
+        # another way how to count probability of ghosts actions...
         probability2 = 1.0 / float(len(ghostActions))
 
         if Directions.STOP in ghostActions:
@@ -365,8 +365,14 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
 
             # expected action and value
             expectedValue[0] = action
-            expectedValue[1] += tmp * probability[action]
-
+            try:
+                expectedValue[1] += tmp * probability[action]
+            except:
+                # print "-----------------------PROBLEM!!!-------------------------"
+                # print "tmp: ",tmp,"probability[action]: ",probability[action],"ev[1]: ",expectedValue[1], "action: ",action, " agent: ", agentIndex, "depth: ", depth
+                # print "----------------------------------------------------------"
+                # exit()
+                pass
         #print "minexpval: ", expectedValue, " agent: ", agentIndex
         return tuple(expectedValue)
 
@@ -396,7 +402,7 @@ def betterEvaluationFunction(currentGameState):
     if currentGameState.isLose():
         return float("-inf")
 
-    # Getting all needed info
+    # getting all needed info
     pos =  currentGameState.getPacmanPosition()
     foodGrid = currentGameState.getFood().asList()
     ghostStates = currentGameState.getGhostStates()
@@ -418,21 +424,24 @@ def betterEvaluationFunction(currentGameState):
         foodDists.append(manhattanDistance(food, pos))
     foodDists.sort()
 
-    # further the closest food is, lower the value is
+    # CLOSEST FOOD - closer = better
     if (len(foodDists) > 0):
         foodFactor = foodDists[0]
     else:
-        foodFactor = float("inf")
+        foodFactor = 10000
+    foodFactor = 1.0/float(foodFactor)
 
-    foodFactor = foodFactor/(currentGameState.getNumFood()*10)
+    # DOTS left - lesser = better
+    foodFactor -= currentGameState.getNumFood()
 
-    # Ghost distances and states
+    # POWER PILLS - lesser = better
+    foodFactor -= len(currentGameState.getCapsules())
+
+    # GHOSTS distances and states
     ghostFactor = 0
     ghostDists = []
     for ghost in ghostStates:
-        ghostPosition = (int(ghost.getPosition()[0]), int(ghost.getPosition()[1]))
         ghostD = manhattanDistance(pos, ghostState.getPosition())
-        print ghostPosition
         if ghost.scaredTimer - ghostD > 0: # catchable ghost
             ghostFactor += ghost.scaredTimer * 4 + ghostD * (-1)
         ghostDists.append(ghostD)
@@ -445,7 +454,7 @@ def betterEvaluationFunction(currentGameState):
         ghostFactor += nearestGhostD  # closer the closest ghost is, lower the value is
 
     value += foodFactor + ghostFactor
-    print "ghostFactor: ", ghostFactor, "+ foodFactor: ", foodFactor, ") => FINALLY: ", value
+    #print "ghostFactor: ", ghostFactor, "+ foodFactor: ", foodFactor, ") => FINALLY: ", value
     return value
 
 # Abbreviation
