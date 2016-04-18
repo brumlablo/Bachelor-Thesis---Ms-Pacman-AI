@@ -144,7 +144,7 @@ Na obrázku \ref{img:policy} lze vidět optimální strategii a vypočtené hodn
 
 \begin{figure}[!htbp]
 \begin{center}
-	\scalebox{0.55}{\includegraphics{img/policy.jpg}}
+	\scalebox{0.55}{\includegraphics{img/policy.png}}
 	\caption{Problém představuje pole o velikosti 12 polí, 4 směry možnosti chůze a dva koncové stavy s odměnami ohodnocenými -1 a 1. Již po 5 iteracích je vidět optimální strategie, reprezentovaná šipkou směru (agent začínám v levém spodním rohu), vypočtena pomocí hodnoty $V_{100}$ každého pole.}
 	\label{img:policy}
 \end{center}
@@ -152,7 +152,7 @@ Na obrázku \ref{img:policy} lze vidět optimální strategii a vypočtené hodn
 
 \begin{figure}[!htbp]
 \begin{center}
-	\scalebox{0.6}{\includegraphics{img/qvals.jpg}}
+	\scalebox{0.6}{\includegraphics{img/qvals.png}}
 	\caption{Ukázka počátečních Q-hodnot pro předešlý grid-world problém. Q-hodnoty se počítají pro všechny možné akce z daného stavu, proto jsou pro jedno políčko na hracím plánu 4 pro každý směr, kam může agent jít.}
 	\label{img:qvals}
 \end{center}
@@ -322,7 +322,7 @@ kde:
 \textit{Ms. Pacman} je arkádová hra z roku 1982, která vylepšuje původní koncept hry Pacman. Hra je obohacena o nový design hlavní postavy, mapy a především implementuje lepší umělou inteligenci nepřátel. Hlavní postavou ovládanou hráčem je nyní Ms. Pacman, nepřátelé zůstávají v podobě 4 barevných duchů. Cílem hry je dosáhnout co největšího skóre pojídáním kuliček, duchů (časově omezené; po snězení speciální větší kuličky tzv. power-upu), nebo ovoce.
 Zvýšení obtížnosti oproti Pacmanovi spočívá především v \textbf{opuštění deterministického chování duchů}, čímž pádem nelze předpovídat jejich chování. Tento fakt spolu se složitostí hry jsou hlavními faktory proč se na hru zaměřit z hlediska strojového učení.
 \section{Pravidla}
-Pro účely této práce se bere v potaz zjednodušení původní hry na vizuální demo tak, aby byla dobře vidět účinnost jednotlivých algoritmů a příliš vysoké nároky na výpočetní výkon. Demo není rozděleno na levely a je založeno na umělé inteligenci obou stran (Ms. Pacman vs 2 duchové). Cíl Ms. Pacman je maximalizovat skóre na aktuální mapě, zatímco cíl nepřátel je její skóre minimalizovat. Stochastické chování nepřátel je simulováno tak, aby co nejvíce odpovídalo svému vzoru (zdrojové kódy hry nejsou veřejné, tudíž nelze simulovat chování duchů naprosto stejně jako v originálu). Duchové se snaží chytit a zabít Ms. Pacman. Pokud se jim to povede, hra končí. Skóre Ms. Pacman se navyšuje jezením kuliček, power-upů a následným jezením duchů po omezený čas trvání power-upu. Bonusová ovoce se neberou v potaz. Skóre se snižuje po dobu chození Ms. Pacman po bludišti bez jezení ovoce/duchů. Mapy se též liší, jsou menší a obsahují pro umělou inteligenci Ms. Pacman problémová zákoutí, jako větší neohraničené plochy atp. Ms. Pacman a duchové mají stejnou rychlost s výjimkou již zmíněnené situace, kdy Ms. Pacman sní power-up a může po omezený čas jíst duchy. Tato zjednošení slouží především ke snížení vypočetní náročnosti algorimu na běžně dostupný hardware.
+Pro účely této práce se bere v potaz zjednodušení původní hry na vizuální demo tak, aby byla dobře vidět účinnost jednotlivých algoritmů a příliš vysoké nároky na výpočetní výkon. Demo není rozděleno na levely, odehrává se na dané mapě a je založeno na umělé inteligenci obou stran (Ms. Pacman vs 2 duchové). Cíl Ms. Pacman je maximalizovat skóre na aktuální mapě, zatímco cíl nepřátel je její skóre minimalizovat. Stochastické chování nepřátel je simulováno tak, aby co nejvíce odpovídalo svému vzoru (zdrojové kódy hry nejsou veřejné, tudíž nelze simulovat chování duchů naprosto stejně jako v originálu). Duchové se snaží chytit a zabít Ms. Pacman. Pokud se jim to povede, hra končí. Skóre Ms. Pacman se navyšuje jezením kuliček, power-upů a následným jezením duchů po omezený čas trvání power-upu. Bonusová ovoce se neberou v potaz. Skóre se snižuje po dobu chození Ms. Pacman po bludišti bez jezení ovoce/duchů. Mapy se též liší, jsou menší a obsahují pro umělou inteligenci Ms. Pacman problémová zákoutí, jako větší neohraničené plochy atp. Ms. Pacman a duchové mají stejnou rychlost s výjimkou již zmíněnené situace, kdy Ms. Pacman sní power-up a může po omezený čas jíst duchy. Tato zjednošení slouží především ke snížení vypočetní náročnosti algorimu na běžně dostupný hardware.
 \section{Klasifikace dema Ms. Pacman z hlediska Teorie her}
 Ms. Pacman je hra, tzn. strategická interakce mezi 2 a více hráči, kteří chtějí dosáhnout optimálního výsledku ve hře.
 Vizuální demo Ms. Pacman lze specifikovat podle několika kritérií:
@@ -335,18 +335,27 @@ Vizuální demo Ms. Pacman lze specifikovat podle několika kritérií:
 \item \textbf{dle zdrojů:} \textit{antagonistický konflikt} – Ms. Pacman a duchové sdílí jedno pevné maximální skóre
 dle herního plánu: \textit{grid-world game} – vše probíhá diskrétně, po polích na mřížce v herním bludišti, jež mohou nabývat více stavů: prázdná cesta, zeď, prázdná cesta s hráčem, cesta s kuličkou, cesta s power-upem
 \end{itemize}
-\chapter{Návrh a plán práce}
-Tato kapitola se věnuje praktické části práce a to především \textbf{návrhu chování agenta}. Po nastudování teorie je důležité poupravit cíl práce: místo porovnávání metod Minimax a Alfa-Beta Řezů s učicím agentem, bude lepší agenta provnávat s Expectimaxem, který bere v potaz stochastičnost akcí duchů.
+\chapter{Návrh}
+Tato kapitola se podílí na praktické části práce a to především návrhu \textbf{chování agenta}.
+Po nastudování teorie je důležité jasně poupravit cíle práce: budou se porovnávat nejen metody Minimax a Alfa-Beta Řezy s učicím agentem, ale především také Expectimax, který bere v potaz stochastičnost akcí duchů.
+
+\section{Reflexivní agent a jeho ohodnocovací funkce}
+Aby se měl učící agent s čím srovnat, bylo nutné navrhnout jednoduchého reflexivní agenta pracujícího s jednoduchou ohodnocovací funkcí. Reflexivní agent pouze vnímá aktuální stav hry (hloubka = 1) a jeho ohodnocovací funkce vyhodnocuje stav hry na základě informací o celém stavu hry. Agent se následně podívá na ohodnocení všech přípustných \textit{Akcí} (jít vlevo, vpravo, nahoru, dolů, zastavit se) a pseudonáhodně vybere mezi akcemi s nejlepším ohodnocením. \textbf{Ohodnocovací funkce} se ukázala být jako největší problém reflexivního agenta, neboť neustále narážela na problematické nesnadno vyřešitelné stavy stejného ohodnocení např. stejně vzdálené jídlo od agenta. Prakticky to pak dopadá, že agent \textit{čeká} na ducha, aby se konečně mohl dostat ze zacykleného chování. -IMG- OBRÁZEK Z APLIKACE S VEKTORY VZDÁLENOSTÍ + pozn. o manhattonovské vzdálenosti Ohodnvá ohodnocovací akce tedy využívá manhattonovské vzdálenosti jídla a duchů. Dále stav ducha, zda ho dokáže Ms. Pacman dohonit tzn. kolik mu ještě zbývá kroků ve stavu vystrašenosti (Ms. Pacman snědla power-up) vůči jeho vzdálenosti od Ms.Pacman.
+
+\section{Minimax, AlfaBeta řezy}
+Pro tyto algoritmy bylo nutné vzít v potaz větší počet minimalizujících nepřátel, kteří se v každém tahu dané hloubky střídají s maximalizující Ms. Pacman. Alfabeta i Minimax využívají stejnou nedokonalou vyhodnocovací funkci jako základní reflexivní agent, avšak navíc vyhodnocují stavy až do stanové hloubky/terminální uzlu a následně vrátí nejlepší možnou akci pro svého maximalizačního agenta Ms. Pacman (MinimaxAgent, AlphaBetaAgent).
+\section{Expectimax a lepší ohodnocovací funkce}
+Pro Expectimax byla dále naimplementována vyhodnocovací funkce, která dosáhla lepších výsledků než funkce předchozí. Popis, co je lepší, proč, jak by se to dále dalo vylepšit - například pomocí algoritmů pro prohledávání stavového prostoru.
+
 \section{Aproximační Q-Learning}
 Následující sekce řeší rozvrh práce pro návrh algoritmu učíčícho agenta.
 První důležitou částí návrhu řešení je kvalitně definovat \textbf{vektor vlastností}, který by měl korektně předpovídat $Q-hodnoty$ jednotlivých stavů:
 \begin{itemize}
 \item vzdálenost nejbližšího ducha
 \item vzdálenost nejbližší kuličky jídla
-\item vzdálenost nejbližšího powerupu/vzdálenost nejbližšího ducha
+\item vzdálenost nejbližšího power-upu/vzdálenost nejbližšího ducha
 \item počet duchů
 \item je Ms. Pacman v rohu?
-\item je Ms. Pacman v tunelu?
 \item lze ducha sníst a je do vzdálenosti 4 políček?
 \end{itemize}
 Následně se stanoví návrh aproximační funkce vektoru na základě váhy každé vlastnosti.
@@ -360,6 +369,31 @@ Poté bude především potřeba nalézt co nejvíce \textbf{optimální strateg
 \end{enumerate}
 Poměňování váh vlastností takto může \textbf{maximalizovat odměny} a dojít tak lepší strategii, něž byla doposud použita.
 
+\chapter{Realizace}
+Tato kapitola realizuje praktickou část práce a to především \textbf{implemetacím různého chování agentů}.
+
+\section{Zvolené prostředky pro experimentování}
+Nejdříve bylo nutné si zvolit programovací jazyk, který by zvládl výpočetní náročnost problematiky vůči vykreslování grafického dema. Zpočátku byl zvolen jazyk Java díky její vysoké míře abstrakce vůči programátorskému myšlení. Nakonec však po sérii experimentování s jazykem se kvůli náročnosti samotné logiky hry vůči GUI a především kvůli efektivnímu zvládnutí rozgenerování všech možných stavů hry a dodržení matematických vzorců, jež byly stanoveny v předchozí teoretické kapitole přešlo k hledání náhradního řešení - například nalezení frameworku, jež řeší podobnou problematiku. Základem pro studii a experimentování s algoritmy nakonec posloužil pythonový framework od UC Berkeley, používaný v jejich výuce Umělé inteligence - ODKAZ. Hlavním důvodem zvolení frameworku bylo především zaměření práce na experimentování s algoritmy umělé inteligence, ne implemetace aplikace. Dalšími důvody je je použití jazyka Python 2.7.5, který též umožňuje objektový přístup, je dobře čitelný a nenáročný - nejen díky těmto kladům se dají dobře pochopit vlastnosti a schéma jednotlivých objektů frameworku.
+
+\section{Schéma aplikace}
+Nejdůležitější částí aplikace je objekt GameState reprezentující \textbf{stav hry}.
+- objektový schéma framework
+Detailní popis implementace frameworku lze pak najít v komentářích v kódu.
+
+\subsection{Reprezentace stavu hry}
+GameState popis a jak s ním pracovat - popis, co jde využít, jak
+Popis výpočtu manhattonovských vzdáleností, proč toto využívat
+MDP (akce,stav)
+
+\section{Základní algorimy}
+
+\section{Value Iteration agent}
+- vyuziva MDP
+- pasivní plánovací agent
+
+
+\chapter{Experimenty a srovnání agentů}
+blaablabalabalb
 
 \chapter{Závěr}
 Cílem toho semestrálního projektu bylo nastudovat problematiku metod hraní her ve vztahu k učícímu agentovi pro hru Ms. Pacman a navrhnout metodu řešení problému. Ms. Pacman. Nastudování teorie pomohlo především k definici a klasifikaci samotné hry jako, a následném stanovení návrhu řešení problematiky metodou Aproximační Q-Learning. Tato metoda řeší stochastické chování duchů a pomůže výrazně eliminovat problém velké vypočetní náročnosti stavového prostoru Ms. Pacman. Jak si metoda s takto složitou problematikou poradí bude nejlépe vidět při srovnání její efektivity například s metodou Expectimax. Práce mě naučila především nebát se složitějších matematických vzorců a problému a též určitý vhled do možností strojového učení.

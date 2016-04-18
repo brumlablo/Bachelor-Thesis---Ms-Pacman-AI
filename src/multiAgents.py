@@ -449,7 +449,7 @@ def betterEvaluationFunction(currentGameState):
     if (len(ghostDists) > 0):
         ghostDists.sort()
         nearestGhostD = ghostDists[0]
-        if nearestGhostD < 4: # beware of too close ghost
+        if nearestGhostD < 4: # beware of the too close ghost
             nearestGhostD -= 5
         ghostFactor += nearestGhostD  # closer the closest ghost is, lower the value is
 
