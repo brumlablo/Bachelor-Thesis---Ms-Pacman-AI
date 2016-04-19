@@ -124,7 +124,7 @@ Příkladem přepočtu hodnot je metoda \textbf{Value iteration}\cite{RLAprox}:
 \begin{displaymath}
 V_{k+1}(s) \leftarrow \max_a \sum_{s^\prime}T(s,a,s^\prime) \left[R(s,a,s^\prime)+\gamma V_k(s^\prime) \right]
 \end{displaymath}
-\item opakuj předchozí krok dokud vektor $V_k$ nekonverguje (což zaručuje optimálnost metody)
+\item opakuj předchozí krok dokud vektor $V_k$ nekonverguje (konvergence zapřičiňuje \gamma, což zaručuje optimálnost metody)
 \end{enumerate}
 
 Velký rozdíl oproti Expectimaxu je ten, že se nemusí provádět neustálá \textit{rekurze} výpočtu očekávaného užitku, protože je už vypočten ve vektoru hodnot $V_k(s^\prime)$. Stále se však metoda potýká s vysokou prostorovou složitostí. Alternativou jsou proto metody \textbf{Policy iteration}, které se snaží o přímé nalezení otpimální strategie raději než zdlouhavé výpočty hodnot. O těchto metodách se v souvislosti se strojovým učením zmiňuje další kapitola \ref{sec:rl}.
