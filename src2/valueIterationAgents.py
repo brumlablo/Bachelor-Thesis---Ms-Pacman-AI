@@ -43,11 +43,12 @@ class ValueIterationAgent(ValueEstimationAgent):
         self.iterations = iterations
         self.values = util.Counter() # A Counter is a dict with default 0
 
-        for k in range(0,iterations): # actual values = Value_k, counting new values Value_{k+1} = Value_k
+        for k in range(iterations): # actual values = Value_k, counting new values Value_{k+1} = Value_k
             tmpValues = self.values.copy() # current values V_k
             for state in self.mdp.getStates():
                 # legal actions for state
                 actions = self.mdp.getPossibleActions(state)
+                # terminal node test
                 if mdp.isTerminal(state) or len(actions) == 0:
                     tmpValues[state] = 0
                     continue
