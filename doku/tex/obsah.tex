@@ -124,9 +124,8 @@ Příkladem přepočtu hodnot je metoda \textbf{Value iteration}\cite{RLAprox}:
 \begin{displaymath}
 V_{k+1}(s) \leftarrow \max_a \sum_{s^\prime}T(s,a,s^\prime) \left[R(s,a,s^\prime)+\gamma V_k(s^\prime) \right]
 \end{displaymath}
-\item opakuj předchozí krok dokud vektor $V_k$ nekonverguje (konvergence zapřičiňuje \gamma, což zaručuje optimálnost metody)
+\item opakuj předchozí krok dokud vektor $V_k$ nekonverguje (konvergenci především zapřičiňuje $\gamma$, což zaručuje optimálnost metody)
 \end{enumerate}
-
 Velký rozdíl oproti Expectimaxu je ten, že se nemusí provádět neustálá \textit{rekurze} výpočtu očekávaného užitku, protože je už vypočten ve vektoru hodnot $V_k(s^\prime)$. Stále se však metoda potýká s vysokou prostorovou složitostí. Alternativou jsou proto metody \textbf{Policy iteration}, které se snaží o přímé nalezení otpimální strategie raději než zdlouhavé výpočty hodnot. O těchto metodách se v souvislosti se strojovým učením zmiňuje další kapitola \ref{sec:rl}.
 
 \subsection{Q-hodnota}
@@ -337,7 +336,7 @@ dle herního plánu: \textit{grid-world game} – vše probíhá diskrétně, po
 \end{itemize}
 \chapter{Návrh}
 Tato kapitola se podílí na praktické části práce a to především návrhu \textbf{chování agenta}.
-Po nastudování teorie je důležité jasně poupravit cíle práce: budou se porovnávat nejen metody Minimax a Alfa-Beta Řezy s učicím agentem, ale především také Expectimax, který bere v potaz stochastičnost akcí duchů.
+Po nastudování teorie je důležité jasně poupravit cíle práce: budou se porovnávat nejen metody Minimax a Alfa-Beta Řezy s učícím agentem, ale především také Expectimax, který bere v potaz stochastičnost akcí duchů. Tyto algoritmy se budou dále v textu označovat jako "základní algoritmy"
 
 \section{Reflexivní agent a jeho ohodnocovací funkce}
 Aby se měl učící agent s čím srovnat, bylo nutné navrhnout jednoduchého reflexivní agenta pracujícího s jednoduchou ohodnocovací funkcí. Reflexivní agent pouze vnímá aktuální stav hry (hloubka = 1) a jeho ohodnocovací funkce vyhodnocuje stav hry na základě informací o celém stavu hry. Agent se následně podívá na ohodnocení všech přípustných \textit{Akcí} (jít vlevo, vpravo, nahoru, dolů, zastavit se) a pseudonáhodně vybere mezi akcemi s nejlepším ohodnocením. \textbf{Ohodnocovací funkce} se ukázala být jako největší problém reflexivního agenta, neboť neustále narážela na problematické nesnadno vyřešitelné stavy stejného ohodnocení např. stejně vzdálené jídlo od agenta. Prakticky to pak dopadá, že agent \textit{čeká} na ducha, aby se konečně mohl dostat ze zacykleného chování. -IMG- OBRÁZEK Z APLIKACE S VEKTORY VZDÁLENOSTÍ + pozn. o manhattonovské vzdálenosti Ohodnvá ohodnocovací akce tedy využívá manhattonovské vzdálenosti jídla a duchů. Dále stav ducha, zda ho dokáže Ms. Pacman dohonit tzn. kolik mu ještě zbývá kroků ve stavu vystrašenosti (Ms. Pacman snědla power-up) vůči jeho vzdálenosti od Ms.Pacman.
@@ -345,7 +344,7 @@ Aby se měl učící agent s čím srovnat, bylo nutné navrhnout jednoduchého 
 \section{Minimax, AlfaBeta řezy}
 Pro tyto algoritmy bylo nutné vzít v potaz větší počet minimalizujících nepřátel, kteří se v každém tahu dané hloubky střídají s maximalizující Ms. Pacman. Alfabeta i Minimax využívají stejnou nedokonalou vyhodnocovací funkci jako základní reflexivní agent, avšak navíc vyhodnocují stavy až do stanové hloubky/terminální uzlu a následně vrátí nejlepší možnou akci pro svého maximalizačního agenta Ms. Pacman (MinimaxAgent, AlphaBetaAgent).
 \section{Expectimax a lepší ohodnocovací funkce}
-Pro Expectimax byla dále naimplementována vyhodnocovací funkce, která dosáhla lepších výsledků než funkce předchozí. Popis, co je lepší, proč, jak by se to dále dalo vylepšit - například pomocí algoritmů pro prohledávání stavového prostoru.
+Pro Expectimax bude dále naimplementována vyhodnocovací funkce, která by měla dosáhnout lepších výsledků než funkce předchozí. Popis, co je lepší, proč, jak by se to dále dalo vylepšit - například pomocí algoritmů pro prohledávání stavového prostoru.
 
 \section{Aproximační Q-Learning}
 Následující sekce řeší rozvrh práce pro návrh algoritmu učíčícho agenta.
@@ -372,25 +371,39 @@ Poměňování váh vlastností takto může \textbf{maximalizovat odměny} a do
 \chapter{Realizace}
 Tato kapitola realizuje praktickou část práce a to především \textbf{implemetacím různého chování agentů}.
 
-\section{Zvolené prostředky pro experimentování}
-Nejdříve bylo nutné si zvolit programovací jazyk, který by zvládl výpočetní náročnost problematiky vůči vykreslování grafického dema. Zpočátku byl zvolen jazyk Java díky její vysoké míře abstrakce vůči programátorskému myšlení. Nakonec však po sérii experimentování s jazykem se kvůli náročnosti samotné logiky hry vůči GUI a především kvůli efektivnímu zvládnutí rozgenerování všech možných stavů hry a dodržení matematických vzorců, jež byly stanoveny v předchozí teoretické kapitole přešlo k hledání náhradního řešení - například nalezení frameworku, jež řeší podobnou problematiku. Základem pro studii a experimentování s algoritmy nakonec posloužil pythonový framework od UC Berkeley, používaný v jejich výuce Umělé inteligence - ODKAZ. Hlavním důvodem zvolení frameworku bylo především zaměření práce na experimentování s algoritmy umělé inteligence, ne implemetace aplikace. Dalšími důvody je je použití jazyka Python 2.7.5, který též umožňuje objektový přístup, je dobře čitelný a nenáročný - nejen díky těmto kladům se dají dobře pochopit vlastnosti a schéma jednotlivých objektů frameworku.
+\section{Zvolené prostředky}
+Nejdříve bylo nutné si zvolit programovací jazyk, který by zvládl výpočetní náročnost problematiky vůči vykreslování grafického dema. Zpočátku byl zvolen jazyk Java díky její vysoké míře abstrakce vůči programátorskému myšlení. Nakonec však po sérii experimentování s jazykem se kvůli náročnosti samotné logiky hry vůči GUI a především kvůli efektivnímu zvládnutí rozgenerování všech možných stavů hry a dodržení matematických vzorců, jež byly stanoveny v předchozí teoretické kapitole přešlo k hledání náhradního řešení - například nalezení frameworku, jež řeší podobnou problematiku. Základem pro studii a experimentování s algoritmy nakonec posloužil pythonový framework od UC Berkeley, používaný v jejich výuce Umělé inteligence kurzu CS188 - ODKAZ. Hlavním důvodem zvolení frameworku bylo především zaměření práce na experimentování s algoritmy umělé inteligence, ne implemetace aplikace. Dalšími důvodem volby je použití jazyka Python 2.7.5, který též umožňuje objektový přístup, je dobře čitelný a nenáročný - nejen díky těmto kladům se dají dobře pochopit vlastnosti a propojení jednotlivých objektů frameworku. Framework tedy primárně posloužil jako prostředek pro realizaci, sorvnání a zobrazení výsledků jednotlivých algoritmů.
+Pro účely této práce budou v následující sekcích popsány nejdůležitější části aplikace, detailní popis implementace frameworku lze najít v komentářích v kódu.
 
-\section{Schéma aplikace}
-Nejdůležitější částí aplikace je objekt GameState reprezentující \textbf{stav hry}.
-- objektový schéma framework
-Detailní popis implementace frameworku lze pak najít v komentářích v kódu.
-
-\subsection{Reprezentace stavu hry}
-GameState popis a jak s ním pracovat - popis, co jde využít, jak
-Popis výpočtu manhattonovských vzdáleností, proč toto využívat
-MDP (akce,stav)
+\section{Framework a reprezentace stavu hry}
+Pro základní algoritmy je nejdůležitější částí aplikace objekt GameState reprezentující \textbf{stav hry}. GameState dále pracuje s objekty PacmanRules a GhostRules, které zajišťují logiku pro svého agenta(agenty).
+Tento základní objekt tedy obsahuje:
+\begin{itemize}
+\item pozice Ms.Pacman (index = 0) a duchů
+\item pozice zbývajícího jídla v mřížce
+\item pozice zbývajících power-upů v mřížce
+\item pozice zdí v mřížce
+\item počet duchů
+\item možné akce, jež může daný agent provést z aktuálního stavu
+\item schopnost provést akci a vytvořit tak svého následníka (objekt GameState)
+\end{itemize}
+Každý agent dědí z objektu Agent základní metody (např. metoda getAction, jež ho zavazuje přijmout objekt GameSate a vrátit na něj reakci v podobě akce.), avšak vlastní chování je již definováno v konkrétním objektu např. AlphaBetaAgent použí pro své chování algoritmu Alfa-Beta řezy atp.
+Poznámka: Pro výpočet vzdáleností se používá tzv. manhattonovská metrika jako standard pro grid-world problematiku, tato vzdálenost je měřena jako suma rozdílu absolutních vzdáleností koordinát dvou bodů $\left|x1-x2\right|+\left|y1-y2\right|$.
 
 \section{Základní algorimy}
+Jako ukázku lze uvést algoritmus Expectimax, který je z hlediska umělé inteligence nejzajímavější.
+
+\subsection{Framework a MDP}
+jak ty soubory fungují dohromady, kdo co od koho dědí, kde to jde vidět atd
+MDP (akce,stav)
 
 \section{Value Iteration agent}
 - vyuziva MDP
 - pasivní plánovací agent
 
+-vliv discountu = rychlost uceni, livingreward = pohyb a noise = pravdepodobnost akce, vic se riskuje
+
+\section{Q-Learning agent}
 
 \chapter{Experimenty a srovnání agentů}
 blaablabalabalb

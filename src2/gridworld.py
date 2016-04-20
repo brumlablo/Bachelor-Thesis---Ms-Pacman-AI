@@ -505,7 +505,7 @@ if __name__ == '__main__':
             def getQValue(self, state, action):
                 return 0.0
             def getPolicy(self, state):
-                "NOTE: 'random' is a special policy value; don't use it in your code."
+                # random' is a special policy value
                 return 'random'
             def update(self, state, action, nextState, reward):
                 pass

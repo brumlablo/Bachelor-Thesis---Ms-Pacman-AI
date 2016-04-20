@@ -41,29 +41,35 @@ class ValueIterationAgent(ValueEstimationAgent):
         self.mdp = mdp
         self.discount = discount
         self.iterations = iterations
-        self.values = util.Counter() # A Counter is a dict with default 0
+        self.values = util.Counter() # dict with default 0 (used for TERMINAL_STATE type)
+        # values structure is dict with (x,y) grid position: value of the position
+        # e.g. [(0,1):-10.0,(5,3):0.0]
 
-        for k in range(iterations): # actual values = Value_k, counting new values Value_{k+1} = Value_k
-            tmpValues = self.values.copy() # current values V_k
+        st = 0
+        for k in range(iterations): # iterations + 1 for V0 layer
+            futureValues = self.values.copy() # current values V_k
+            print "----------------------------",k,"---------------------------"
             for state in self.mdp.getStates():
+                print "state: ",st,"...",state
                 # legal actions for state
                 actions = self.mdp.getPossibleActions(state)
                 # terminal node test
                 if mdp.isTerminal(state) or len(actions) == 0:
-                    tmpValues[state] = 0
+                    futureValues[state] = 0
                     continue
-                # maximalize = gain best possible action based on chance q-values
+
+                # maximalize = gain best possible VALUE based on chance Q-VALUES
                 value = float("-inf") # V_{k+1}
                 for action in actions:
-                    qvals = 0.0 # suma of q-values
-                    qvals = self.getQValue(state, action)
-                    # same as ...
-                    # for nextState, probability in self.mdp.getTransitionStatesAndProbs(state, action):
-                    #     tmp += probability * (self.mdp.getReward(state, action, nextState) + self.discount * self.getValue(nextState))
-                    if qvals > value: # best value possible
-                        value = qvals
-                tmpValues[state] = value
-            self.values = tmpValues # update values for each state V_{k+1}
+                    print "         action:",action
+                    expectedQValue = 0.0 # suma of q-values = resulting states s'
+                    expectedQValue = self.getQValue(state, action)
+                    if expectedQValue > value: # best value possible of expected rewards
+                        value = expectedQValue
+                print "             newstatevalue: ",value
+                futureValues[state] = value
+                st += 1
+            self.values = futureValues # update values for each state V_{k+1}
 
     def getValue(self, state):
         """
@@ -72,18 +78,30 @@ class ValueIterationAgent(ValueEstimationAgent):
         return self.values[state]
 
 
+    # expected future utility from a chance node = q-state
+    def getQValue(self, state, action):
+        return self.computeQValueFromValues(state, action)
+
     def computeQValueFromValues(self, state, action): #chance node
         """
           Compute the Q-value of action in state from the
           value function stored in self.values.
-
-          probability = transitionFunction(state,action,nextState)
-          Q_k(state) = suma(probability * ( Reward(state,action,nextState) + discountFactor * Value_k(nextState)
         """
         qval = 0.0
+        # probability = transitionFunction(state,action,nextState)
         for nextState,probability in self.mdp.getTransitionStatesAndProbs(state, action):
+            # averaging all nextStates
+            #Q_k(state) = suma(probability * (Reward(state, action, nextState) + discountFactor * Value_k(nextState)
             qval += probability * ( self.mdp.getReward(state,action,nextState) + self.discount * self.getValue(nextState))
         return qval
+
+    # choose best possible action = max node
+    def getPolicy(self, state):
+        return self.computeActionFromValues(state)
+
+    def getAction(self, state):
+        "Returns the policy at the state (no exploration)."
+        return self.computeActionFromValues(state)
 
     def computeActionFromValues(self, state): # max node
         """
@@ -91,11 +109,11 @@ class ValueIterationAgent(ValueEstimationAgent):
           according to the values currently stored in self.values.
 
           Choosing optimal policy (similar to max node in Expectimax)
-          Value*(state) = max action of Q-Value*(state) (state,action,nextState)
-          = = PI*
+          policy* = max action of Q-Value*(state) (state,action,nextState)
         """
         # tuple (action,value)
-        expectedValue = ["", float("-inf")]
+        print "GETTING BEST POLICY"
+        bestPolicy = ["", float("-inf")]
 
         actions = self.mdp.getPossibleActions(state)
         # terminal node
@@ -104,18 +122,7 @@ class ValueIterationAgent(ValueEstimationAgent):
 
         for action in actions:
             tmp = self.getQValue(state,action) # expected value
-            if tmp > expectedValue[1]:
-                expectedValue = (action,tmp)
-        return expectedValue[0]
-
-    # max node
-    def getPolicy(self, state):
-        return self.computeActionFromValues(state)
-
-    # chance node
-    def getQValue(self, state, action):
-        return self.computeQValueFromValues(state, action)
-
-    def getAction(self, state):
-        "Returns the policy at the state (no exploration)."
-        return self.computeActionFromValues(state)
+            if tmp > bestPolicy[1]:
+                bestPolicy = (action,tmp)
+        print "policy - best action returned: ",bestPolicy[0]
+        return bestPolicy[0]
