@@ -178,7 +178,7 @@ Další důležitou vlastností agenta bude schopnost \textit{učit se} \cite{RL
 \end{center}
 \end{figure}
 
-Metody strojového učení \cite{RLIntro}: se dělí dle \textbf{závislosti na modelu } 
+Metody strojového učení \cite{RLIntro}: se dělí dle \textbf{závislosti na modelu}
 \begin{itemize}
 \item (\textit{model-based}) metoda chce empiricky vytvořit model, který již lze řešit pomocí MDP - to se děje na základě průběžného výpočtu očekávaného užitku: 
 \begin{enumerate}
@@ -234,7 +234,7 @@ Problém je opět chybějící přechodová a odměnová funkce ($T,R$), to ře�
 \end{itemize}
 
 \subsection{Q-Learning}
-Dosud se primárně vycházelo z $V$-hodnot, avšak Q-Learning staví na vyhodnocování akcí, tedy využití $Q$-hodnot, takže jediné co je potřeba vědět je aktuální stav a jeho možné akce:
+Dosud se primárně vycházelo z $V$-hodnot, avšak Q-Learning staví na vyhodnocování posloupností akcí do nových stavů, tedy využití $Q$-hodnot. Jediné co je tedy potřeba vědět je aktuální stav a jeho možné akce:
 \begin{displaymath}
 vzorek = \left [ R(s,a(s),s^\prime)+\gamma \max_{a^\prime}Q_{k}(s^\prime,a^\prime) \right]
 \end{displaymath}
@@ -369,7 +369,7 @@ Poté bude především potřeba nalézt co nejvíce \textbf{optimální strateg
 Poměňování váh vlastností takto může \textbf{maximalizovat odměny} a dojít tak lepší strategii, něž byla doposud použita.
 
 \chapter{Realizace}
-Tato kapitola realizuje praktickou část práce a to především \textbf{implemetacím různého chování agentů}.
+Tato kapitola popisuje praktickou část práce a především se zaměřuje na \textbf{implemetace různého chování agentů}.
 
 \section{Zvolené prostředky}
 Nejdříve bylo nutné si zvolit programovací jazyk, který by zvládl výpočetní náročnost problematiky vůči vykreslování grafického dema. Zpočátku byl zvolen jazyk Java díky její vysoké míře abstrakce vůči programátorskému myšlení. Nakonec však po sérii experimentování s jazykem se kvůli náročnosti samotné logiky hry vůči GUI a především kvůli efektivnímu zvládnutí rozgenerování všech možných stavů hry a dodržení matematických vzorců, jež byly stanoveny v předchozí teoretické kapitole přešlo k hledání náhradního řešení - například nalezení frameworku, jež řeší podobnou problematiku. Základem pro studii a experimentování s algoritmy nakonec posloužil pythonový framework od UC Berkeley, používaný v jejich výuce Umělé inteligence kurzu CS188 - ODKAZ. Hlavním důvodem zvolení frameworku bylo především zaměření práce na experimentování s algoritmy umělé inteligence, ne implemetace aplikace. Dalšími důvodem volby je použití jazyka Python 2.7.5, který též umožňuje objektový přístup, je dobře čitelný a nenáročný - nejen díky těmto kladům se dají dobře pochopit vlastnosti a propojení jednotlivých objektů frameworku. Framework tedy primárně posloužil jako prostředek pro realizaci, sorvnání a zobrazení výsledků jednotlivých algoritmů.
@@ -387,27 +387,100 @@ Tento základní objekt tedy obsahuje:
 \item možné akce, jež může daný agent provést z aktuálního stavu
 \item schopnost provést akci a vytvořit tak svého následníka (objekt GameState)
 \end{itemize}
-Každý agent dědí z objektu Agent základní metody (např. metoda getAction, jež ho zavazuje přijmout objekt GameSate a vrátit na něj reakci v podobě akce.), avšak vlastní chování je již definováno v konkrétním objektu např. AlphaBetaAgent použí pro své chování algoritmu Alfa-Beta řezy atp.
+Každý agent dědí z objektu Agent základní metody a proměné (např. proměnné definující základní směry pohybu; metoda getAction, jež zavazuje agenta přijmout objekt GameSate a vrátit na něj reakci v podobě akce.), avšak implementace vlastního chování je již definována v konkrétním objektu (jako override). Např. AlphaBetaAgent implementuje metodu getAction jako algoritmus Alfa-Beta řezy atp.
 Poznámka: Pro výpočet vzdáleností se používá tzv. manhattonovská metrika jako standard pro grid-world problematiku, tato vzdálenost je měřena jako suma rozdílu absolutních vzdáleností koordinát dvou bodů $\left|x1-x2\right|+\left|y1-y2\right|$.
 
 \section{Základní algorimy}
-Jako ukázku lze uvést algoritmus Expectimax, který je z hlediska umělé inteligence nejzajímavější.
+Jako ukázku lze uvést pseudokód algoritmu Expectimax, který je z hlediska porovnání s pokročilými metodami umělé inteligence nejzajímavější.
+-Pseudokód chování Agenta ExpectimaxAgent-:
 
-\subsection{Framework a MDP}
-jak ty soubory fungují dohromady, kdo co od koho dědí, kde to jde vidět atd
-MDP (akce,stav)
+def Expectimax(self, state, agentIndex, depth):
+
+     nová vrstva
+    if agentIndex == self.agentsNum:
+        agentIndex = self.index
+        depth += 1
+
+     jedna se o terminalni uzel?
+    if state.isWin() or state.isLose() or depth == self.depth:
+        return self.evaluationFunction(state)
+
+     Ms. Pacman
+    if agentIndex == self.index:
+        return maximize(state, agentIndex, depth)
+     duchové
+    else:
+        return chanceMinimize(state, agentIndex, depth)
+
+MAXIMALIZAČNÍ UZEL MS. PACMAN
+def maximize(self, state, agentIndex, depth):
+
+     tuple (action,value)
+    value = ["", float("-inf")]
+    for action in state.getLegalActions(agentIndex):
+        tmp = self.Expectimax(state.generateSuccessor(agentIndex, action), agentIndex + 1, depth)
+         getting value
+        if type(tmp) is tuple:
+            tmp = tmp[1]
+        returning tuple with action
+        if tmp > value[1]:
+            value = (action, tmp)
+    return value
+
+UZEL NÁHODNOSTI
+def chanceMinimize(self, state, agentIndex, depth):
+
+     tuple (action,value)
+    expectedValue = ["", 0.0]
+    ghostActions = state.getLegalActions(agentIndex)
+
+     ghost Actions probability
+    probability = {}
+    for action in ghostActions:
+        probability[action] = 1.0 / float(len(ghostActions))
+
+    for action in ghostActions:
+
+        tmp = self.Expectimax(state.generateSuccessor(agentIndex, action), agentIndex + 1, depth)
+         getting value
+        if type(tmp) is tuple:
+            tmp = tmp[1]
+
+        expected action and value
+        expectedValue[0] = action
+        expectedValue[1] += tmp KRAT probability[action]
+    return tuple(expectedValue)
+
+\section{Framework a MDP problematika}
+Následující agenti dále dědí od objektu ValueEstimationAgent (dědící od základní třídy Agent), která navíc přináší následující metody:
+getQValue(state,action)
+getValue(state)
+getPolicy(state)
+
+ValueIteration Agent, který potřebuje pro svoje chování model (přechodová funkce T, odměnová funkce R) a využívá třídu MarkovDecisionProcess.
+
+Abstraktní Reinforcement Agent, který je základním objektem pro strojové učení - obsahuje například metodu update(state, action, nextState, reward) pro updatování nových odhadů Q-hodnot.
+Reinforcement Agent tedy staví na odhadu Q-Hodnot, protože neobsahuje model.
+
+QLearning Agent dále dědí od ReinforcementAgent, PacmanQAgent od Q-Learning Agent a nakonec ApproximateQAgent dědící od PacmanQAgent.
 
 \section{Value Iteration agent}
-- vyuziva MDP
-- pasivní plánovací agent
+Tento agent je pasivní plánovací agent, nejdříve tedy provede veškeré své výpočty a naplánuje si tak optimální posloupnost akcí, které se mají následně provést. Velký vliv na jeho průběh mají především následující faktory:
+koeficient odměny $\gamma$ - čím je koeficient menší, tím se vyhodnocení hodnot zpomaluje a důkladněji se tak prozkoumá více hodnot (výsledná posloupnost akcí můe být například delší, ale optimálnější)
+livingReward = ohodnocení pohybu z jednoho neterminálního stavu do druhého - čím je menší, až například záporná, tím rychleji se agent snaží najít terminální uzel a skončit tak hru/problém
+noise = stochastičnost akce, tedy pravděpodobnost, že se daná akce provede - ovlivňuje, jak často agent riskuje
 
--vliv discountu = rychlost uceni, livingreward = pohyb a noise = pravdepodobnost akce, vic se riskuje
+%http://artint.info/html/ArtInt_227.html
+-PSEUDOKÓD VALUE ITERATION- ++ lepší popis v teorii!!! i s příkladem
 
 \section{Q-Learning agent}
 
 \chapter{Experimenty a srovnání agentů}
-blaablabalabalb
+Agenty lze srovnat nejlépe podle dosaženého herního skóre.
+\section{Srovnání z hlediska skóre}
+\section{Srovnání z hlediska času}
+\section{Výsledky}
 
 \chapter{Závěr}
-Cílem toho semestrálního projektu bylo nastudovat problematiku metod hraní her ve vztahu k učícímu agentovi pro hru Ms. Pacman a navrhnout metodu řešení problému. Ms. Pacman. Nastudování teorie pomohlo především k definici a klasifikaci samotné hry jako, a následném stanovení návrhu řešení problematiky metodou Aproximační Q-Learning. Tato metoda řeší stochastické chování duchů a pomůže výrazně eliminovat problém velké vypočetní náročnosti stavového prostoru Ms. Pacman. Jak si metoda s takto složitou problematikou poradí bude nejlépe vidět při srovnání její efektivity například s metodou Expectimax. Práce mě naučila především nebát se složitějších matematických vzorců a problému a též určitý vhled do možností strojového učení.
+Cílem toho semestrálního projektu bylo nastudovat problematiku metod hraní her ve vztahu k učícímu agentovi pro hru Ms. Pacman a navrhnout metodu řešení problému. Ms. Pacman. Nastudování teorie pomohlo především k definici a klasifikaci samotné hry jako problému umělé inteligence, a následném stanovení návrhu řešení problematiky metodou Aproximační Q-Learning. Tato metoda řeší stochastické chování duchů a pomůže výrazně eliminovat problém velké vypočetní náročnosti stavového prostoru Ms. Pacman. Jak si metoda s takto složitou problematikou poradí bude nejlépe vidět při srovnání její efektivity například s metodou Expectimax. Práce mě naučila především nebát se složitějších matematických vzorců a problémů a též určitý vhled do možností strojového učení.
 

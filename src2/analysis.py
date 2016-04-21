@@ -16,8 +16,7 @@
 # ANALYSIS QUESTIONS #
 ######################
 
-# Set the given parameters to obtain the specified policies through
-# value iteration.
+# value iteration
 
 def question2():
     answerDiscount = 0.9

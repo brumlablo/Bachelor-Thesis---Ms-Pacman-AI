@@ -42,6 +42,7 @@ class Gridworld(mdp.MarkovDecisionProcess):
         """
         self.livingReward = reward
 
+    # non-deterministic behaviour
     def setNoise(self, noise):
         """
         The probability of moving in an unintended direction.

@@ -18,10 +18,9 @@ from learningAgents import ValueEstimationAgent
 
 class ValueIterationAgent(ValueEstimationAgent):
     """
-        * Please read learningAgents.py before reading this.*
-
         A ValueIterationAgent takes a Markov decision process
-        (see mdp.py) on initialization and runs value iteration
+        (mdp.py) on initialization, (gets initial values of
+        transition function and reward) and runs value iteration
         for a given number of iterations using the supplied
         discount factor.
     """
@@ -77,7 +76,6 @@ class ValueIterationAgent(ValueEstimationAgent):
         """
         return self.values[state]
 
-
     # expected future utility from a chance node = q-state
     def getQValue(self, state, action):
         return self.computeQValueFromValues(state, action)
@@ -100,13 +98,14 @@ class ValueIterationAgent(ValueEstimationAgent):
         return self.computeActionFromValues(state)
 
     def getAction(self, state):
-        "Returns the policy at the state (no exploration)."
+        "Returns directly the policy at the state (no exploration)."
         return self.computeActionFromValues(state)
 
     def computeActionFromValues(self, state): # max node
         """
-          The policy is the best action in the given state
-          according to the values currently stored in self.values.
+          FINAL POLICY COMPUTING
+          (policy = the best action in the given state
+          according to the values currently stored in self.values)
 
           Choosing optimal policy (similar to max node in Expectimax)
           policy* = max action of Q-Value*(state) (state,action,nextState)

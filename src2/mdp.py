@@ -14,6 +14,7 @@
 
 import random
 
+# mdp for value iteration agent
 class MarkovDecisionProcess:
 
     def getStates(self):
@@ -29,12 +30,14 @@ class MarkovDecisionProcess:
         """
         abstract
 
+    # posible actions to take from set state
     def getPossibleActions(self, state):
         """
         Return list of possible actions from 'state'.
         """
         abstract
 
+    # transition function
     def getTransitionStatesAndProbs(self, state, action):
         """
         Returns list of (nextState, prob) pairs
@@ -48,6 +51,7 @@ class MarkovDecisionProcess:
         """
         abstract
 
+    # reward function
     def getReward(self, state, action, nextState):
         """
         Get the reward for the state, action, nextState transition.

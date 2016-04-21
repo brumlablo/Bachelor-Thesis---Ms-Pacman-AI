@@ -391,10 +391,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
 
 def betterEvaluationFunction(currentGameState):
     """
-      Your extreme ghost-hunting, pellet-nabbing, food-gobbling, unstoppable
-      evaluation function
-
-      DESCRIPTION: <write something here so we know what you did>
+      ghost-hunting, pellet-nabbing, food-gobbling evaluation function
     """
     if currentGameState.isWin():
         return float("inf")
