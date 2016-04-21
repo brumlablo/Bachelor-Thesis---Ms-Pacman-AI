@@ -74,7 +74,7 @@ class QLearningAgent(ReinforcementAgent):
             tmp = self.getQValue(state, action)  # expected value
             if tmp > actionValue:
                 actionValue = tmp
-        print "policy - best action value returned: ", actionValue
+        #print "policy - best action value returned: ", actionValue
         return actionValue
 
     def getPolicy(self, state):
@@ -99,7 +99,7 @@ class QLearningAgent(ReinforcementAgent):
             elif tmp == bestPolicy[0][1]: # randomness of same valued actions - optimizing
                 bestPolicy.append((action,tmp))
         # bestPolicy.sort()
-        print "policyPairs: ", bestPolicy
+        #print "policyPairs: ", bestPolicy
         return (random.choice(bestPolicy)[0])
 
     def getAction(self, state):
@@ -127,9 +127,9 @@ class QLearningAgent(ReinforcementAgent):
         """
           The parent class calls this to observe a state = action => nextState and reward transition...
           Q-Value update:
-          Q(state,action) = Q(state,action) + alpha(reward+ discount * bestAction' Q(s',a') - Q(s,a))
+          used here: Q(state,action) = Q(state,action) + alpha(reward+ discount * bestAction' Q(s',a') - Q(s,a))
           ==
-          Q(state,action) =  (1-alpha) Q(state,action) + alpha(reward + discount * bestAction' Q(state',action')).
+          alternstive:Q(state,action) =  (1-alpha) Q(state,action) + alpha(reward + discount * bestAction' Q(state',action')).
         """
         self.qValues[(state,action)] = self.getQValue(state,action) + self.alpha * ((reward +
         self.discount * self.getValue(nextState)) - self.qValues[(state,action)])
