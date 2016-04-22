@@ -136,7 +136,7 @@ class QLearningAgent(ReinforcementAgent):
 
 
 class PacmanQAgent(QLearningAgent):
-    "Exactly the same as QLearningAgent, but with different default parameters"
+    "same as QLearningAgent, but with different default parameters"
 
     def __init__(self, epsilon=0.05,gamma=0.8,alpha=0.2, numTraining=0, **args):
         """
@@ -153,7 +153,7 @@ class PacmanQAgent(QLearningAgent):
         args['gamma'] = gamma
         args['alpha'] = alpha
         args['numTraining'] = numTraining
-        self.index = 0  # This is always Pacman
+        self.index = 0  # Ms. Pacman index
         QLearningAgent.__init__(self, **args)
 
     def getAction(self, state):

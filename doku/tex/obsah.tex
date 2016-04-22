@@ -376,7 +376,8 @@ Nejdříve bylo nutné si zvolit programovací jazyk, který by zvládl výpoče
 Pro účely této práce budou v následující sekcích popsány nejdůležitější části aplikace, detailní popis implementace frameworku lze najít v komentářích v kódu.
 
 \section{Framework a reprezentace stavu hry}
-Pro základní algoritmy je nejdůležitější částí aplikace objekt GameState reprezentující \textbf{stav hry}. GameState dále pracuje s objekty PacmanRules a GhostRules, které zajišťují logiku pro svého agenta(agenty).
+Pro algoritmy je nejdůležitější částí frameworku objekt GameState reprezentující \textbf{stav hry}, který lze najít v souboru pacman.py (tento soubor a soubor game.py tvoří samotné jádro frameworku - definují základní chování agentů, možné akce, základní objekt stavového prostoru Grid apod.)
+GameState dále pracuje s objekty PacmanRules a GhostRules, které zajišťují logiku pro svého agenta(agenty).
 Tento základní objekt tedy obsahuje:
 \begin{itemize}
 \item pozice Ms.Pacman (index = 0) a duchů
@@ -387,28 +388,29 @@ Tento základní objekt tedy obsahuje:
 \item možné akce, jež může daný agent provést z aktuálního stavu
 \item schopnost provést akci a vytvořit tak svého následníka (objekt GameState)
 \end{itemize}
-Každý agent dědí z objektu Agent základní metody a proměné (např. proměnné definující základní směry pohybu; metoda getAction, jež zavazuje agenta přijmout objekt GameSate a vrátit na něj reakci v podobě akce.), avšak implementace vlastního chování je již definována v konkrétním objektu (jako override). Např. AlphaBetaAgent implementuje metodu getAction jako algoritmus Alfa-Beta řezy atp.
+Každý agent dědí ze základního objektu Agent povinnou metodu getAction (metoda, jež zavazuje agenta přijmout objekt GameSate a vrátit na něj reakci v podobě akce.) a proměnnou index definující index agenta (Ms. Pacman má tradičně index = 0).
+Implementace vlastního chování konkrétního agenta je již definována v jeho konkrétním objektu (jako override). Např. AlphaBetaAgent přetěžuje metodu getAction jako algoritmus Alfa-Beta řezy atp.
 Poznámka: Pro výpočet vzdáleností se používá tzv. manhattonovská metrika jako standard pro grid-world problematiku, tato vzdálenost je měřena jako suma rozdílu absolutních vzdáleností koordinát dvou bodů $\left|x1-x2\right|+\left|y1-y2\right|$.
 
 \section{Základní algorimy}
-Jako ukázku lze uvést pseudokód algoritmu Expectimax, který je z hlediska porovnání s pokročilými metodami umělé inteligence nejzajímavější.
+Jako ukázku lze uvést pseudokód algoritmu Expectimax, který je z hlediska porovnání s pokročilými metodami umělé inteligence nejzajímavější. Algoritmus musí mít přehled, která strana je na tahu na základě indexu agenta a také o kolikátou vrstvu střídání Ms. Pacman vs. (1-n) duchů se jedná - to zajišťuje proměnná depth.
 -Pseudokód chování Agenta ExpectimaxAgent-:
 
 def Expectimax(self, state, agentIndex, depth):
 
-     nová vrstva
+    nová vrstva
     if agentIndex == self.agentsNum:
         agentIndex = self.index
         depth += 1
 
-     jedna se o terminalni uzel?
+    jedna se o terminalni uzel?
     if state.isWin() or state.isLose() or depth == self.depth:
         return self.evaluationFunction(state)
 
-     Ms. Pacman
+    Ms. Pacman
     if agentIndex == self.index:
         return maximize(state, agentIndex, depth)
-     duchové
+    duchové
     else:
         return chanceMinimize(state, agentIndex, depth)
 
@@ -473,8 +475,10 @@ noise = stochastičnost akce, tedy pravděpodobnost, že se daná akce provede -
 %http://artint.info/html/ArtInt_227.html
 -PSEUDOKÓD VALUE ITERATION- ++ lepší popis v teorii!!! i s příkladem
 
-\section{Q-Learning agent}
+Vzhledem k vypočetní náročnosti metody si jej lze vyzkoušet především na demonstrativní mřížce definovavé v souboru gridworld.py. Například pomocí příkazu... kde yohle definuje tohle atd
 
+\section{Q-Learning agent}
+Jak již bylo řešeno, tento agent si musí model odhadnout sám. Využívá k tomu především vhodný poměr prozkoumávání a uplatňování dosud zjištěného odhadu optimální akce z daného stavu (exporation/exploitation ratio). Tento poměr je dán parametrem $\epsilon-greedy$, který určuje náhodnost, zda se má provést optimální, či náhodná akce. Dalším důležitým faktorem je alpha($\alpha$), která ovlivňuje především rychlost učení. Čím větší alpha, tím víc se dává důraz na nové vzorky.
 \chapter{Experimenty a srovnání agentů}
 Agenty lze srovnat nejlépe podle dosaženého herního skóre.
 \section{Srovnání z hlediska skóre}
