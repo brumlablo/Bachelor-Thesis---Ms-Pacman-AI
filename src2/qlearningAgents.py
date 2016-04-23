@@ -159,8 +159,7 @@ class PacmanQAgent(QLearningAgent):
     def getAction(self, state):
         """
         Simply calls the getAction method of QLearningAgent and then
-        informs parent of action for Pacman.  Do not change or remove this
-        method.
+        informs parent of action for Pacman.
         """
         action = QLearningAgent.getAction(self,state)
         self.doAction(state,action)
@@ -170,10 +169,6 @@ class PacmanQAgent(QLearningAgent):
 class ApproximateQAgent(PacmanQAgent):
     """
        ApproximateQLearningAgent
-
-       You should only have to overwrite getQValue
-       and update.  All other QLearningAgent functions
-       should work as is.
     """
     def __init__(self, extractor='IdentityExtractor', **args):
         self.featExtractor = util.lookup(extractor, globals())()
@@ -188,9 +183,10 @@ class ApproximateQAgent(PacmanQAgent):
           Should return Q(state,action) = w * featureVector
           where * is the dotProduct operator
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
-
+        qvalue = 0.0
+        for feature in self.featExtractor.getFeatures(state, action):
+            qvalue += self.getWeights()[feature] * feature
+        return qvalue
     def update(self, state, action, nextState, reward):
         """
            Should update your weights based on transition
