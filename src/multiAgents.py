@@ -391,10 +391,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
 
 def betterEvaluationFunction(currentGameState):
     """
-      Your extreme ghost-hunting, pellet-nabbing, food-gobbling, unstoppable
-      evaluation function
-
-      DESCRIPTION: <write something here so we know what you did>
+      ghost-hunting, pellet-nabbing, food-gobbling evaluation function
     """
     if currentGameState.isWin():
         return float("inf")
@@ -449,7 +446,7 @@ def betterEvaluationFunction(currentGameState):
     if (len(ghostDists) > 0):
         ghostDists.sort()
         nearestGhostD = ghostDists[0]
-        if nearestGhostD < 4: # beware of too close ghost
+        if nearestGhostD < 4: # beware of the too close ghost
             nearestGhostD -= 5
         ghostFactor += nearestGhostD  # closer the closest ghost is, lower the value is
 
