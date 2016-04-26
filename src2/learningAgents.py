@@ -126,8 +126,6 @@ class ReinforcementAgent(ValueEstimationAgent):
             Called by environment to inform agent that a transition has
             been observed. This will result in a call to self.update
             on the same arguments
-
-            NOTE: Do *not* override or call this function
         """
         self.episodeRewards += deltaReward
         self.update(state,action,nextState,deltaReward)

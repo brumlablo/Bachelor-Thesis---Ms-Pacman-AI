@@ -236,7 +236,7 @@ Problém je opět chybějící přechodová a odměnová funkce ($T,R$), to ře�
 \subsection{Q-Learning}
 Dosud se primárně vycházelo z $V$-hodnot, avšak Q-Learning staví na vyhodnocování posloupností akcí do nových stavů, tedy využití $Q$-hodnot. Jediné, co je tedy potřeba vědět je aktuální stav a jeho možné akce \cite{RLIntro}:
 \begin{displaymath}
-vzorek = \left [ R(s,a(s),s^\prime)+\gamma \max_{a^\prime}Q_{k}(s^\prime,a^\prime) \right]
+vzorek = \left [ R(s,a,s^\prime)+\gamma \max_{a^\prime}Q_{k}(s^\prime,a^\prime) \right]
 \end{displaymath}
 Následně se provede aktualizace (update) TD učení:
 \begin{displaymath}
@@ -249,14 +249,14 @@ $\alpha$ nyní představuje rychlost učení (\textit{learning rate}).
 \begin{enumerate}
 \item -POZOR NA PRAVY OKRAJ - ZAROVNANI-navštiv nový uzel a ze vzorku $(s,a,s^\prime,r)$ vypočti novou hodnotu jeho odhadu $Q_{k+1}(s,a)$ jako:
 \newline
-průměr očekávaných užitků akcí stavu $T\:*\:$ (okamžitá odměna $+$ nejlepší možná $Q$-hodnota následníka), tedy:
+průměr očekávaných užitků akcí stavu $T\:*\:$ (okamžitá odměna $+$ nejlepší možná $Q$-hodnota následníka $Q_{k}(s,a)$), tedy:
 \begin{displaymath}
-Q_{k+1}(s,a) \leftarrow \sum_{s^\prime} T(s,a,s^\prime) \left[ R(s,a,s^\prime) + \gamma \max_a^\prime Q_k(s^\prime,a^\prime)\right]
+Q_{k+1}(s,a) \leftarrow \sum_{s^\prime} T(s,a,s^\prime) \left[ R(s,a,s^\prime) + \gamma \max_{a^\prime} Q_k(s^\prime,a^\prime)\right]
 \end{displaymath}
-průměr $T$ a hodnoty odměn se postupně počítají na základě akcí, algoritmus se tedy blíží následující rovnici:
+průměr $T$ a hodnoty odměn $R$ se postupně počítají na základě akcí (nejsou zpočátku známy), algoritmus se tedy blíží následující rovnici:
 
 \begin{displaymath}
-Q(s,a) \approx r + \gamma \max_{a^\prime}Q_{k}(s^\prime,a^\prime)
+Q(s,a) \approx r + \gamma \max_{a^\prime}Q(s^\prime,a^\prime)
 \end{displaymath}
 $r$ je přímá odměna ze stavu
 
@@ -265,19 +265,19 @@ $r$ je přímá odměna ze stavu
  Q(s,a) \leftarrow  Q(s,a) + \alpha \left [ r + \gamma \max_{a^\prime} Q(s^\prime,a^\prime) \right]
 \end{displaymath}
 \end{enumerate}
-Q-Learning konverguje k optimální strategii, i když následuje posloupnost neoptimálních akcí. Tento jev se nazývá \textit{off-policy learning}.
+Q-Learning konverguje k optimální strategii, i když následuje posloupnost neoptimálních akcí. Tento jev se nazývá \textit{off-policy learning} -ZDROJ-.
 Jak ale agent vybírá, kterou akci provede, aby maximalizoval svůj užitek z tréninku? Je nutné zvolit dobrý poměr mezi zjišťováním terénu (\textit{exporation}) a využíváním již zjištěných dobrých strategií (\textit{exploitation}). Dobrý poměr lze řešit několika způsoby -ZDROJ-:
 \begin{itemize}
 \item zavedení koeficientu $\varepsilon-greedy$ pro výběr náhodných akcí. Výhodné je ovšem koeficient časem zmenšovat, aby nedocházelo k nelogičnostem akcí.
-\item využití explorační funkce, aby se prozkoumaly stavy, jejichž špatná hodnota ještě není úplně jasná (málo výskytů). Nakonec s tímto skončit, výsledný Q-Update potom vypadá:
+\item využití \textbf{explorační funkce}, která bere v potaz nejen budoucí užitek stavu $U$, ale i množství navštívění stavu $N$, tak aby se prozkoumaly stavy, jejichž špatná hodnota ještě není úplně jasná (málo výskytů). Funkce tedy snižuje důležitost opakujících se stavů a dává větší důraz na neprozkoumané stavy. Nakonec s tímto skončit, výsledný Q-Update potom vypadá:
 \begin{displaymath}
 Q(s,a) \leftarrow_\alpha R(s,a,s^\prime) + \gamma \max_{a^\prime} f(Q(s^\prime,a^\prime),N(s^\prime,a^\prime))\
 \end{displaymath}
 Q-Update se následně propaguje dál.
 \end{itemize}
-Novým pojmem pro metody posilovaného učení je \textbf{lítost} (\textit{regret}) jako míra toho, kolik mě stály všechny chyby během tréninku (rozdíl mezi očekávanými odměnami a optimálními odměnami). Je snaha tuto míru minimalizovat, tedy se vlastně optimálně učit optimální řešení daného problému.
+Novým pojmem pro metody posilovaného učení je \textbf{lítost} (\textit{regret}) jako míra toho, kolik mě stály všechny chyby během tréninku (rozdíl mezi očekávanými odměnami a optimálními odměnami). Je snaha tuto co nejvíce míru minimalizovat (optimálně se i učit optimální řešení daného problému).
 
-\subsection{Approximate Q-Learning}
+\subsection{Approximační Q-Learning}
 Zatímco základní Q-Learning pomohl zbavit se zbytečného přepočítávání hodnot, stále je potřeba si neustále udržovat tabulku všech $Q$-hodnot. Pro složitou úlohu jakou je Ms. Pacman je tato velká prostorová složitost stavového prostoru stále nevhodná. Z toho důvodu je potřeba \textbf{generalizovat}: naučit se Q-hodnoty malého množství tréninkových stavů a hodnoty generalizovat na podobných situacích. To je důležitá myšlenka metody aproximační Q-Learning a potažmo i strojového učení \cite{RLAprox}:
 \newline
 popsání stavu pomocí vektoru vlastností (\textit{properties}), vlastosti jsou funkce ze stavů do reálných čísel (např. 0,1), které zachycují důležité vlastnosti stavu. Následně lze tyto vlastnosti ohonodnotit \textbf{váhou} (\textit{weight}) a sesavit lineární rovnice \cite{RLAprox}:
@@ -287,7 +287,7 @@ V(s) = w_1f_1(s) + w_2f_2(s) + \dots + w_nf_n(s)
 \begin{displaymath}
 Q(s,a) = w_1f_1(s,a) + w_2f_2(s,a) + \dots + w_nf_n(s,a)
 \end{displaymath}
-Nevýhoda takové generalizace je ale fakt, že je potřeba stanovit co nejlepší vektor vlastností, tak aby se hodnoty rozdílných stavů nepodobaly.
+Nevýhoda takové generalizace je ale fakt, že je potřeba stanovit co nejlepší vektor vlastností tak, aby se hodnoty rozdílných stavů nepodobaly.
 \subsubsection{Aproximační Q-Learning postup}
 
 \begin{enumerate}
@@ -307,9 +307,9 @@ w_i(s) \leftarrow w_i + \alpha \left [ r + \gamma \max_{a^\prime}Q(s^\prime,a^\p
 \end{displaymath}
 kde:
 \begin{itemize}
-	\item $\alpha \left [ r + \gamma \max_{a^\prime}Q(s^\prime,a^\prime)\right] $ reprezentuje cíl (maximální), kterého se snaží daný stav dosáhnout
-	\item $\alpha \left [ Q(s^\prime,a^\prime)\right]$ předpokládaná Q-hodnota dané akce $a$ daného stavu $s$
-	\item $f_i(s,a)$ reprezentuje lineární funkci, jejíž rozdíl je aproximován\footnote{K aproximaci se používá obecná \textbf{Metoda nejmenších čtverců, tzv. lineární regrese}}, což napomáhá možnosti využití i nelineárních funkcí ve vektoru vlastností. \newline
+	\item $\left [ r + \gamma \max_{a^\prime}Q(s^\prime,a^\prime)\right] $ reprezentuje cíl (maximální), kterého se snaží daný stav dosáhnout (nejlepší odhad Q-hodnoty následujícího stavu)
+	\item $\left [ Q(s,a)\right]$ vzorek aktuálního stavu
+	\item $f_i(s,a)$ lineární funkce, jejíž rozdíl vzorků je aproximován\footnote{K aproximaci se používá obecná \textbf{Metoda nejmenších čtverců, tzv. lineární regrese}}, což napomáhá možnosti využití i nelineárních funkcí ve vektoru vlastností. Funkce reflektuje předpoklad odhadu Q-hodnoty následujícího stavu\newline
 	Zjednodušeně řečeno např. u Ms. Pacman: Pokud Ms. Pacman narazí do ducha, zvětší se váha situace ohrožení Ms. Pacman duchem. Pokud se tedy stane nějaká pozitivní akce, pozitivní váha zvětší hodnoty vlastností ve vektoru vlastností a naopak.
 \end{itemize}
 
@@ -346,19 +346,28 @@ Pro tyto algoritmy bylo nutné vzít v potaz větší počet minimalizujících 
 Pro Expectimax agenta bude dále naimplementována vyhodnocovací funkce, která by měla dosáhnout lepších výsledků než funkce předchozích agentů. Popis, co je lepší, proč, jak by se to dále dalo vylepšit - například pomocí algoritmů pro prohledávání stavového prostoru.
 
 \section{Value Iteration agent}
-DÁL POPSAT, NEBO STACI JEN REALIZACE???
+Tento agent je pasivní plánovací agent, nejdříve tedy provede veškeré své výpočty pomocí daného modelu světa a naplánuje si tak optimální posloupnost akcí, které se mají následně provést.
+Z vypočetních a názorných důvodů, bude tento agent zobrazen výhradně formou již zmíněného \textbf{gridworld} problému (demonstrativní mřížka definovaná v souboru gridworld.py, na obr. XYZ)
+Avšak určení nové hodnoty stavu $V$ poslouží i pro Q-Learningového agenta.
+
+Velký vliv na jeho průběh mají především následující faktory:
+koeficient odměny $\gamma$ - čím je koeficient menší, tím se vyhodnocení hodnot zpomaluje a důkladněji se tak prozkoumá více hodnot (výsledná posloupnost akcí může být například delší, ale optimálnější)
+livingReward = ohodnocení pohybu z jednoho neterminálního stavu do druhého - čím je menší, až například záporná, tím rychleji se agent snaží najít terminální uzel a skončit tak hru/problém
+noise = stochastičnost akce, tedy pravděpodobnost, že se daná akce provede - ovlivňuje, jak často agent riskuje
+
+DÁL POPSAT, NEBO STACI JEN PSEUDOKOD REALIZACE???
+
 \section{Q-Learning}
-Hlavní náplní agenta je sestavit tabulku Q-hodnot akcí ke každému stavu ve hře a následně z ních po stanoveném počtu iterací určit optimální strategii. STANOVENÍ ALFY,EPSILONU ATD...
+Hlavní náplní agenta je sestavit tabulku Q-hodnot každému páru (akce, stav) ve hře a následně z ních po stanoveném počtu iterací určit optimální strategii. Z názorných důvodů bude tento agent zobrazen formou \textbf{gridworld} problému a dále i ve hře Ms. Pacman.
+STANOVENÍ ALFY,EPSILONU ATD...
 STACI JEN REALIZACE ALGORITMU?
 \section{Aproximační Q-Learning}
-Důležitou částí návrhu řešení tohoto agenta je kvalitně definovat \textbf{vektor vlastností}, který by měl korektně předpovídat $Q-hodnoty$ jednotlivých stavů:
+Důležitou částí návrhu řešení tohoto agenta je kvalitně definovat \textbf{vektor vlastností} (feature vector), který by měl korektně předpovídat $Q-hodnoty$ jednotlivých párů $(stav,akce)$:
 \begin{itemize}
-\item vzdálenost nejbližšího ducha
+\item vzdálenost nejbližšího ducha a jeho stav
 \item vzdálenost nejbližší kuličky jídla
-\item vzdálenost nejbližšího power-upu/vzdálenost nejbližšího ducha
+\item vzdálenost nejbližšího power-upu
 \item počet duchů
-\item je Ms. Pacman v rohu?
-\item lze ducha sníst a je do vzdálenosti 4 políček?
 \end{itemize}
 Následně se stanoví návrh aproximační funkce vektoru na základě váhy každé vlastnosti.
 
@@ -400,6 +409,7 @@ Pro srovnání s algoritmy byl implementován tento základní typ agenta. Nejv�
 
 \section{Základní algorimy}
 Jako ukázku lze uvést pseudokód algoritmu Expectimax, který je z hlediska porovnání s pokročilými metodami umělé inteligence nejzajímavější. Algoritmus musí mít přehled, která strana je na tahu na základě indexu agenta a také o kolikátou vrstvu střídání Ms. Pacman vs. (1-n) duchů se jedná - to zajišťuje proměnná depth.
+\newline
 -Pseudokód chování Agenta ExpectimaxAgent-:
 
 def Expectimax(self, state, agentIndex, depth):
@@ -460,36 +470,39 @@ def chanceMinimize(self, state, agentIndex, depth):
     return tuple(expectedValue)
 
 \section{Framework a MDP problematika}
-Následující agenti dále dědí od objektu ValueEstimationAgent (dědící od základní třídy Agent), která navíc přináší následující metody:
-getQValue(state,action)
-getValue(state)
-getPolicy(state)
+Hlavním objektem je ValueEstimationAgent (dědící od základní třídy Agent). Tento agent slouží především pro propojení prostředí problému (Ms. Pacman, gridworld) s $Q$-hodnotami párů (stav,akce), dále propojení stavu s jeho hodnotou ($V$) a nakonec propojení výsledných hodnot s nalezenou optimální strategiií.
+Následující agenti od něj dále dědí následující základní metody:
+\begin{itemize}
+\item getQValue(state,action) - vrací Q-hodnotu páru (stav,akce)
+\item getValue(state) - vrací hodnotu stavu (po vybrání nejlepší možné akce)
+\item getPolicy(state) - vrací nejlepší možnou akci z daného stavu
+\end{itemize}
+\textbf{ValueIterationAgent} navíc potřebuje pro svoje chování model (přechodová funkce T, odměnová funkce R) a využívá pro to třídu MarkovDecisionProcess. MarkovDecisionProcess napojuje ve své metodě getTransitionStatesAndProbs(state, action) problematiku gridworldu na model, vrací tedy list párů $((s,a,s^\prime),T(s,a,s^\prime))$, tedy (následující možný stav z aktuálního stavu,jeho přechodová funkce = pravděpodobnost).
+\newline
+Abstraktní \textbf{ReinforcementAgent}, který je základním objektem pro agenty strojového učení, stará se o chování agenta během průbehu jednotlivých epizod, dále řeší vstupní argumenty a v případě Ms. Pacman o průběžný a finální výpis. Důležitými metodami jsou:
+\begin{itemize}
+\item observeTransition(state,action,nextState,deltaReward) -  voláno prostředím, které informuje agenta, že je získána nová hodnota přechodové funkce
+\item update(state, action, nextState, reward) - updatování nových odhadů Q-hodnot
+\end{itemize}
+ReinforcementAgent staví na odhadu Q-Hodnot, protože neobsahuje model a je rodičem objektu řešící Q-Learning na gridworld problém \textbf{QLearningAgent}. Podobný agent, avšak s odlišnými vstupními parametry pro Ms. Pacman jsou \textbf{PacmanQAgent} a nakonec dále dědící \textbf{ApproximateQAgent}, který implementuje algoritmus Aproximační Q-learning a vyuřžívá u toho třídy FeatureExtractor pro implementaci vektoru vlastností pro Ms. Pacman.
 
-ValueIteration Agent, který potřebuje pro svoje chování model (přechodová funkce T, odměnová funkce R) a využívá třídu MarkovDecisionProcess.
-
-Abstraktní Reinforcement Agent, který je základním objektem pro strojové učení - obsahuje například metodu update(state, action, nextState, reward) pro updatování nových odhadů Q-hodnot.
-Reinforcement Agent tedy staví na odhadu Q-Hodnot, protože neobsahuje model.
-
-QLearning Agent dále dědí od ReinforcementAgent, PacmanQAgent od Q-Learning Agent a nakonec ApproximateQAgent dědící od PacmanQAgent.
-
-\section{Value Iteration agent}
-Tento agent je pasivní plánovací agent, nejdříve tedy provede veškeré své výpočty a naplánuje si tak optimální posloupnost akcí, které se mají následně provést. Velký vliv na jeho průběh mají především následující faktory:
-koeficient odměny $\gamma$ - čím je koeficient menší, tím se vyhodnocení hodnot zpomaluje a důkladněji se tak prozkoumá více hodnot (výsledná posloupnost akcí můe být například delší, ale optimálnější)
-livingReward = ohodnocení pohybu z jednoho neterminálního stavu do druhého - čím je menší, až například záporná, tím rychleji se agent snaží najít terminální uzel a skončit tak hru/problém
-noise = stochastičnost akce, tedy pravděpodobnost, že se daná akce provede - ovlivňuje, jak často agent riskuje
-
+\section{Value Iteration agent (ValueIterationAgent)}
 %http://artint.info/html/ArtInt_227.html
--PSEUDOKÓD VALUE ITERATION- ++ lepší popis v teorii!!! i s příkladem
+-PSEUDOKÓD VALUE ITERATION???- ++ lepší popis v teorii!!! i s příkladem
 
-Vzhledem k vypočetní náročnosti metody si jej lze vyzkoušet především na demonstrativní mřížce definovavé v souboru gridworld.py. Například pomocí příkazu... kde yohle definuje tohle atd
+\section{Q-Learning agenti (QLearningAgent,PacmanQAgent)}
+Jak již bylo řešeno, tento agent si musí model odhadnout sám. Využívá k tomu především vhodný poměr prozkoumávání a uplatňování dosud zjištěného odhadu optimální akce z daného stavu (exporation/exploitation ratio). Tento poměr je dán parametrem $\epsilon-greedy$, který určuje náhodnost, zda se má provést optimální (pravděpodobnost $1-\epsilon$), či náhodná akce (pravděpodobnost $\epsilon$). Čím je $\epsilon-greedy$ větší, tím pravděpodobněji se agent chová dle své akuální optimální akce. Dalším důležitým faktorem je alfa($\alpha$), která ovlivňuje především rychlost učení. Čím je větší alfa, tím víc se dává důraz na nové vzorky.
 
-\section{Q-Learning agent}
-Jak již bylo řešeno, tento agent si musí model odhadnout sám. Využívá k tomu především vhodný poměr prozkoumávání a uplatňování dosud zjištěného odhadu optimální akce z daného stavu (exporation/exploitation ratio). Tento poměr je dán parametrem $\epsilon-greedy$, který určuje náhodnost, zda se má provést optimální, či náhodná akce. Dalším důležitým faktorem je alpha($\alpha$), která ovlivňuje především rychlost učení. Čím větší alpha, tím víc se dává důraz na nové vzorky.
+\section{Aproximační Q-Learning agent (ApproximateQAgent)}
+
+-PSEUDOKOD BETTERFEATUREXTRACTOR-
+
 \chapter{Experimenty a srovnání agentů}
 Agenty lze srovnat nejlépe podle dosaženého herního skóre.
 \section{Srovnání z hlediska skóre}
 \section{Srovnání z hlediska času}
 \section{Výsledky}
+učící křivka (x:skóre,y:počet tréninku)
 
 \chapter{Závěr}
 -PŘEPSAT-

@@ -89,7 +89,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         # probability = transitionFunction(state,action,nextState)
         for nextState,probability in self.mdp.getTransitionStatesAndProbs(state, action):
             # averaging all nextStates
-            #Q_k(state) = suma(probability * (Reward(state, action, nextState) + discountFactor * Value_k(nextState)
+            # Q_k(state) = suma(probability * (Reward(state, action, nextState) + discountFactor * Value_k(nextState)
             qval += probability * ( self.mdp.getReward(state,action,nextState) + self.discount * self.getValue(nextState))
         return qval
 
@@ -123,5 +123,5 @@ class ValueIterationAgent(ValueEstimationAgent):
             tmp = self.getQValue(state,action) # expected value
             if tmp > bestPolicy[1]:
                 bestPolicy = (action,tmp)
-        print "policy - best action returned: ",bestPolicy[0]
+        #print "policy - best action returned: ",bestPolicy[0]
         return bestPolicy[0]
