@@ -332,7 +332,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
             if isinstance(tmp, list):
                 tmp = tmp[1]
             # returning pair [action,value]
-            if tmp > value[1]:
+            if tmp >= value[1]:
                 value = [action,tmp]
         print "max: ", value, " agent: ", agentIndex
         return value
