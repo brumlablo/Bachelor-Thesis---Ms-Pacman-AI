@@ -324,6 +324,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         # pair (action,value)
         value = ["", float("-inf")]
         for action in state.getLegalActions(agentIndex):
+
             if action == Directions.STOP:
                 continue
 
@@ -334,8 +335,8 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
             # returning pair [action,value]
             if tmp >= value[1]:
                 value = [action,tmp]
-        print "max: ", value, " agent: ", agentIndex
-        return value
+        #print "max: ", value, " agent: ", agentIndex
+        return list(value)
 
     def chanceMinimize(self, state, agentIndex, depth):
 
@@ -367,11 +368,11 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
             try:
                 expectedValue[1] += tmp * probability[action]
             except:
-                 print "-----------------------PROBLEM!!!-------------------------"
-                 print "tmp: ",tmp,"probability[action]: ",probability[action],"ev[1]: ",expectedValue[1], "action: ",action, " agent: ", agentIndex, "depth: ", depth
-                 print "----------------------------------------------------------"
+                 # print "-----------------------PROBLEM!!!-------------------------"
+                 # print "tmp: ",tmp,"probability[action]: ",probability[action],"ev[1]: ",expectedValue[1], "action: ",action, " agent: ", agentIndex, "depth: ", depth
+                 # print "----------------------------------------------------------"
                  pass
-        print "minexpval: ", expectedValue, " agent: ", agentIndex
+        #print "minexpval: ", expectedValue, " agent: ", agentIndex
         return list(expectedValue)
 
     def getAction(self, gameState):
@@ -383,7 +384,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         """
         self.agentsNum = gameState.getNumAgents()
         value = self.Expectimax(gameState, self.index, 0)
-        print "FINAL ACTION: ",value[0]
+        #print "FINAL ACTION: ",value[0]
         return value[0]
 
 
