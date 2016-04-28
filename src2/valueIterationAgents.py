@@ -47,9 +47,9 @@ class ValueIterationAgent(ValueEstimationAgent):
         st = 0
         for k in range(iterations): # iterations + 1 for V0 layer
             futureValues = self.values.copy() # current values V_k
-            print "----------------------------",k,"---------------------------"
+            #print "----------------------------",k,"---------------------------"
             for state in self.mdp.getStates():
-                print "state: ",st,"...",state
+                #print "state: ",st,"...",state
                 # legal actions for state
                 actions = self.mdp.getPossibleActions(state)
                 # terminal node test
@@ -60,12 +60,12 @@ class ValueIterationAgent(ValueEstimationAgent):
                 # maximalize = gain best possible VALUE based on chance Q-VALUES
                 value = float("-inf") # V_{k+1}
                 for action in actions:
-                    print "         action:",action
+                    #print "         action:",action
                     expectedQValue = 0.0 # suma of q-values = resulting states s'
                     expectedQValue = self.getQValue(state, action)
                     if expectedQValue > value: # best value possible of expected rewards
                         value = expectedQValue
-                print "             newstatevalue: ",value
+                #print "             newstatevalue: ",value
                 futureValues[state] = value
                 st += 1
             self.values = futureValues # update values for each state V_{k+1}
@@ -111,7 +111,7 @@ class ValueIterationAgent(ValueEstimationAgent):
           policy* = max action of Q-Value*(state) (state,action,nextState)
         """
         # tuple (action,value)
-        print "GETTING BEST POLICY"
+        #print "GETTING BEST POLICY"
         bestPolicy = ["", float("-inf")]
 
         actions = self.mdp.getPossibleActions(state)

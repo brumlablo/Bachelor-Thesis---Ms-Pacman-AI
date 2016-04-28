@@ -534,8 +534,6 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         sys.exit(0)
 
-
-
     # FIGURE OUT WHAT TO DISPLAY EACH TIME STEP (IF ANYTHING)
     displayCallback = lambda x: None
     if not opts.quiet:
@@ -553,6 +551,7 @@ if __name__ == '__main__':
     # FIGURE OUT WHETHER TO WAIT FOR A KEY PRESS AFTER EACH TIME STEP
     pauseCallback = lambda : None
     if opts.pause:
+        pauseCallback = lambda : display.pause()
         pauseCallback = lambda : display.pause()
 
     # FIGURE OUT WHETHER THE USER WANTS MANUAL CONTROL (FOR DEBUGGING AND DEMOS)

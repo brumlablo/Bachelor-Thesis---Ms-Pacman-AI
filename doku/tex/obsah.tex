@@ -320,7 +320,7 @@ kde:
 \textit{Ms. Pacman} je arkádová hra z roku 1982, která vylepšuje původní koncept hry Pacman. Hra je obohacena o nový design hlavní postavy, mapy a především implementuje lepší umělou inteligenci nepřátel. Hlavní postavou ovládanou hráčem je nyní Ms. Pacman, nepřátelé zůstávají v podobě 4 barevných duchů. Cílem hry je dosáhnout co největšího skóre pojídáním kuliček, duchů (časově omezené; po snězení speciální větší kuličky tzv. power-upu), nebo ovoce.
 Zvýšení obtížnosti oproti Pacmanovi spočívá především v \textbf{opuštění deterministického chování duchů}, čímž pádem nelze předpovídat jejich chování. Tento fakt spolu se složitostí hry jsou hlavními faktory proč se na hru zaměřit z hlediska strojového učení.
 \section{Pravidla}
-Pro účely této práce se bere v potaz zjednodušení původní hry na vizuální demo tak, aby byla dobře vidět účinnost jednotlivých algoritmů a nebyly příliš vysoké nároky na výpočetní výkon. Demo není rozděleno na levely, odehrává se na zvolené mapě a je založeno na umělé inteligenci obou stran (Ms. Pacman vs 2 duchové). Cíl Ms. Pacman je maximalizovat skóre na aktuální mapě, zatímco cíl nepřátel je její skóre minimalizovat. Stochastické chování nepřátel je simulováno tak, aby co nejvíce odpovídalo svému vzoru (zdrojové kódy hry nejsou veřejné, tudíž nelze simulovat chování duchů naprosto stejně jako v originálu). Duchové se snaží chytit a zabít Ms. Pacman. Pokud se jim to povede, hra končí (skóre -500 bodů). Skóre Ms. Pacman se navyšuje jezením jídla (skóre +10bodů za jednu kuličku), power-upů a následným jezením duchů (skóre +200 bodů za každého ducha) po omezený čas trvání power-upu. Bonusová ovoce se neberou v potaz. Skóre se snižuje po dobu chození Ms. Pacman po bludišti bez jezení ovoce/duchů. Mapy se též liší, jsou menší a obsahují pro umělou inteligenci Ms. Pacman problémová zákoutí, jako větší neohraničené plochy atp. Ms. Pacman a duchové mají stejnou rychlost. Tato zjednodušení slouží především ke snížení vypočetní náročnosti algorimů na běžně dostupný hardware.
+Pro účely této práce se bere v potaz zjednodušení původní hry na vizuální demo tak, aby byla dobře vidět účinnost jednotlivých algoritmů a nebyly příliš vysoké nároky na výpočetní výkon. Demo není rozděleno na levely, odehrává se na zvolené mapě a je založeno na umělé inteligenci obou stran (Ms. Pacman vs 2 duchové). Cíl Ms. Pacman je maximalizovat skóre na aktuální mapě, zatímco cíl nepřátel je její skóre minimalizovat. Stochastické chování nepřátel je simulováno tak, aby co nejvíce odpovídalo svému vzoru (zdrojové kódy hry nejsou veřejné, tudíž nelze simulovat chování duchů naprosto stejně jako v originálu). Duchové se snaží chytit a zabít Ms. Pacman. Pokud se jim to povede, hra končí (skóre -500 bodů). Skóre Ms. Pacman se navyšuje jezením jídla (skóre +10bodů za jednu kuličku), power-upů a následným jezením duchů (skóre +200 bodů za každého ducha) po omezený čas trvání power-upu. Bonusová ovoce se neberou v potaz. Skóre se snižuje po dobu chození Ms. Pacman po bludišti bez jezení ovoce/duchů (každé takové kolo skóre -1 bodů). Mapy se též liší, jsou menší a obsahují pro umělou inteligenci Ms. Pacman problémová zákoutí, jako větší neohraničené plochy, stísněný prostor atp. Ms. Pacman a duchové mají stejnou rychlost. Tato zjednodušení slouží především ke snížení vypočetní náročnosti algorimů na běžně dostupný hardware.
 \section{Klasifikace dema Ms. Pacman z hlediska Teorie her}
 Ms. Pacman je hra, tzn. strategická interakce mezi 2 a více hráči, kteří chtějí dosáhnout optimálního výsledku ve hře.
 Vizuální demo Ms. Pacman lze specifikovat podle několika kritérií:
@@ -334,28 +334,30 @@ Vizuální demo Ms. Pacman lze specifikovat podle několika kritérií:
 dle herního plánu: \textit{grid-world game} – vše probíhá diskrétně, po polích na mřížce v herním bludišti, jež mohou nabývat více stavů: prázdná cesta, zeď, prázdná cesta s hráčem, cesta s kuličkou, cesta s power-upem
 \end{itemize}
 \chapter{Návrh}
+\label{navrh}
 Tato kapitola se podílí na praktické části práce a to především návrhu \textbf{chování agentů}.
 Po nastudování teorie je důležité jasně poupravit cíle práce: budou se porovnávat nejen metody Minimax a Alfa-Beta Řezy s učícím agentem, ale především také Expectimax, který bere v potaz stochastičnost akcí duchů. Tyto algoritmy se budou dále v textu označovat jako "základní algoritmy"
 
 \section{Reflexivní agent a jeho ohodnocovací funkce}
-Aby se měl učící agent s čím srovnat, bylo nutné navrhnout jednoduchého reflexivní agenta pracujícího s jednoduchou ohodnocovací funkcí. Reflexivní agent pouze vnímá aktuální stav hry (hloubka = 1) a jeho ohodnocovací funkce vyhodnocuje stav hry na základě informací o celém stavu hry. Agent se následně podívá na ohodnocení všech přípustných \textit{Akcí} (jít vlevo, vpravo, nahoru, dolů, zastavit se) a pseudonáhodně vybere mezi akcemi s nejlepším ohodnocením.  Jednoduchá \textbf{ohodnocovací funkce} agenta musí vzít v potaz především vzdálenosti jídla, duchů atp. Dále se bere v potaz stav ducha, zda ho dokáže Ms. Pacman dohonit tzn. kolik mu ještě zbývá kroků ve stavu vystrašenosti (Ms. Pacman snědla power-up) vůči jeho vzdálenosti od Ms.Pacman. Pro výpočet vzdáleností je použita tzv. manhattonovská metrika jako standard pro grid-world problematiku, tato vzdálenost je měřena jako suma rozdílu absolutních vzdáleností koordinát dvou bodů $\left|x1-x2\right|+\left|y1-y2\right|$.
+Aby se měl učící agent s čím srovnat, bylo nutné navrhnout reflexivní agenta pracujícího s jednoduchou ohodnocovací funkcí. Reflexivní agent pouze vnímá aktuální stav hry (hloubka = 1) a jeho ohodnocovací funkce vyhodnocuje stav hry na základě informací o celém stavu hry. Agent se následně podívá na ohodnocení všech přípustných \textit{Akcí} (jít vlevo, vpravo, nahoru, dolů, zastavit se) a pseudonáhodně vybere mezi akcemi s nejlepším ohodnocením.  Ohodnocovací funkce agenta musí vzít v potaz především vzdálenosti jídla, duchů atp. Dále se bere v potaz stav ducha, zda ho dokáže Ms. Pacman dohonit tzn. kolik mu ještě zbývá kroků ve stavu vystrašenosti (Ms. Pacman snědla power-up) vůči jeho vzdálenosti od Ms.Pacman. Pro výpočet vzdáleností je použita tzv. \textit{manhattonovská metrika} jako standard pro grid-world problematiku, tato vzdálenost je měřena jako suma rozdílu absolutních vzdáleností koordinát dvou bodů $\left|x1-x2\right|+\left|y1-y2\right|$. Chování duchů je pro zjednodušení náhodné, avšak duchové dodržují následující pravidla: nemohou jít zpět, pouze se otočit na křižovatce např. o 90 stupňů.
 
 \section{Minimax, AlfaBeta řezy}
-Pro tyto algoritmy bylo nutné vzít v potaz větší počet minimalizujících nepřátel, kteří se v každém tahu dané hloubky střídají s maximalizující Ms. Pacman. Alfabeta i Minimax budou využívat stejnou nedokonalou vyhodnocovací funkci jako základní reflexivní agent, avšak navíc vyhodnotí stavy až do stanové hloubky/terminální uzlu a následně vrátí nejlepší možnou akci pro svého maximalizačního agenta Ms. Pacman (MinimaxAgent, AlphaBetaAgent).
+Pro základní algoritmy bylo nutné vzít v potaz větší počet minimalizujících nepřátel, kteří se v každém tahu dané hloubky střídají s maximalizující Ms. Pacman. Alfabeta i Minimax budou využívat vyhodnocovací funkci založenou na skóre aktuálního stavu ve hře. Algoritmy vyhodnocují stavy až do stanové hloubky/terminální uzlu a následně vrátí nejlepší možnou akci pro svého maximalizačního agenta Ms. Pacman (MinimaxAgent, AlphaBetaAgent).
+
 \section{Expectimax a lepší ohodnocovací funkce}
-Pro Expectimax agenta bude dále naimplementována vyhodnocovací funkce, která by měla dosáhnout lepších výsledků než funkce předchozích agentů. Popis, co je lepší, proč, jak by se to dále dalo vylepšit - například pomocí algoritmů pro prohledávání stavového prostoru.
+Pro Expectimax agenta bude dále naimplementována kvalitnější vyhodnocovací funkce, která by měla dosáhnout lepších výsledků než funkce předchozích agentů. Funkce bere v potaz nejen skóre, ale také další součásti stavu hry (vzdálenosti jídla, duchů, powerupů atp. - podobně jako ohodnocovací funkce reflexivního agenta). Tato funkce by se dala do budoucna vylepšit o algoritmy prohledávání stavového prostoru jako BFS, DFS-FOOTNOTE- atp., aby se dále brala v potaz například pozice stěn.
 
 \section{Value Iteration agent}
-Tento agent je pasivní plánovací agent, nejdříve tedy provede veškeré své výpočty pomocí daného modelu světa a naplánuje si tak optimální posloupnost akcí, které se mají následně provést.
+Tento agent je pasivní plánovací agent - provede veškeré své výpočty pomocí daného modelu světa a naplánuje si tak optimální posloupnost akcí, které se mají následně provést. Jeden přepočet $V$-hodnot (= \textbf{epizoda}) probíhá vždy do určitého stanoveného počtu $k$ iterací.
 Z vypočetních a názorných důvodů, bude tento agent zobrazen výhradně formou již zmíněného \textbf{gridworld} problému (demonstrativní mřížka definovaná v souboru gridworld.py, na obr. XYZ)
 Avšak určení nové hodnoty stavu $V$ poslouží i pro Q-Learningového agenta.
 
 Velký vliv na jeho průběh mají především následující faktory:
-koeficient odměny $\gamma$ - čím je koeficient menší, tím se vyhodnocení hodnot zpomaluje a důkladněji se tak prozkoumá více hodnot (výsledná posloupnost akcí může být například delší, ale optimálnější)
-livingReward = ohodnocení pohybu z jednoho neterminálního stavu do druhého - čím je menší, až například záporná, tím rychleji se agent snaží najít terminální uzel a skončit tak hru/problém
+koeficient odměny $\gamma$ - čím je koeficient menší, tím se vyhodnocení hodnot zpomaluje a důkladněji se tak prozkoumá více hodnot (výsledná posloupnost akcí může být například delší, ale optimálnější),
+livingReward = ohodnocení pohybu z jednoho neterminálního stavu do druhého - čím je menší, až například záporná, tím rychleji se agent snaží najít terminální uzel a skončit tak hru/problém,
 noise = stochastičnost akce, tedy pravděpodobnost, že se daná akce provede - ovlivňuje, jak často agent riskuje
 
-DÁL POPSAT, NEBO STACI JEN PSEUDOKOD REALIZACE???
+DÁL POPSAT, NEBO STACI JEN PSEUDOKOD V REALIZACI, NAPSAT VSECHNY PSEUDOKODY???
 
 \section{Q-Learning}
 Hlavní náplní agenta je sestavit tabulku Q-hodnot každému páru (akce, stav) ve hře a následně z ních po stanoveném počtu iterací určit optimální strategii. Z názorných důvodů bude tento agent zobrazen formou \textbf{gridworld} problému a dále i ve hře Ms. Pacman.
@@ -384,33 +386,41 @@ Poměňování váh vlastností takto může \textbf{maximalizovat odměny} a do
 Tato kapitola popisuje praktickou část práce a především se zaměřuje na \textbf{implemetace různého chování agentů}.
 
 \section{Zvolené prostředky}
-Nejdříve bylo nutné si zvolit programovací jazyk, který by zvládl výpočetní náročnost problematiky vůči vykreslování grafického dema. Zpočátku byl zvolen jazyk Java díky její vysoké míře abstrakce vůči programátorskému myšlení. Nakonec však po sérii experimentování s jazykem se kvůli náročnosti samotné logiky hry vůči GUI a především kvůli efektivnímu zvládnutí rozgenerování všech možných stavů hry a dodržení matematických vzorců, jež byly stanoveny v předchozí teoretické kapitole, přešlo k hledání náhradního řešení. Tím se stalo hledání aplikace, nebo frameworku, jež řeší podobnou problematiku. Základem pro studii a experimentování s algoritmy nakonec posloužil pythonový framework od UC Berkeley \cite{pacmanProjects}, používaný v jejich výuce Úvod do umělé inteligence (kurz CS188) \cite{berkeley}. Hlavním důvodem zvolení frameworku bylo především zaměření práce na experimentování s algoritmy umělé inteligence, ne implemetace aplikace. Dalšími důvodem volby je použití jazyka \textit{Python 2.7.5}, který též umožňuje objektový přístup, je dobře čitelný a nenáročný - nejen díky těmto kladům se dají dobře pochopit vlastnosti a propojení jednotlivých objektů frameworku. Framework tedy primárně posloužil jako prostředek pro realizaci, srovnání a zobrazení výsledků jednotlivých algoritmů.
-Pro účely této práce budou v následující sekcích popsány nejdůležitější části aplikace, detailní popis implementace frameworku lze najít v komentářích v kódu.
+Nejdříve bylo nutné si zvolit programovací jazyk, který by zvládl výpočetní náročnost problematiky vůči vykreslování grafického dema. Zpočátku byl zvolen jazyk \textit{Java} díky její vysoké míře abstrakce vůči programátorskému myšlení. Během implementace se však narazilo na několik problémů: 
+\begin{enumerate}
+\item propojení stavů hry a herního plánu s prostředím + následné propojení stavu hry s MDP
+\item výpočetní náročnost algoritmů versus rozgenerování všech možných stavů ve hře
+\item snaha co nejvíce dodržet matematické vzorce z teorie
+\item názorné vykreslení složitějších algoritmů
+\item časová náročnost implementace logiky a GUI hry versus zaměření práce na umělou inteligenci
+Nakonec po sérii experimentování s jazykem se kvůli zmíněným problémům přešlo k hledání náhradního řešení. Tím se stalo hledání aplikace, nebo frameworku, jež řeší podobnou problematiku. Základem pro studii a experimentování s algoritmy nakonec posloužil pythonový framework od UC Berkeley \cite{pacmanProjects}, používaný v jejich výuce Úvod do umělé inteligence (kurz CS188) \cite{berkeley}. Hlavním důvodem zvolení frameworku bylo především zaměření práce na experimentování s algoritmy umělé inteligence, ne implemetace aplikace. Dalšími důvodem volby je použití jazyka \textit{Python 2.7.5}, který též umožňuje objektový přístup, je dobře čitelný a nenáročný - nejen díky těmto kladům se dají dobře pochopit vlastnosti a propojení jednotlivých objektů frameworku. Framework tedy primárně posloužil jako prostředek pro realizaci, srovnání a názorné zobrazení výsledků jednotlivých algoritmů.
+Pro účely této práce budou v následující sekcích popsány nejdůležitější části aplikace, detailní popis implementace frameworku lze najít v komentářích.
 
 \section{Framework a reprezentace stavu hry}
-Pro algoritmy je nejdůležitější částí frameworku objekt GameState reprezentující \textbf{stav hry}, který lze najít v souboru pacman.py (tento soubor a soubor game.py tvoří samotné jádro frameworku - definují základní chování agentů, možné akce, základní objekt stavového prostoru Grid apod.)
-GameState dále pracuje s objekty PacmanRules a GhostRules, které zajišťují logiku pro svého agenta(agenty).
+Pro všechny algoritmy je nejdůležitější částí frameworku objekt \texttt{GameState} reprezentující \textbf{stav hry}, který lze najít v souboru \texttt{pacman.py} (tento soubor a soubor game.py tvoří samotné jádro frameworku - definují základní chování agentů, možné akce, základní objekt stavového prostoru \texttt{Grid} apod.)
+GameState dále pracuje s objekty \texttt{PacmanRules} a \texttt{GhostRules}, které zajišťují logiku přípustných akcí pro svého agenta(agenty).
 Tento základní objekt tedy obsahuje:
 \begin{itemize}
-\item pozice Ms.Pacman (index = 0) a duchů
+\item pozice Ms.Pacman a duchů
 \item pozice zbývajícího jídla v mřížce
 \item pozice zbývajících power-upů v mřížce
 \item pozice zdí v mřížce
 \item počet duchů
 \item možné akce, jež může daný agent provést z aktuálního stavu
-\item schopnost provést akci a vytvořit tak svého následníka (objekt GameState)
+\item schopnost provést akci a vytvořit tak svého následníka (opět objekt GameState)
 \end{itemize}
-Každý agent dědí ze základního objektu Agent povinnou metodu getAction (metoda, jež zavazuje agenta přijmout objekt GameSate a vrátit na něj reakci v podobě akce.) a proměnnou index definující index agenta (Ms. Pacman má tradičně index = 0).
-Implementace vlastního chování konkrétního agenta je již definována v jeho konkrétním objektu (jako override). Např. AlphaBetaAgent přetěžuje metodu getAction jako algoritmus Alfa-Beta řezy atp.
+-POPSAT NEJAK VIC JESTE GAME ENGINE - KTERY SOUBOR RESI CO? NEBO SE ZAMERIT SPIS NA PRO AI DULEZITE SOUBORY A TRIDY?-
+Každý agent dědí ze základního objektu \texttt{Agent} povinnou metodu \texttt{getAction} (zavazuje agenta přijmout objekt GameSate a vrátit na něj reakci v podobě akce) a proměnnou \texttt{index} definující index agenta (Ms. Pacman má tradičně index = 0).
+Implementace vlastního chování konkrétního typu agenta je již definována v jeho vlasntím objektu (jako override). Např. \texttt{AlphaBetaAgent} přetěžuje metodu getAction jako algoritmus Alfa-Beta řezy atp.
 
 \section{Reflexivní agent}
-Pro srovnání s algoritmy byl implementován tento základní typ agenta. Největším problémem se stala jeho \textbf{ohodnocovací funkce}, neboť neustále narážela na problematické nesnadno vyřešitelné stavy stejného ohodnocení např. stejně vzdálené jídlo od agenta. Prakticky to pak dopadá, že agent doslova \textit{čeká} na ducha, aby se konečně mohl dostat ze zacykleného chování. Pro účely srovnání s následujícími agenty, však tento agent postačí.
+Pro srovnání s algoritmy byl implementován tento základní typ agenta. Překvapivě největším problémem při implementaci se stala jeho \textbf{ohodnocovací funkce}, neboť neustále narážela na problematické nesnadno vyřešitelné stavy stejného ohodnocení např. stejně vzdálené jídlo od agenta. Prakticky to pak dopadá, že agent doslova \textit{čeká} na ducha, aby se konečně mohl dostat ze zacykleného chování. Pro účely srovnání s následujícími agenty, však tento agent postačí.
 -IMG- OBRÁZEK Z APLIKACE S VEKTORY VZDÁLENOSTÍ Na obrázku lze vidět problematické místo pro ohodnocovací funkci agenta, která je založena převším na vzdálenosti nejbližšího jídla vůči pozici agenta.
 
 \section{Základní algorimy}
-Jako ukázku lze uvést pseudokód algoritmu Expectimax, který je z hlediska porovnání s pokročilými metodami umělé inteligence nejzajímavější. Algoritmus musí mít přehled, která strana je na tahu na základě indexu agenta a také o kolikátou vrstvu střídání Ms. Pacman vs. (1-n) duchů se jedná - to zajišťuje proměnná depth.
+Jako ukázku lze uvést pseudokód algoritmu Expectimax, který je z hlediska porovnání s pokročilými metodami umělé inteligence nejzajímavější. Algoritmus musí mít přehled, která strana je na tahu na základě indexu agenta a také o kolikátou vrstvu střídání Ms. Pacman vs. (1-$N$) duchů se jedná - to zajišťuje proměnná depth. Pro výpočetní únosnost byla zvolena výchozí hodnota hloubky depth 2.
 \newline
--Pseudokód chování Agenta ExpectimaxAgent-:
+-Pseudokód chování Agenta \texttt{ExpectimaxAgent}-:
 
 def Expectimax(self, state, agentIndex, depth):
 
@@ -468,6 +478,7 @@ def chanceMinimize(self, state, agentIndex, depth):
         expectedValue[0] = action
         expectedValue[1] += tmp KRAT probability[action]
     return tuple(expectedValue)
+-PRIKLAD + UKAZKA VYPISU?-
 
 \section{Framework a MDP problematika}
 Hlavním objektem je ValueEstimationAgent (dědící od základní třídy Agent). Tento agent slouží především pro propojení prostředí problému (Ms. Pacman, gridworld) s $Q$-hodnotami párů (stav,akce), dále propojení stavu s jeho hodnotou ($V$) a nakonec propojení výsledných hodnot s nalezenou optimální strategiií.
@@ -488,13 +499,15 @@ ReinforcementAgent staví na odhadu Q-Hodnot, protože neobsahuje model a je rod
 
 \section{Value Iteration agent (ValueIterationAgent)}
 %http://artint.info/html/ArtInt_227.html
--PSEUDOKÓD VALUE ITERATION???- ++ lepší popis v teorii!!! i s příkladem
+-PSEUDOKÓD VALUE ITERATION???-... LEPSI POPIS V TEORII/NAVRHU!!! + PRIDAT PRIKLAD
 
 \section{Q-Learning agenti (QLearningAgent,PacmanQAgent)}
 Jak již bylo řešeno, tento agent si musí model odhadnout sám. Využívá k tomu především vhodný poměr prozkoumávání a uplatňování dosud zjištěného odhadu optimální akce z daného stavu (exporation/exploitation ratio). Tento poměr je dán parametrem $\epsilon-greedy$, který určuje náhodnost, zda se má provést optimální (pravděpodobnost $1-\epsilon$), či náhodná akce (pravděpodobnost $\epsilon$). Čím je $\epsilon-greedy$ větší, tím pravděpodobněji se agent chová dle své akuální optimální akce. Dalším důležitým faktorem je alfa($\alpha$), která ovlivňuje především rychlost učení. Čím je větší alfa, tím víc se dává důraz na nové vzorky.
 
 \section{Aproximační Q-Learning agent (ApproximateQAgent)}
-
+Tento agent využívá především váh vektoru vlastností ve tříde BetterFeatureExtractor. Jsou zde vzaty v potaz vlastnosti z části \ref{navrh}.
+\newline
+typ vlastnosti - honodta vlastnsti
 -PSEUDOKOD BETTERFEATUREXTRACTOR-
 
 \chapter{Experimenty a srovnání agentů}
