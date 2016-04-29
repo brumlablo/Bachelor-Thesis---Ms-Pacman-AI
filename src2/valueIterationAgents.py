@@ -44,7 +44,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         # values structure is dict with (x,y) grid position: value of the position
         # e.g. [(0,1):-10.0,(5,3):0.0]
 
-        st = 0
+        #st = 0
         for k in range(iterations): # iterations + 1 for V0 layer
             futureValues = self.values.copy() # current values V_k
             #print "----------------------------",k,"---------------------------"
@@ -67,7 +67,7 @@ class ValueIterationAgent(ValueEstimationAgent):
                         value = expectedQValue
                 #print "             newstatevalue: ",value
                 futureValues[state] = value
-                st += 1
+                #st += 1
             self.values = futureValues # update values for each state V_{k+1}
 
     def getValue(self, state):

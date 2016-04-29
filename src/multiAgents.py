@@ -55,7 +55,7 @@ class ReflexAgent(Agent):
         getAction takes a current GameState and returns some Directions.X for some X
         in the posible actions {North, South, West, East, Stop}
         """
-        # Collect legal moves and successor states
+        # collect legal moves and successor states
         legalMoves = state.getLegalActions()
 
         # choose one of the best actions

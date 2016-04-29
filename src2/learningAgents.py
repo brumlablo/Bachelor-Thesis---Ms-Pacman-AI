@@ -16,6 +16,11 @@ from game import Directions, Agent, Actions
 
 import random,util,time
 
+# slightly edited and commented...
+
+#------------------------------------------------------------------------------------------------#
+# abstract class for agents: ValueIterationAgent, ReinforcementAgent (and QLearningAgent,...)
+# inherits from Agent in game.py
 class ValueEstimationAgent(Agent):
     """
       Abstract agent which assigns values to (state,action)
@@ -47,32 +52,29 @@ class ValueEstimationAgent(Agent):
         self.numTraining = int(numTraining)
 
     ####################################
-    #    Override These Functions      #
+    #  these functions are overriden   #
     ####################################
     def getQValue(self, state, action):
         """
-        Should return Q(state,action)
+        returns Q(state,action)
         """
         util.raiseNotDefined()
 
     def getValue(self, state):
         """
-        What is the value of this state under the best action?
-        Concretely, this is given by
-
-        V(s) = max_{a in actions} Q(s,a)
+        returns value of this state under the best action
+        Value(state) = max_{action in legal actions} Q(state,action)
         """
         util.raiseNotDefined()
 
     def getPolicy(self, state):
         """
-        What is the best action to take in the state. Note that because
-        we might want to explore, this might not coincide with getAction
-        Concretely, this is given by
+        returns the best action to take in the state
+        (or random action based on epsilon-greedy)
 
-        policy(s) = arg_max_{a in actions} Q(s,a)
+        policy(state) = arg_max_{action in legal actions} Q(state,action)
 
-        If many actions achieve the maximal Q-value,
+        NOTE: If many actions achieve the maximal Q-value,
         it doesn't matter which is selected.
         """
         util.raiseNotDefined()
@@ -80,7 +82,7 @@ class ValueEstimationAgent(Agent):
     def getAction(self, state):
         """
         state: can call state.getLegalActions()
-        Choose an action and return it.
+        return chosen action
         """
         util.raiseNotDefined()
 
@@ -99,7 +101,7 @@ class ReinforcementAgent(ValueEstimationAgent):
                       are available in a state
     """
     ####################################
-    #    Override These Functions      #
+    #  these functions are overriden   #
     ####################################
 
     def update(self, state, action, nextState, reward):
@@ -110,7 +112,7 @@ class ReinforcementAgent(ValueEstimationAgent):
         util.raiseNotDefined()
 
     ####################################
-    #    Read These Functions          #
+    #    other functions               #
     ####################################
 
     def getLegalActions(self,state):
@@ -201,10 +203,11 @@ class ReinforcementAgent(ValueEstimationAgent):
     ###################
     # Pacman Specific #
     ###################
+
+    # conncecting agent's behaviour with Ms. Pacman Game
     def observationFunction(self, state):
         """
-            This is where we ended up after our last action.
-            The simulation should somehow ensure this is called
+            Successor state where we ended up after our last action. Called by environment...
         """
         if not self.lastState is None:
             reward = state.getScore() - self.lastState.getScore()
@@ -218,7 +221,7 @@ class ReinforcementAgent(ValueEstimationAgent):
 
     def final(self, state):
         """
-          Called by Pacman game at the terminal state
+          called by Ms. Pacman game at the terminal state
         """
         deltaReward = state.getScore() - self.lastState.getScore()
         self.observeTransition(self.lastState, self.lastAction, state, deltaReward)

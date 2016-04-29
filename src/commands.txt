@@ -16,8 +16,8 @@ python pacman.py -p ExpectimaxAgent -l trappedClassic -a depth=3 -q -n 10
 
 VALUE ITERATION GRIDWORLD
 
-k = pocet V
-i = pocet iteraci
+i = hloubka, pocet iteraci ...pocet V
+k = kolikrat se ma provest policy = pocet epizod
 
 python gridworld.py -a value -i 100 -k 10
 python gridworld.py -a value -i 5

@@ -139,7 +139,7 @@ V^*(s) = \max_a Q^*(s) (s,a,s^\prime)
 Q^*(s) = \sum_{s^\prime}T(s,a,s^\prime) \left[R(s,a,s^\prime)+\gamma V_k(s^\prime) \right]
 \end{displaymath}
 
-Na obrázku \ref{img:policy} lze vidět optimální strategii a vypočtené hodnoty pro daný \textit{grid-world} problém.
+Na obrázku \ref{img:policy} lze vidět optimální strategii a vypočtené hodnoty pro daný \textit{gridworld} problém.
 
 \begin{figure}[!htbp]
 \begin{center}
@@ -333,38 +333,47 @@ Vizuální demo Ms. Pacman lze specifikovat podle několika kritérií:
 \item \textbf{dle zdrojů:} \textit{antagonistický konflikt} – Ms. Pacman a duchové sdílí jedno pevné maximální skóre
 dle herního plánu: \textit{grid-world game} – vše probíhá diskrétně, po polích na mřížce v herním bludišti, jež mohou nabývat více stavů: prázdná cesta, zeď, prázdná cesta s hráčem, cesta s kuličkou, cesta s power-upem
 \end{itemize}
+
 \chapter{Návrh}
 \label{navrh}
 Tato kapitola se podílí na praktické části práce a to především návrhu \textbf{chování agentů}.
-Po nastudování teorie je důležité jasně poupravit cíle práce: budou se porovnávat nejen metody Minimax a Alfa-Beta Řezy s učícím agentem, ale především také Expectimax, který bere v potaz stochastičnost akcí duchů. Tyto algoritmy se budou dále v textu označovat jako "základní algoritmy"
+Po nastudování teorie je důležité jasně poupravit cíle práce: budou se porovnávat nejen metody Minimax a Alfa-Beta Řezy s učícím agentem, ale především také Expectimax, který bere v potaz stochastičnost akcí duchů. Tyto algoritmy se budou dále v textu označovat jako "základní algoritmy".
 
-\section{Reflexivní agent a jeho ohodnocovací funkce}
-Aby se měl učící agent s čím srovnat, bylo nutné navrhnout reflexivní agenta pracujícího s jednoduchou ohodnocovací funkcí. Reflexivní agent pouze vnímá aktuální stav hry (hloubka = 1) a jeho ohodnocovací funkce vyhodnocuje stav hry na základě informací o celém stavu hry. Agent se následně podívá na ohodnocení všech přípustných \textit{Akcí} (jít vlevo, vpravo, nahoru, dolů, zastavit se) a pseudonáhodně vybere mezi akcemi s nejlepším ohodnocením.  Ohodnocovací funkce agenta musí vzít v potaz především vzdálenosti jídla, duchů atp. Dále se bere v potaz stav ducha, zda ho dokáže Ms. Pacman dohonit tzn. kolik mu ještě zbývá kroků ve stavu vystrašenosti (Ms. Pacman snědla power-up) vůči jeho vzdálenosti od Ms.Pacman. Pro výpočet vzdáleností je použita tzv. \textit{manhattonovská metrika} jako standard pro grid-world problematiku, tato vzdálenost je měřena jako suma rozdílu absolutních vzdáleností koordinát dvou bodů $\left|x1-x2\right|+\left|y1-y2\right|$. Chování duchů je pro zjednodušení náhodné, avšak duchové dodržují následující pravidla: nemohou jít zpět, pouze se otočit na křižovatce např. o 90 stupňů.
+
+Pro výpočet vzdáleností je použita tzv. \textit{manhattonovská metrika} jako standard pro grid-world problematiku, tato vzdálenost je měřena jako suma rozdílu absolutních vzdáleností koordinát dvou bodů $\left|x1-x2\right|+\left|y1-y2\right|$. Chování duchů je náhodné, avšak duchové dodržují následující pravidlo: nemohou jít zpět, pouze se otočit na křižovatce např. o 90 stupňů.
 
 \section{Minimax, AlfaBeta řezy}
 Pro základní algoritmy bylo nutné vzít v potaz větší počet minimalizujících nepřátel, kteří se v každém tahu dané hloubky střídají s maximalizující Ms. Pacman. Alfabeta i Minimax budou využívat vyhodnocovací funkci založenou na skóre aktuálního stavu ve hře. Algoritmy vyhodnocují stavy až do stanové hloubky/terminální uzlu a následně vrátí nejlepší možnou akci pro svého maximalizačního agenta Ms. Pacman (MinimaxAgent, AlphaBetaAgent).
 
 \section{Expectimax a lepší ohodnocovací funkce}
-Pro Expectimax agenta bude dále naimplementována kvalitnější vyhodnocovací funkce, která by měla dosáhnout lepších výsledků než funkce předchozích agentů. Funkce bere v potaz nejen skóre, ale také další součásti stavu hry (vzdálenosti jídla, duchů, powerupů atp. - podobně jako ohodnocovací funkce reflexivního agenta). Tato funkce by se dala do budoucna vylepšit o algoritmy prohledávání stavového prostoru jako BFS, DFS-FOOTNOTE- atp., aby se dále brala v potaz například pozice stěn.
+Pro Expectimax agenta bude dále naimplementována kvalitnější vyhodnocovací funkce, která by měla dosáhnout lepších výsledků než funkce předchozích agentů. Funkce bere v potaz nejen skóre, ale také další součásti stavu hry (vzdálenosti jídla, duchů, powerupů atp. Tato funkce by se dala do budoucna vylepšit o algoritmy prohledávání stavového prostoru jako BFS, DFS-FOOTNOTE- atp., aby se dále brala v potaz například pozice stěn.
+
+Algoritmus Expectimax je (stejně jako Alpha Beta řezy) založený na algoritmu Minimax a je také z hlediska porovnání s pokročilými metodami umělé inteligence nejzajímavější, proto lze jako názornou ukázku uvést právě jeho pseudokód:
+-Pseudokód chování Agenta \texttt{ExpectimaxAgent}-:....
 
 \section{Value Iteration agent}
-Tento agent je pasivní plánovací agent - provede veškeré své výpočty pomocí daného modelu světa a naplánuje si tak optimální posloupnost akcí, které se mají následně provést. Jeden přepočet $V$-hodnot (= \textbf{epizoda}) probíhá vždy do určitého stanoveného počtu $k$ iterací.
-Z vypočetních a názorných důvodů, bude tento agent zobrazen výhradně formou již zmíněného \textbf{gridworld} problému (demonstrativní mřížka definovaná v souboru gridworld.py, na obr. XYZ)
-Avšak určení nové hodnoty stavu $V$ poslouží i pro Q-Learningového agenta.
+Tento agent je pasivní plánovací agent - provede veškeré své výpočty odhadů hodnot pomocí daného modelu světa a naplánuje si tak optimální posloupnost akcí, které se mají následně provést = strategie (\textit{policy}). Provedení výsledné strategie pak probíhá v tzv. \textbf{epizodách}). Přepočet odhadů $V$-hodnot probíhá vždy do určitého stanoveného počtu $k$ iterací (podobné jako hloubka, agent by měl provést $k$-kroků výpočtu odhadů $V$-hodnot).
 
-Velký vliv na jeho průběh mají především následující faktory:
-koeficient odměny $\gamma$ - čím je koeficient menší, tím se vyhodnocení hodnot zpomaluje a důkladněji se tak prozkoumá více hodnot (výsledná posloupnost akcí může být například delší, ale optimálnější),
-livingReward = ohodnocení pohybu z jednoho neterminálního stavu do druhého - čím je menší, až například záporná, tím rychleji se agent snaží najít terminální uzel a skončit tak hru/problém,
-noise = stochastičnost akce, tedy pravděpodobnost, že se daná akce provede - ovlivňuje, jak často agent riskuje
+Velký vliv průběh tohoto a následujících algoritmů má koeficient odměny $\gamma$ - čím je koeficient menší, tím se vyhodnocení hodnot zpomaluje a důkladněji se tak prozkoumá více hodnot (výsledné vyhodnocení posloupnosti akcí může například trvat déle vyhodnotit, ale pravděpodobnost optimality výsledné strategie bude větší).
 
-DÁL POPSAT, NEBO STACI JEN PSEUDOKOD V REALIZACI, NAPSAT VSECHNY PSEUDOKODY???
+Dalším důležitou konstantou je odměna nebo penalta po každém agentově kroku (\textit{living reward} nebo též \textit{living penalty}), tedy ohodnocení pohybu z jednoho neterminálního stavu do druhého - čím je menší, až například záporná, tím rychleji se agent snaží najít terminální uzel a skončit tak hru/problém.
+
+Poslední důležitý vliv na algoritmus má náhodnost pohybu agenta (\textit{noise}, která modeluje stochastičnost akce, tedy pravděpodobnost, že se daná akce provede - ovlivňuje, jak často agent riskuje.
+
+PSEUDOKOD VALUE ITERATION + EPISOD OPTIMÁLNÍ STRATEGIE
+
+
+
+DÁL POPSAT, PSEUDOKOD, NAPSAT VSECHNY PSEUDOKODY???
 
 \section{Q-Learning}
 Hlavní náplní agenta je sestavit tabulku Q-hodnot každému páru (akce, stav) ve hře a následně z ních po stanoveném počtu iterací určit optimální strategii. Z názorných důvodů bude tento agent zobrazen formou \textbf{gridworld} problému a dále i ve hře Ms. Pacman.
+
+
 STANOVENÍ ALFY,EPSILONU ATD...
 STACI JEN REALIZACE ALGORITMU?
 \section{Aproximační Q-Learning}
-Důležitou částí návrhu řešení tohoto agenta je kvalitně definovat \textbf{vektor vlastností} (feature vector), který by měl korektně předpovídat $Q-hodnoty$ jednotlivých párů $(stav,akce)$:
+Důležitou částí návrhu řešení tohoto agenta je kvalitně definovat \textbf{vektor vlastností} (feature vector), který by měl korektně předpovídat $Q$-hodnoty jednotlivých párů $(stav,akce)$:
 \begin{itemize}
 \item vzdálenost nejbližšího ducha a jeho stav
 \item vzdálenost nejbližší kuličky jídla
@@ -393,112 +402,58 @@ Nejdříve bylo nutné si zvolit programovací jazyk, který by zvládl výpoče
 \item snaha co nejvíce dodržet matematické vzorce z teorie
 \item názorné vykreslení složitějších algoritmů
 \item časová náročnost implementace logiky a GUI hry versus zaměření práce na umělou inteligenci
-Nakonec po sérii experimentování s jazykem se kvůli zmíněným problémům přešlo k hledání náhradního řešení. Tím se stalo hledání aplikace, nebo frameworku, jež řeší podobnou problematiku. Základem pro studii a experimentování s algoritmy nakonec posloužil pythonový framework od UC Berkeley \cite{pacmanProjects}, používaný v jejich výuce Úvod do umělé inteligence (kurz CS188) \cite{berkeley}. Hlavním důvodem zvolení frameworku bylo především zaměření práce na experimentování s algoritmy umělé inteligence, ne implemetace aplikace. Dalšími důvodem volby je použití jazyka \textit{Python 2.7.5}, který též umožňuje objektový přístup, je dobře čitelný a nenáročný - nejen díky těmto kladům se dají dobře pochopit vlastnosti a propojení jednotlivých objektů frameworku. Framework tedy primárně posloužil jako prostředek pro realizaci, srovnání a názorné zobrazení výsledků jednotlivých algoritmů.
-Pro účely této práce budou v následující sekcích popsány nejdůležitější části aplikace, detailní popis implementace frameworku lze najít v komentářích.
+\end{enumerate}
+Nakonec po sérii experimentování s jazykem se kvůli zmíněným problémům přešlo k hledání náhradního řešení. Tím se stalo hledání aplikace, nebo frameworku, jež řeší podobnou problematiku. Základem pro studii a experimentování s algoritmy nakonec posloužil pythonový framework od univerzity UC Berkeley \cite{pacmanProjects}, používaný v jejich výuce Úvod do umělé inteligence (kurz CS188) \cite{berkeley}. Hlavním důvodem zvolení frameworku tedy bylo především zaměření práce na experimentování s algoritmy umělé inteligence, ne implemetace aplikace. Dalším důvodem volby je použití jazyka \textit{Python 2.7.5}, který též umožňuje objektový přístup, je dobře čitelný a nenáročný - nejen díky těmto kladům se dají dobře pochopit vlastnosti a propojení jednotlivých objektů frameworku. Framework tedy primárně posloužil jako prostředek pro realizaci, srovnání a názorné zobrazení výsledků jednotlivých algoritmů.
+Pro účely této práce budou v následující sekcích popsány nejdůležitější části aplikace, detailní popis implementace frameworku lze najít v komentářích v kódu.
 
 \section{Framework a reprezentace stavu hry}
-Pro všechny algoritmy je nejdůležitější částí frameworku objekt \texttt{GameState} reprezentující \textbf{stav hry}, který lze najít v souboru \texttt{pacman.py} (tento soubor a soubor game.py tvoří samotné jádro frameworku - definují základní chování agentů, možné akce, základní objekt stavového prostoru \texttt{Grid} apod.)
+Pro všechny algoritmy je nejdůležitější částí frameworku objekt \texttt{GameState} reprezentující \textbf{stav hry}, který lze najít ve spustitelném souboru \texttt{pacman.py} Tento soubor a soubor \texttt{game.py} tvoří samotné jádro frameworku pro problematiku Ms. Pacman - definují základní chování agentů, možné akce apod.
+Dalším důležitým spustitelným souborem pro problematiku názornějšího zobrazení $V$ a $Q$ hodnot ve formě gridworld problému je \texttt{gridworld.py}.
 GameState dále pracuje s objekty \texttt{PacmanRules} a \texttt{GhostRules}, které zajišťují logiku přípustných akcí pro svého agenta(agenty).
 Tento základní objekt tedy obsahuje:
 \begin{itemize}
-\item pozice Ms.Pacman a duchů
+\item pozice Ms. Pacman a duchů
 \item pozice zbývajícího jídla v mřížce
 \item pozice zbývajících power-upů v mřížce
 \item pozice zdí v mřížce
 \item počet duchů
 \item možné akce, jež může daný agent provést z aktuálního stavu
-\item schopnost provést akci a vytvořit tak svého následníka (opět objekt GameState)
+\item schopnost provést akci a vytvořit tak svého následníka (opět objekt \texttt{GameState})
 \end{itemize}
--POPSAT NEJAK VIC JESTE GAME ENGINE - KTERY SOUBOR RESI CO? NEBO SE ZAMERIT SPIS NA PRO AI DULEZITE SOUBORY A TRIDY?-
-Každý agent dědí ze základního objektu \texttt{Agent} povinnou metodu \texttt{getAction} (zavazuje agenta přijmout objekt GameSate a vrátit na něj reakci v podobě akce) a proměnnou \texttt{index} definující index agenta (Ms. Pacman má tradičně index = 0).
+Každý agent dědí ze základního objektu \texttt{Agent} povinnou metodu \texttt{getAction} (zavazuje agenta přijmout objekt \texttt{GameSate} a vrátit na něj reakci v podobě akce) a proměnnou \texttt{index} definující index agenta (Ms. Pacman má tradičně index = 0).
 Implementace vlastního chování konkrétního typu agenta je již definována v jeho vlasntím objektu (jako override). Např. \texttt{AlphaBetaAgent} přetěžuje metodu getAction jako algoritmus Alfa-Beta řezy atp.
 
-\section{Reflexivní agent}
-Pro srovnání s algoritmy byl implementován tento základní typ agenta. Překvapivě největším problémem při implementaci se stala jeho \textbf{ohodnocovací funkce}, neboť neustále narážela na problematické nesnadno vyřešitelné stavy stejného ohodnocení např. stejně vzdálené jídlo od agenta. Prakticky to pak dopadá, že agent doslova \textit{čeká} na ducha, aby se konečně mohl dostat ze zacykleného chování. Pro účely srovnání s následujícími agenty, však tento agent postačí.
+\section{ReflexAgent a jeho ohodnocovací funkce}
+Pro další srovnání s algoritmy byl implementován tento základní typ neadversárního reflexivního agenta. Reflexivní agent pouze vnímá aktuální stav hry (hloubka = 1) a jeho ohodnocovací funkce vyhodnocuje stav hry na základě informací o celém stavu hry. Chování reflexivního agenta je založeno na jednoduché ohodnocovací funkci svých následníků: agent se nejdříve podívá na ohodnocení stavů, tedy jejich užitek, po podniknutí všech přípustných \textit{Akcí} (jít vlevo, vpravo, nahoru, dolů, zastavit se) a následně pseudonáhodně vybere výslednou akci stavu s nejlepším ohodnocením.
+\textbf{Ohodnocovací funkce} agenta musí vzít v potaz především informace o vzdálenosti jídla, duchů atp. Dále se bere v potaz stav ducha, zda ho dokáže Ms. Pacman dohonit tzn. kolik mu ještě zbývá kroků ve stavu vystrašenosti (Ms. Pacman snědla power-up) vůči jeho vzdálenosti od Ms. Pacman. Čím lepší vlastnosti hodnoceného následníka stavu, tím větší ohodnocení funkce vrací. 
+Právě ohodnocovací funkce se překvapivě stala největším problémem při implementaci tohoto agenta, neboť neustále narážela na problematické nesnadno vyřešitelné stavy stejného ohodnocení např. stejně vzdálené jídlo od agenta. Prakticky to pak dopadá, že agent doslova \textit{čeká} na ducha, aby se konečně mohl dostat ze zacykleného chování. Pro účely srovnání s následujícími agenty však tento agent postačí.
 -IMG- OBRÁZEK Z APLIKACE S VEKTORY VZDÁLENOSTÍ Na obrázku lze vidět problematické místo pro ohodnocovací funkci agenta, která je založena převším na vzdálenosti nejbližšího jídla vůči pozici agenta.
 
 \section{Základní algorimy}
-Jako ukázku lze uvést pseudokód algoritmu Expectimax, který je z hlediska porovnání s pokročilými metodami umělé inteligence nejzajímavější. Algoritmus musí mít přehled, která strana je na tahu na základě indexu agenta a také o kolikátou vrstvu střídání Ms. Pacman vs. (1-$N$) duchů se jedná - to zajišťuje proměnná depth. Pro výpočetní únosnost byla zvolena výchozí hodnota hloubky depth 2.
-\newline
--Pseudokód chování Agenta \texttt{ExpectimaxAgent}-:
-
-def Expectimax(self, state, agentIndex, depth):
-
-    nová vrstva
-    if agentIndex == self.agentsNum:
-        agentIndex = self.index
-        depth += 1
-
-    jedna se o terminalni uzel?
-    if state.isWin() or state.isLose() or depth == self.depth:
-        return self.evaluationFunction(state)
-
-    Ms. Pacman
-    if agentIndex == self.index:
-        return maximize(state, agentIndex, depth)
-    duchové
-    else:
-        return chanceMinimize(state, agentIndex, depth)
-
-MAXIMALIZAČNÍ UZEL MS. PACMAN
-def maximize(self, state, agentIndex, depth):
-
-     tuple (action,value)
-    value = ["", float("-inf")]
-    for action in state.getLegalActions(agentIndex):
-        tmp = self.Expectimax(state.generateSuccessor(agentIndex, action), agentIndex + 1, depth)
-         getting value
-        if type(tmp) is tuple:
-            tmp = tmp[1]
-        returning tuple with action
-        if tmp > value[1]:
-            value = (action, tmp)
-    return value
-
-UZEL NÁHODNOSTI
-def chanceMinimize(self, state, agentIndex, depth):
-
-     tuple (action,value)
-    expectedValue = ["", 0.0]
-    ghostActions = state.getLegalActions(agentIndex)
-
-     ghost Actions probability
-    probability = {}
-    for action in ghostActions:
-        probability[action] = 1.0 / float(len(ghostActions))
-
-    for action in ghostActions:
-
-        tmp = self.Expectimax(state.generateSuccessor(agentIndex, action), agentIndex + 1, depth)
-         getting value
-        if type(tmp) is tuple:
-            tmp = tmp[1]
-
-        expected action and value
-        expectedValue[0] = action
-        expectedValue[1] += tmp KRAT probability[action]
-    return tuple(expectedValue)
+Algoritmy musí mít přehled, která strana je na tahu na základě indexu agenta a také o kolikátou vrstvu střídání Ms. Pacman vs. (1-$N$) duchů se jedná - to zajišťuje proměnná depth. Pro časovou a výpočetní únosnost byla zvolena výchozí hodnota hloubky depth 2. Během implementace bylo zjištěno, že pro správnou funkcionalitu frameworkového návrhu získávání agentem zvolené akce metodou \texttt{getAction} se musí průběžně vracet nejen aktuální hodnota uzlu, ale i akce, která je pro daného agenta optimální (zda se jedná o maximalizační nebo minimalizační vrstvu) a to během vyhodnocování souběžně jako pár \texttt{[akce,hodnota]}.
 -PRIKLAD + UKAZKA VYPISU?-
 
 \section{Framework a MDP problematika}
-Hlavním objektem je ValueEstimationAgent (dědící od základní třídy Agent). Tento agent slouží především pro propojení prostředí problému (Ms. Pacman, gridworld) s $Q$-hodnotami párů (stav,akce), dále propojení stavu s jeho hodnotou ($V$) a nakonec propojení výsledných hodnot s nalezenou optimální strategiií.
+Hlavním objektem je \texttt{ValueEstimationAgent} (dědící od základní třídy Agent). Tento agent slouží především pro propojení prostředí problému (Ms. Pacman, gridworld) s $Q$-hodnotami párů (stav,akce), dále propojení stavu s jeho hodnotou ($V$) a nakonec propojení výsledných hodnot s výslednou nalezenou strategiií.
 Následující agenti od něj dále dědí následující základní metody:
 \begin{itemize}
-\item getQValue(state,action) - vrací Q-hodnotu páru (stav,akce)
-\item getValue(state) - vrací hodnotu stavu (po vybrání nejlepší možné akce)
-\item getPolicy(state) - vrací nejlepší možnou akci z daného stavu
+\item \texttt{getQValue(state,action)} - vrací Q-hodnotu páru (stav,akce)
+\item \texttt{getValue(state)} - vrací hodnotu stavu (po vybrání nejlepší možné akce)
+\item \texttt{getPolicy(state)} - vrací nejlepší možnou akci z daného stavu
 \end{itemize}
-\textbf{ValueIterationAgent} navíc potřebuje pro svoje chování model (přechodová funkce T, odměnová funkce R) a využívá pro to třídu MarkovDecisionProcess. MarkovDecisionProcess napojuje ve své metodě getTransitionStatesAndProbs(state, action) problematiku gridworldu na model, vrací tedy list párů $((s,a,s^\prime),T(s,a,s^\prime))$, tedy (následující možný stav z aktuálního stavu,jeho přechodová funkce = pravděpodobnost).
+\textbf{ValueIterationAgent} navíc potřebuje pro svoje chování model (přechodová funkce T, odměnová funkce R) a využívá pro to třídu \texttt{MarkovDecisionProcess} ze souboru \texttt{mdp.py}. \texttt{MarkovDecisionProcess} napojuje ve své metodě \texttt{getTransitionStatesAndProbs(state, action)} problematiku gridworldu na model, vrací tedy list párů $((s,a,s^\prime),T(s,a,s^\prime))$, tedy (následující možný stav z aktuálního stavu,jeho přechodová funkce = pravděpodobnost výskutu).
 \newline
-Abstraktní \textbf{ReinforcementAgent}, který je základním objektem pro agenty strojového učení, stará se o chování agenta během průbehu jednotlivých epizod, dále řeší vstupní argumenty a v případě Ms. Pacman o průběžný a finální výpis. Důležitými metodami jsou:
+Abstraktní \texttt{ReinforcementAgent}, který je základním objektem pro agenty strojového učení, stará se o chování agenta během průbehu jednotlivých iterací algoritmu a následný epizod provádění výsledné strategie, dále řeší vstupní argumenty a v případě Ms. Pacman o průběžný a finální výpis. Důležitými metodami jsou:
 \begin{itemize}
-\item observeTransition(state,action,nextState,deltaReward) -  voláno prostředím, které informuje agenta, že je získána nová hodnota přechodové funkce
-\item update(state, action, nextState, reward) - updatování nových odhadů Q-hodnot
+\item \texttt{observeTransition(state,action,nextState,deltaReward)} - voláno prostředím (Ms. Pacman, gridworld), které informuje agenta, že je získána nová hodnota přechodové funkce
+\item \texttt{update(state, action, nextState, reward)} - updatování nových odhadů Q-hodnot
 \end{itemize}
-ReinforcementAgent staví na odhadu Q-Hodnot, protože neobsahuje model a je rodičem objektu řešící Q-Learning na gridworld problém \textbf{QLearningAgent}. Podobný agent, avšak s odlišnými vstupními parametry pro Ms. Pacman jsou \textbf{PacmanQAgent} a nakonec dále dědící \textbf{ApproximateQAgent}, který implementuje algoritmus Aproximační Q-learning a vyuřžívá u toho třídy FeatureExtractor pro implementaci vektoru vlastností pro Ms. Pacman.
+\texttt{ReinforcementAgent} staví na odhadu Q-Hodnot, protože neobsahuje model a je rodičem objektu řešící Q-Learning na gridworld problém \texttt{QLearningAgent}. Podobný agent, avšak s odlišnými vstupními parametry pro Ms. Pacman jsou \texttt{PacmanQAgent} a nakonec dále dědící \texttt{ApproximateQAgent}, který implementuje algoritmus Aproximační Q-learning a vyuřžívá u toho třídy \texttt{FeatureExtractor} pro implementaci vektoru vlastností pro Ms. Pacman.
 
 \section{Value Iteration agent (ValueIterationAgent)}
 %http://artint.info/html/ArtInt_227.html
+Z vypočetních (nutnoast stanovit model) a názorných důvodů je tento agent zobrazen výhradně formou \textbf{gridworld} problému (mřížka hodnot definovaná v souboru \texttt{gridworld.py}, na obr. XYZ), kde jedno políčko ukazuje svou výslednou $V$-hodnotu, po zmáčknutí klávesy "Q" své 4 $Q-hodnoty$ pro každý směr a po dalším zmáčknutí klávesy se provede stanovený počet epizod (agentovo provedení výsledné strategie).
+Avšak určení nové hodnoty stavu $V$ poslouží i pro Q-Learningového agenta.
 -PSEUDOKÓD VALUE ITERATION???-... LEPSI POPIS V TEORII/NAVRHU!!! + PRIDAT PRIKLAD
 
 \section{Q-Learning agenti (QLearningAgent,PacmanQAgent)}
