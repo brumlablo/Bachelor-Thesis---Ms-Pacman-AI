@@ -127,7 +127,7 @@ V_{k+1}(s) \leftarrow \max_a \sum_{s^\prime}T(s,a,s^\prime) \left[R(s,a,s^\prime
 \end{displaymath}
 \item opakuj předchozí krok dokud vektor $V_k$ nekonverguje (konvergenci především zapřičiňuje $\gamma$, což zaručuje optimálnost metody): $\left|V_{k+1}(s)-V_k(s) \right| < presnost$.
 \end{enumerate}
-Velký rozdíl oproti Expectimaxu je ten, že se nemusí provádět neustálá \textit{rekurze} výpočtu očekávaného užitku, protože je už vypočten ve vektoru hodnot $V_k(s^\prime)$. Stále se však metoda potýká s vysokou prostorovou složitostí. Alternativou jsou proto metody \textbf{Policy iteration} \cite{RLAprox}, které se snaží o přímé nalezení optimální strategie raději než zdlouhavé výpočty hodnot. O těchto metodách se v souvislosti se strojovým učením zmiňuje další kapitola \ref{sec:rl}.
+Velký rozdíl oproti Expectimaxu je ten, že se nemusí provádět neustálá \textit{rekurze} výpočtu očekávaného užitku, protože je už vypočten ve vektoru hodnot $V_k(s^\prime)$ (algoritmus je iterativní: staví na každé předchozí vrstvě). Stále se však metoda potýká s vysokou prostorovou složitostí. Alternativou jsou proto metody \textbf{Policy iteration} \cite{RLAprox}, které se snaží o přímé nalezení optimální strategie raději než zdlouhavé přepočty nových hodnot. O těchto metodách se v souvislosti se strojovým učením zmiňuje další kapitola \ref{sec:rl}.
 
 \subsection{Q-hodnota}
 Posledním důležitým pojmem je Q-hodnota -ZDROJ-, která definuje optimální očekávaný užitek v budoucnosti z uzlu náhodnosti, tzv. \textit{q-stavu}, příklad na obrázku \ref{img:qvals}.
@@ -419,64 +419,94 @@ Samotný algoritmus Expectimax je (stejně jako Alpha Beta řezy) založený na 
 
 
 \subsection{Value Iteration agent}
-Tento agent je \textbf{pasivní plánovací agent} - provede veškeré své výpočty odhadů hodnot pomocí daného modelu světa a naplánuje si po každé iteraci optimální posloupnost akcí, které se mají následně provést = strategie (\textit{policy}). Provedení výsledné strategie pak probíhá v tzv. \textbf{epizodách}) (jedna epizoda = jeden pokus agenta o provedení strategie). Přepočet odhadů $V$-hodnot probíhá vždy do určitého stanoveného počtu $k$ iterací (podobné jako hloubka, agent by měl provést $k$-kroků výpočtu odhadů $V$-hodnot). Pseudokód Value Iteration lze vidět na \ref{alg:valiter}.
+Tento agent je \textbf{pasivní plánovací agent} - provede veškeré své výpočty odhadů hodnot pomocí daného modelu světa a naplánuje si po každé iteraci optimální posloupnost akcí, které se mají následně provést = strategie (\textit{policy}). Provedení výsledné strategie pak probíhá v tzv. \textbf{epizodách}) (jedna epizoda = jeden pokus agenta o provedení strategie). Přepočet odhadů $V$-hodnot probíhá vždy do určitého stanoveného počtu $k$ iterací (podobné jako hloubka, agent by měl provést $k$-kroků výpočtu odhadů $V$-hodnot). Pseudokód Value Iteration lze vidět na \ref{alg:valiter1} a \ref{alg:valiter2}.
 
 Velký vliv na průběh tohoto a následujících algoritmů má koeficient odměny $\gamma$ - čím je koeficient menší, tím se vyhodnocení hodnot zpomaluje a důkladněji se tak prozkoumá více hodnot (výsledné vyhodnocení posloupnosti akcí může například trvat déle vyhodnotit, ale pravděpodobnost optimality výsledné strategie bude větší).
 
 Dalším důležitou konstantou je odměna po každém agentově kroku (\textit{living reward}), tedy ohodnocení pohybu z jednoho neterminálního stavu do druhého. Odměna může být i záporná - čím je menší, tím rychleji se agent snaží najít terminální uzel a skončit tak hru/problém.
 
 Poslední důležitý vliv na algoritmus má náhodnost pohybu agenta (\textit{noise}, která modeluje stochastičnost akce, tedy pravděpodobnost, že se daná akce provede - ovlivňuje, jak často agent riskuje.
-
-
-PSEUDOKOD VALUE ITERATION + EPISOD OPTIMÁLNÍ STRATEGIE
+\newpage
 
 \begin{algorithm}
-\caption{\textbf{Value Iteration} - pseudokód}
-\label{alg:valiter}
+\caption{\textbf{Value Iteration} - pseudokód I.část}
+\label{alg:valiter1}
 \begin{algorithmic}[1]
 
-\Require stav hry
-\Ensure užitek stavu
-\Function{Expectimax}{stav}
-	\If{terminalni uzel}
-		\State \Return $\text{\Call{vyhodnocovaciFunkce}{stav}}$  \Comment{navrať užitek stavu}
-	\EndIf
-	\If{dalsiAgent == MAX}
-		\State \Return $\text{\Call{maxNode}{stav}}$  \Comment{vrstva Ms. Pacman = maximalizační}
-	\EndIf
-	\If{dalsiAgent == EXP}
-		\State \Return $\text{\Call{chanceNode}{stav}}$  \Comment{vstva nepřátel = odhad tahu}
-	\EndIf
+\Require model, koeficient gamma, počet episod, počet iterací,presnost
+\Function{ValueIteration}{model,gamma,maxEpisod,maxIteraci,presnost}
+	\For{i = 0, i $<$ maxIteraci,i++}
+		noveVHodnoty = vHodnoty \Comment{ $V_{k}$}
+		\For{stav $\in$ model.stavy}
+			\If{$\text{\Call{model.terminalniUzel}{stav}}$}
+				\State \Return noveVHodnoty[stav] = 0
+			\EndIf
+			\State hodnota = $-\infty$ \Comment{ $V_{k+1}$}
+			\ForAll{pripustne akce z modelu}
+				\State odhadQ = $\text{\Call{getQValue}{stav,akce}}$
+				\If{odhadQ $>$ hodnota} \Comment{největší možná Q-hodnota}
+					\State hodnota = odhadQ
+				\EndIf
+			\EndFor
+			\State noveVHodnoty[stav] = hodnota
+		\EndFor
+		\State \Return vHodnoty = noveVHodnoty
+		\If{$\left| \text{noveVHodnoty[stav] - noveVHodnoty[stav]}\right| < $ presnost}
+			\State \Return noveVhodnoty[stav]
+		\EndIf
+	\EndFor
+	\State \Return noveVhodnoty[stav]
 \EndFunction
+
 \algrule
-\Require stav hry
-\Ensure hodnota uzlu pro Ms. Pacman
-\Function{maxNode}{stav}
-    \State hodnota = $-\infty$
-    \ForAll{naslednici stavu}
-		\State tmp = $\text{\Call{Expectimax}{naslednik}}$
-		\If{tmp $>$ hodnota} \Comment{získej nejlepší možnou hodnotu pro Ms. Pacman}
+
+\Require stav, vektor V-Hodnot stavů
+\Ensure V-Hodnoty(stav)
+\Function{getValue}{stav}
+    \State \Return vHodnoty[stav]
+\EndFunction
+
+\algrule
+
+\Require model,stav,akce,koeficient gamma, vektor V-Hodnot stavů
+\Ensure Q-Hodnota(stav,akce)
+\Function{getQValue}{stav,akce}
+    \State qHodnota = 0.0
+    \ForAll{naslednici z modelu}	
+		\State p = $\text{\Call{model.prechodovaFunkce}{stav,akce,naslednik}}$ \Comment{pravděpodobnost}
+		\State r = $\text{\Call{model.odmenovaFunkce}{stav,akce,naslednik}}$ \Comment{odměna}
+		\State qHodnota += p * ( r + gamma * $\text{\Call{getValue}{naslednik}})$
+    \EndFor
+    \State \Return qHodnota
+\EndFunction
+\algstore{bkbreak}
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{\textbf{Value Iteration } - pseudokód II. část}
+\label{alg:valiter2}
+\begin{algorithmic}[1]
+\algrestore{bkbreak}
+\Require model, stav hry
+\Ensure nejlepší možná akce z daného stavu ($\pi$(stav))
+\Function{getPolicy}{model,stav}
+	\If{terminalni uzel}
+		\State \Return NULL\Comment{terminalní uzel nemá žádnou možnou akci k provedení; z modelu}
+	\EndIf
+	\State hodnota = $-\infty$
+    \ForAll{pripustne akce z modelu}
+		\State tmp = $\text{\Call{getQValue}{stav,akce}}$
+		\If{tmp $>$ hodnota} \Comment{největší možná Q-hodnota}
 		    \State hodnota = tmp
+			\State policy = akce
     	\EndIf
     \EndFor 
-    \State \Return hodnota
-\EndFunction
-\algrule
-\Require stav hry
-\Ensure hodnota uzlu pro nepřítele
-\Function{chanceNode}{stav}
-    \State hodnota = 0
-    \ForAll{naslednici stavu}	
-		\State p = $\text{\Call{pravdepodobnost}{stav,naslednik}}$ \Comment{pravděpodobnost výskytu následníka}	
-		\State hodnota += p * $\text{\Call{Expectimax}{naslednik}}$
-    \EndFor
-    \State \Return hodnota \Comment{navrať průměrnou hodnotu všech následníků}
+    \State \Return policy
 \EndFunction
 
 \end{algorithmic}
 \end{algorithm}
-
-DÁL POPSAT, PSEUDOKOD, NAPSAT VSECHNY PSEUDOKODY???
 
 \section{Q-Learning}
 Hlavní náplní agenta je sestavit tabulku Q-hodnot každému páru (akce, stav) ve hře a následně z ních po stanoveném počtu iterací určit optimální strategii. Z názorných důvodů bude tento agent zobrazen formou \textbf{gridworld} problému a dále i ve hře Ms. Pacman.

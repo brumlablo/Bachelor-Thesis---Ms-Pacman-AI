@@ -11,6 +11,13 @@
 # Student side autograding was added by Brad Miller, Nick Hay, and
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
+#------------------------------------------------------------------------------------------------#
+# BP: imlemented:
+# Q-Learning agents for
+    # gridworld (QLearningAgent)
+    # Ms. Pacman (PacmanQAgent)
+# Approximate Q-Learning Agent (ApproximateQAgent)
+#------------------------------------------------------------------------------------------------#
 
 from game import *
 from learningAgents import ReinforcementAgent
@@ -18,6 +25,8 @@ from featureExtractors import *
 
 import random,util,math
 
+#------------------------------------------------------------------------------------------------#
+# Q-Learning Agent for gridworld
 class QLearningAgent(ReinforcementAgent):
     """
       Q-Learning Agent
@@ -118,7 +127,8 @@ class QLearningAgent(ReinforcementAgent):
         self.qValues[(state,action)] = self.getQValue(state,action) + self.alpha * ((reward +
         self.discount * self.getValue(nextState)) - self.qValues[(state,action)])
 
-
+#------------------------------------------------------------------------------------------------#
+# Q-Learning Agent for Ms. Pacman
 class PacmanQAgent(QLearningAgent):
     "same as QLearningAgent, but with different default parameters"
 
@@ -149,7 +159,8 @@ class PacmanQAgent(QLearningAgent):
         self.doAction(state,action)
         return action
 
-
+#------------------------------------------------------------------------------------------------#
+# Aproximate Q-Learning Agent for Ms. Pacman
 class ApproximateQAgent(PacmanQAgent):
     """
        ApproximateQLearningAgent

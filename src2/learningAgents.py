@@ -16,7 +16,9 @@ from game import Directions, Agent, Actions
 
 import random,util,time
 
-# slightly edited and commented...
+#------------------------------------------------------------------------------------------------#
+# BP: slightly edited and commented...
+#------------------------------------------------------------------------------------------------#
 
 #------------------------------------------------------------------------------------------------#
 # abstract class for agents: ValueIterationAgent, ReinforcementAgent (and QLearningAgent,...)

@@ -12,6 +12,10 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
+#------------------------------------------------------------------------------------------------#
+# BP: implemented Value Iteration agent
+#------------------------------------------------------------------------------------------------#
+
 import mdp, util
 
 from learningAgents import ValueEstimationAgent
@@ -76,11 +80,12 @@ class ValueIterationAgent(ValueEstimationAgent):
         """
         return self.values[state]
 
+    # ------------------------------------------------------------------------------------------------#
     # expected future utility from a chance node = q-state
     def getQValue(self, state, action):
         return self.computeQValueFromValues(state, action)
 
-    def computeQValueFromValues(self, state, action): #chance node
+    def computeQValueFromValues(self, state, action):
         """
           Compute the Q-value of action in state from the
           value function stored in self.values.
@@ -93,7 +98,8 @@ class ValueIterationAgent(ValueEstimationAgent):
             qval += probability * ( self.mdp.getReward(state,action,nextState) + self.discount * self.getValue(nextState))
         return qval
 
-    # choose best possible action = max node
+    # ------------------------------------------------------------------------------------------------#
+    # return best possible action = max node
     def getPolicy(self, state):
         return self.computeActionFromValues(state)
 
@@ -101,9 +107,9 @@ class ValueIterationAgent(ValueEstimationAgent):
         "Returns directly the policy at the state (no exploration)."
         return self.computeActionFromValues(state)
 
-    def computeActionFromValues(self, state): # max node
+    def computeActionFromValues(self, state):
         """
-          FINAL POLICY COMPUTING
+          RETURNS BEST POLICY BASED ON Q-VALUES OF STATE
           (policy = the best action in the given state
           according to the values currently stored in self.values)
 
@@ -122,6 +128,6 @@ class ValueIterationAgent(ValueEstimationAgent):
         for action in actions:
             tmp = self.getQValue(state,action) # expected value
             if tmp > bestPolicy[1]:
-                bestPolicy = (action,tmp)
+                bestPolicy = [action,tmp]
         #print "policy - best action returned: ",bestPolicy[0]
         return bestPolicy[0]

@@ -11,8 +11,11 @@
 # Student side autograding was added by Brad Miller, Nick Hay, and
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
+#------------------------------------------------------------------------------------------------#
+# BP: basic agents implemented here
+
 # REFLEX AGENTS + BASIC AGENTS BEHAVIOUR IMPLEMENTATION
-# basuc usage examples:
+# basic usage examples:
 # more in help: python pacman.py -h
 # basic arguments examples:
     # no animation: --frameTime 0
@@ -32,6 +35,7 @@
 #
 # EXPECTIMAX AGENT, special layout, depth = 3 (default depth = 2), 5 games, quiet
 # python pacman.py -p ExpectimaxAgent -l smallClassic -a depth=3, -n 5 -q
+#------------------------------------------------------------------------------------------------#
 
 from util import manhattanDistance
 from game import Directions
