@@ -52,7 +52,8 @@ Metoda pro zmenšení stavového prostoru \cite{AI1}, odříznutím nadbytečný
 \item \boldmath$\alpha$ reprezentující dolní mez ohodnocení uzlu, tedy tah hráče
 \item \boldmath$\beta$ reprezentující horní mez ohodnocení uzlu, tedy tah protihráče
 \end{itemize}
-Algoritmus si pamatuje hodnoty svých mezí, a postupně je aktualizuje porovnáváním meze s následníky uzlu aktuální úrovně a to podle toho, na které úrovni se nachází: ($max$ - aktualizuji $\alpha$ na největší hodnotu následníků, $min$ - aktualizuji $\beta$ na nejmenší hodnotu následníků). Porovnávání probíhá dokud $\alpha < \beta$, takto se vynechají nadbytečné větve, jejichž procházení již nezmění výslednou cestu. Konečná hodnota kořene je stejná jako u Minimaxu, a pokud by se uzly správně seřadily, výrazně se tím změní vypočetní náročnost algoritmu. 
+Algoritmus si pamatuje hodnoty svých mezí, a postupně je aktualizuje porovnáváním meze s následníky uzlu aktuální úrovně a to podle toho, na které úrovni se nachází: ($max$ - aktualizuji $\alpha$ na největší hodnotu následníků, $min$ - aktualizuji $\beta$ na nejmenší hodnotu následníků). Porovnávání probíhá dokud $\alpha < \beta$, takto se vynechají nadbytečné větve, jejichž procházení již nezmění výslednou cestu. Konečná hodnota kořene je stejná jako u Minimaxu, a pokud by se uzly správně seřadily, výrazně se tím změní vypočetní náročnost algoritmu.
+ 
 \subsection{Expectimax}
 Expectimax \cite{mas} je jednou z možností jak řešit \textbf{hry s neurčitostí} jako je i Ms. Pacman. Hry s neurčitostí také zahrnují střídání hráčů a mají také úplnou informaci o stavu hry, avšak navíc využívají při získání těchto informací \textit{pravděpodobnosti}, které popisují náhodný charakter stavů ve hře. Příkladem jsou hry, kde figuruje házení kostkou nebo např. řízení libovolného robota v reálném světě, kdy se může náhodně pokazit nějaká jeho součástka. Expectimax obohacuje každý tah hráče (jako Minimax) o náhodnost. \textbf{Hodnoty stavů} nyní navíc reflektují průměrnou pravděpodobnost stavů: \newline \newline
 $V_{\min}(s) = \sum_{i=0} p_i * \min \: V(s^\prime)$, kde
@@ -201,7 +202,7 @@ Ukázka postupu metody přímého vyhodnocení (\textbf{direct evaluation} -ZDRO
 \end{enumerate}
 Není potřeba $T$ ani $R$, avšak je zde přílišná abstrakce (plýtvání informací) a vyhodnocení stavů díky tomu má příliš velkou časovou náročnost.
 \newline
-Další možností je \textbf{Time-Difference value learning} \cite{RLIntro}, dále TD učení, které se místo vyhodnocování hodnoty Value iteration snaží vyhodnotit přímo nové strategie na základě hodnot (\textbf{Policy iteration}). Vyhodnocení probíhá \textit{po každé akci}, protože nelze zaručit, že se strategie bude vracet znovu do již vyhodnoceného stavu, aby opět přehodnotila svou hodnotu.
+Další možností je \textbf{Time-Difference value learning} \cite{RLIntro}, dále TD učení, které se místo vyhodnocování hodnoty Value iteration (a nakonec teprve získání výsledné strategie) snaží vyhodnotit přímo nové strategie na základě hodnot (\textbf{Policy iteration}). Vyhodnocení probíhá \textit{po každé akci}, protože nelze zaručit, že se strategie bude vracet znovu do již vyhodnoceného stavu, aby opět přehodnotila svou hodnotu.
 \begin{enumerate}
 \item následuj $\pi$
 \item aktualizuj $V(s)$ pokaždé, když narazíš na přechod pro vzorek $(s,a,s^\prime,r)$. \textbf{Aktualizace} (\textit{update}) spočívá v tom, že se vezme aktuální hodnota stavu a přičte se k ní o koeficient $\alpha$ zmenšený rozdíl mezi očekávaným stavem a reálným vzorkem. $\alpha$ reguluje fakt, že nové odměny budou mít větší váhu než staré.
@@ -315,13 +316,18 @@ kde:
 
 \end{enumerate}
 
-\chapter{Ms. Pacman}
-\section{O hře a důvod jejího výběru}
+\chapter{Analýza a návrh}
+Tato kapitola se podílí na praktické části práce a to především praktické analýze problematiky Ms. Pacman (první část \ref{analyza}) a návrhu \textbf{chování agentů} (druhá část \ref{navrh}).
+
+\section{Analýza}
+\label{analyza}
+\subsection{O hře a důvod jejího výběru}
 \textit{Ms. Pacman} je arkádová hra z roku 1982, která vylepšuje původní koncept hry Pacman. Hra je obohacena o nový design hlavní postavy, mapy a především implementuje lepší umělou inteligenci nepřátel. Hlavní postavou ovládanou hráčem je nyní Ms. Pacman, nepřátelé zůstávají v podobě 4 barevných duchů. Cílem hry je dosáhnout co největšího skóre pojídáním kuliček, duchů (časově omezené; po snězení speciální větší kuličky tzv. power-upu), nebo ovoce.
 Zvýšení obtížnosti oproti Pacmanovi spočívá především v \textbf{opuštění deterministického chování duchů}, čímž pádem nelze předpovídat jejich chování. Tento fakt spolu se složitostí hry jsou hlavními faktory proč se na hru zaměřit z hlediska strojového učení.
-\section{Pravidla}
-Pro účely této práce se bere v potaz zjednodušení původní hry na vizuální demo tak, aby byla dobře vidět účinnost jednotlivých algoritmů a nebyly příliš vysoké nároky na výpočetní výkon. Demo není rozděleno na levely, odehrává se na zvolené mapě a je založeno na umělé inteligenci obou stran (Ms. Pacman vs 2 duchové). Cíl Ms. Pacman je maximalizovat skóre na aktuální mapě, zatímco cíl nepřátel je její skóre minimalizovat. Stochastické chování nepřátel je simulováno tak, aby co nejvíce odpovídalo svému vzoru (zdrojové kódy hry nejsou veřejné, tudíž nelze simulovat chování duchů naprosto stejně jako v originálu). Duchové se snaží chytit a zabít Ms. Pacman. Pokud se jim to povede, hra končí (skóre -500 bodů). Skóre Ms. Pacman se navyšuje jezením jídla (skóre +10bodů za jednu kuličku), power-upů a následným jezením duchů (skóre +200 bodů za každého ducha) po omezený čas trvání power-upu. Bonusová ovoce se neberou v potaz. Skóre se snižuje po dobu chození Ms. Pacman po bludišti bez jezení ovoce/duchů (každé takové kolo skóre -1 bodů). Mapy se též liší, jsou menší a obsahují pro umělou inteligenci Ms. Pacman problémová zákoutí, jako větší neohraničené plochy, stísněný prostor atp. Ms. Pacman a duchové mají stejnou rychlost. Tato zjednodušení slouží především ke snížení vypočetní náročnosti algorimů na běžně dostupný hardware.
-\section{Klasifikace dema Ms. Pacman z hlediska Teorie her}
+\subsection{Pravidla}
+Pro účely této práce se bere v potaz zjednodušení původní hry na vizuální demo tak, aby byla dobře vidět účinnost jednotlivých algoritmů a nebyly příliš vysoké nároky na výpočetní výkon. Demo není rozděleno na levely, odehrává se na zvolené mapě a je založeno na umělé inteligenci obou stran (Ms. Pacman vs 2 duchové). Cíl Ms. Pacman je maximalizovat skóre na aktuální mapě, zatímco cíl nepřátel je její skóre minimalizovat. Stochastické chování nepřátel je simulováno tak, aby co nejvíce odpovídalo svému vzoru (zdrojové kódy hry nejsou veřejné, tudíž nelze simulovat chování duchů naprosto stejně jako v originálu: chování duchů je tedy \textbf{náhodné}, avšak duchové dodržují např. následující pravidlo: nemohou jít zpět, pouze se otočit na křižovatce např. o 90 stupňů.). Duchové se snaží chytit a zabít Ms. Pacman. Pokud se jim to povede, hra končí (skóre -500 bodů). Skóre Ms. Pacman se navyšuje jezením jídla (skóre +10bodů za jednu kuličku), power-upů a následným jezením duchů (skóre +200 bodů za každého ducha) po omezený čas trvání power-upu. Bonusová ovoce se neberou v potaz. Skóre se snižuje po dobu chození Ms. Pacman po bludišti bez jezení ovoce/duchů (každé takové kolo skóre -1 bodů). Mapy se též liší, jsou menší a obsahují pro umělou inteligenci Ms. Pacman problémová zákoutí, jako větší neohraničené plochy, stísněný prostor atp. Ms. Pacman a duchové mají stejnou rychlost. Tato zjednodušení slouží především ke snížení vypočetní náročnosti algorimů na běžně dostupný hardware.
+
+\subsection{Klasifikace dema Ms. Pacman z hlediska Teorie her}
 Ms. Pacman je hra, tzn. strategická interakce mezi 2 a více hráči, kteří chtějí dosáhnout optimálního výsledku ve hře.
 Vizuální demo Ms. Pacman lze specifikovat podle několika kritérií:
 \begin{itemize}
@@ -331,44 +337,149 @@ Vizuální demo Ms. Pacman lze specifikovat podle několika kritérií:
 \item \textbf{dle počtu hráčů:} Ms. Pacman je maximizér a 2 duchové jsou minimizéři
 \item \textbf{dle komunikace hráčů:} \textit{nekooperativní hra} – Ms. Pacman a duchové spolu nekomunikují a souběžně hrají proti sobě (striktně kompetitivní hra)
 \item \textbf{dle zdrojů:} \textit{antagonistický konflikt} – Ms. Pacman a duchové sdílí jedno pevné maximální skóre
-dle herního plánu: \textit{grid-world game} – vše probíhá diskrétně, po polích na mřížce v herním bludišti, jež mohou nabývat více stavů: prázdná cesta, zeď, prázdná cesta s hráčem, cesta s kuličkou, cesta s power-upem
+dle herního plánu: \textit{gridworld game} – vše probíhá diskrétně, po polích na mřížce v herním bludišti, jež mohou nabývat více stavů: prázdná cesta, zeď, prázdná cesta s hráčem, cesta s kuličkou, cesta s power-upem
 \end{itemize}
 
-\chapter{Návrh}
+\section{Návrh}
 \label{navrh}
-Tato kapitola se podílí na praktické části práce a to především návrhu \textbf{chování agentů}.
-Po nastudování teorie je důležité jasně poupravit cíle práce: budou se porovnávat nejen metody Minimax a Alfa-Beta Řezy s učícím agentem, ale především také Expectimax, který bere v potaz stochastičnost akcí duchů. Tyto algoritmy se budou dále v textu označovat jako "základní algoritmy".
+Po nastudování teorie a analýze chování nepřátel ve hře (duchů) je důležité jasně poupravit cíle práce: budou se porovnávat nejen metody Minimax a Alfa-Beta Řezy s učícím agentem, ale především také Expectimax, který bere v potaz stochastičnost akcí duchů. Tyto algoritmy se budou dále v textu označovat jako \textit{základní algoritmy}.
+\newline
+Pro výpočet vzdáleností bude použita tzv. \textit{manhattonovská metrika} \cite{manhattanDist} jako standard pro gridworld problematiku, kde figuruje mřížka a 4 směry pohybu agenta (Lze vidět na obrázku \ref{img:manhattanDist}). Tato vzdálenost je měřena jako suma rozdílu absolutních vzdáleností koordinát dvou bodů $\left|x1-x2\right|+\left|y1-y2\right|$.
+\newpage
+
+\begin{figure}[!htbp]
+\begin{center}
+	\scalebox{0.08}{\includegraphics{img/manhattan.png}}
+	\caption{Červená, modrá i žlutá čára reprezentují stejnou manhattonskou vzdálenost o velikosti 12 (narozdíl od Euklidovské vzdálenosti reprezentované zelenou čárou.)}
+	\label{img:manhattanDist}
+\end{center}
+\end{figure}
+
+\subsection{Minimax, AlfaBeta řezy}
+Pro základní algoritmy bylo nutné vzít v potaz větší počet minimalizujících nepřátel, kteří se v každém tahu dané hloubky střídají s maximalizující Ms. Pacman, viz obrázek \ref{img:playersminimax}. Alfabeta i Minimax budou využívat vyhodnocovací funkci založenou na skóre aktuálního stavu ve hře. Algoritmy vyhodnocují stavy až do stanové hloubky/terminální uzlu a následně vrátí nejlepší možnou akci pro svého maximalizačního agenta Ms. Pacman.
+
+\begin{figure}[!htbp]
+\begin{center}
+	\scalebox{0.35}{\includegraphics{img/playersminimax.png}}
+	\caption{Ukázka střídání hráčů na stromu algoritmu Minimax.}
+	\label{img:playersminimax}
+\end{center}
+\end{figure}
+
+\subsection{Expectimax a lepší ohodnocovací funkce}
+Jelikož Expectimax průměruje hodnoty následníků ve svých uzlech náhodnosti \textit{chance node}, bere tedy v potaz hodnoty všech stavů (ne jen těch nejlepších a nejhorších, jak tomu bylo doposud). Proto bude pro tohoto agenta bude naimplementována kvalitnější vyhodnocovací funkce, která by měla společně s algoritmem dosáhnout lepších skóre než u předchozích agentů. Funkce bere v potaz nejen herní skóre následníka, ale také další součásti stavu hry (vzdálenosti jídla, duchů, power-upů atp. Tato funkce by se dala do budoucna vylepšit o algoritmy prohledávání stavového prostoru jako \textit{BFS}, \textit{DFS}\footnote{\textit{BFS} = slépé prohledávání do šířky, \textit{DFS} = slepé prohledávání do hloubky; tyto a další metody popisuje \cite{AI1}}, atp. tak, aby se dále brala v potaz například pozice stěn na herní desce. 
+\newline
+Samotný algoritmus Expectimax je (stejně jako Alpha Beta řezy) založený na algoritmu Minimax a je také z hlediska porovnání s pokročilými metodami umělé inteligence nejzajímavější, proto lze jako názornou ukázku uvést právě návrh jeho pseudokód \ref{alg:expectimax}.
+
+\begin{algorithm}
+\caption{\textbf{Expectimax} - pseudokód vyhodnocování hodnot stavů}
+\label{alg:expectimax}
+\begin{algorithmic}[1]
+
+\Require stav hry
+\Ensure užitek stavu
+\Function{Expectimax}{stav}
+	\If{terminalni uzel}
+		\State \Return $\text{\Call{vyhodnocovaciFunkce}{stav}}$  \Comment{navrať užitek stavu}
+	\EndIf
+	\If{dalsiAgent == MAX}
+		\State \Return $\text{\Call{maxNode}{stav}}$  \Comment{vrstva Ms. Pacman = maximalizační}
+	\EndIf
+	\If{dalsiAgent == EXP}
+		\State \Return $\text{\Call{chanceNode}{stav}}$  \Comment{vstva nepřátel = odhad tahu}
+	\EndIf
+\EndFunction
+\algrule
+\Require stav hry
+\Ensure hodnota uzlu pro Ms. Pacman
+\Function{maxNode}{stav}
+    \State hodnota = $-\infty$
+    \ForAll{naslednici stavu}
+		\State tmp = $\text{\Call{Expectimax}{naslednik}}$
+		\If{tmp $>$ hodnota} \Comment{získej nejlepší možnou hodnotu pro Ms. Pacman}
+		    \State hodnota = tmp
+    	\EndIf
+    \EndFor 
+    \State \Return hodnota
+\EndFunction
+\algrule
+\Require stav hry
+\Ensure hodnota uzlu pro nepřítele
+\Function{chanceNode}{stav}
+    \State hodnota = 0
+    \ForAll{naslednici stavu}	
+		\State p = $\text{\Call{pravdepodobnost}{stav,naslednik}}$ \Comment{pravděpodobnost výskytu následníka}	
+		\State hodnota += p * $\text{\Call{Expectimax}{naslednik}}$
+    \EndFor
+    \State \Return hodnota \Comment{navrať průměrnou hodnotu všech následníků}
+\EndFunction
+
+\end{algorithmic}
+\end{algorithm}
 
 
-Pro výpočet vzdáleností je použita tzv. \textit{manhattonovská metrika} jako standard pro grid-world problematiku, tato vzdálenost je měřena jako suma rozdílu absolutních vzdáleností koordinát dvou bodů $\left|x1-x2\right|+\left|y1-y2\right|$. Chování duchů je náhodné, avšak duchové dodržují následující pravidlo: nemohou jít zpět, pouze se otočit na křižovatce např. o 90 stupňů.
+\subsection{Value Iteration agent}
+Tento agent je \textbf{pasivní plánovací agent} - provede veškeré své výpočty odhadů hodnot pomocí daného modelu světa a naplánuje si po každé iteraci optimální posloupnost akcí, které se mají následně provést = strategie (\textit{policy}). Provedení výsledné strategie pak probíhá v tzv. \textbf{epizodách}) (jedna epizoda = jeden pokus agenta o provedení strategie). Přepočet odhadů $V$-hodnot probíhá vždy do určitého stanoveného počtu $k$ iterací (podobné jako hloubka, agent by měl provést $k$-kroků výpočtu odhadů $V$-hodnot). Pseudokód Value Iteration lze vidět na \ref{alg:valiter}.
 
-\section{Minimax, AlfaBeta řezy}
-Pro základní algoritmy bylo nutné vzít v potaz větší počet minimalizujících nepřátel, kteří se v každém tahu dané hloubky střídají s maximalizující Ms. Pacman. Alfabeta i Minimax budou využívat vyhodnocovací funkci založenou na skóre aktuálního stavu ve hře. Algoritmy vyhodnocují stavy až do stanové hloubky/terminální uzlu a následně vrátí nejlepší možnou akci pro svého maximalizačního agenta Ms. Pacman (MinimaxAgent, AlphaBetaAgent).
+Velký vliv na průběh tohoto a následujících algoritmů má koeficient odměny $\gamma$ - čím je koeficient menší, tím se vyhodnocení hodnot zpomaluje a důkladněji se tak prozkoumá více hodnot (výsledné vyhodnocení posloupnosti akcí může například trvat déle vyhodnotit, ale pravděpodobnost optimality výsledné strategie bude větší).
 
-\section{Expectimax a lepší ohodnocovací funkce}
-Pro Expectimax agenta bude dále naimplementována kvalitnější vyhodnocovací funkce, která by měla dosáhnout lepších výsledků než funkce předchozích agentů. Funkce bere v potaz nejen skóre, ale také další součásti stavu hry (vzdálenosti jídla, duchů, powerupů atp. Tato funkce by se dala do budoucna vylepšit o algoritmy prohledávání stavového prostoru jako BFS, DFS-FOOTNOTE- atp., aby se dále brala v potaz například pozice stěn.
-
-Algoritmus Expectimax je (stejně jako Alpha Beta řezy) založený na algoritmu Minimax a je také z hlediska porovnání s pokročilými metodami umělé inteligence nejzajímavější, proto lze jako názornou ukázku uvést právě jeho pseudokód:
--Pseudokód chování Agenta \texttt{ExpectimaxAgent}-:....
-
-\section{Value Iteration agent}
-Tento agent je pasivní plánovací agent - provede veškeré své výpočty odhadů hodnot pomocí daného modelu světa a naplánuje si tak optimální posloupnost akcí, které se mají následně provést = strategie (\textit{policy}). Provedení výsledné strategie pak probíhá v tzv. \textbf{epizodách}). Přepočet odhadů $V$-hodnot probíhá vždy do určitého stanoveného počtu $k$ iterací (podobné jako hloubka, agent by měl provést $k$-kroků výpočtu odhadů $V$-hodnot).
-
-Velký vliv průběh tohoto a následujících algoritmů má koeficient odměny $\gamma$ - čím je koeficient menší, tím se vyhodnocení hodnot zpomaluje a důkladněji se tak prozkoumá více hodnot (výsledné vyhodnocení posloupnosti akcí může například trvat déle vyhodnotit, ale pravděpodobnost optimality výsledné strategie bude větší).
-
-Dalším důležitou konstantou je odměna nebo penalta po každém agentově kroku (\textit{living reward} nebo též \textit{living penalty}), tedy ohodnocení pohybu z jednoho neterminálního stavu do druhého - čím je menší, až například záporná, tím rychleji se agent snaží najít terminální uzel a skončit tak hru/problém.
+Dalším důležitou konstantou je odměna po každém agentově kroku (\textit{living reward}), tedy ohodnocení pohybu z jednoho neterminálního stavu do druhého. Odměna může být i záporná - čím je menší, tím rychleji se agent snaží najít terminální uzel a skončit tak hru/problém.
 
 Poslední důležitý vliv na algoritmus má náhodnost pohybu agenta (\textit{noise}, která modeluje stochastičnost akce, tedy pravděpodobnost, že se daná akce provede - ovlivňuje, jak často agent riskuje.
 
+
 PSEUDOKOD VALUE ITERATION + EPISOD OPTIMÁLNÍ STRATEGIE
 
+\begin{algorithm}
+\caption{\textbf{Value Iteration} - pseudokód}
+\label{alg:valiter}
+\begin{algorithmic}[1]
 
+\Require stav hry
+\Ensure užitek stavu
+\Function{Expectimax}{stav}
+	\If{terminalni uzel}
+		\State \Return $\text{\Call{vyhodnocovaciFunkce}{stav}}$  \Comment{navrať užitek stavu}
+	\EndIf
+	\If{dalsiAgent == MAX}
+		\State \Return $\text{\Call{maxNode}{stav}}$  \Comment{vrstva Ms. Pacman = maximalizační}
+	\EndIf
+	\If{dalsiAgent == EXP}
+		\State \Return $\text{\Call{chanceNode}{stav}}$  \Comment{vstva nepřátel = odhad tahu}
+	\EndIf
+\EndFunction
+\algrule
+\Require stav hry
+\Ensure hodnota uzlu pro Ms. Pacman
+\Function{maxNode}{stav}
+    \State hodnota = $-\infty$
+    \ForAll{naslednici stavu}
+		\State tmp = $\text{\Call{Expectimax}{naslednik}}$
+		\If{tmp $>$ hodnota} \Comment{získej nejlepší možnou hodnotu pro Ms. Pacman}
+		    \State hodnota = tmp
+    	\EndIf
+    \EndFor 
+    \State \Return hodnota
+\EndFunction
+\algrule
+\Require stav hry
+\Ensure hodnota uzlu pro nepřítele
+\Function{chanceNode}{stav}
+    \State hodnota = 0
+    \ForAll{naslednici stavu}	
+		\State p = $\text{\Call{pravdepodobnost}{stav,naslednik}}$ \Comment{pravděpodobnost výskytu následníka}	
+		\State hodnota += p * $\text{\Call{Expectimax}{naslednik}}$
+    \EndFor
+    \State \Return hodnota \Comment{navrať průměrnou hodnotu všech následníků}
+\EndFunction
+
+\end{algorithmic}
+\end{algorithm}
 
 DÁL POPSAT, PSEUDOKOD, NAPSAT VSECHNY PSEUDOKODY???
 
 \section{Q-Learning}
 Hlavní náplní agenta je sestavit tabulku Q-hodnot každému páru (akce, stav) ve hře a následně z ních po stanoveném počtu iterací určit optimální strategii. Z názorných důvodů bude tento agent zobrazen formou \textbf{gridworld} problému a dále i ve hře Ms. Pacman.
-
 
 STANOVENÍ ALFY,EPSILONU ATD...
 STACI JEN REALIZACE ALGORITMU?
@@ -379,6 +490,7 @@ Důležitou částí návrhu řešení tohoto agenta je kvalitně definovat \tex
 \item vzdálenost nejbližší kuličky jídla
 \item vzdálenost nejbližšího power-upu
 \item počet duchů
+\item pozice Ms. Pacman - je v rohu?
 \end{itemize}
 Následně se stanoví návrh aproximační funkce vektoru na základě váhy každé vlastnosti.
 

@@ -22,7 +22,11 @@
 \DeclareUrlCommand\url{\def\UrlLeft{<}\def\UrlRight{>} \urlstyle{tt}}
 \DeclareUnicodeCharacter{00A0}{ }
 %zde muzeme vlozit vlastni balicky
-
+\usepackage{algorithm,algpseudocode}
+\renewcommand{\algorithmiccomment}[1]{\bgroup\hfill//~#1\egroup}
+\renewcommand{\algorithmicrequire}{\textbf{Vstup:}}
+\renewcommand{\algorithmicensure}{\textbf{Výstup:}}
+\newcommand{\algrule}[1][.2pt]{\par\vskip.5\baselineskip\hrule height #1\par\vskip.5\baselineskip}
 % =======================================================================
 % balíček "hyperref" vytváří klikací odkazy v pdf, pokud tedy použijeme pdflatex
 % problém je, že balíček hyperref musí být uveden jako poslední, takže nemůže
