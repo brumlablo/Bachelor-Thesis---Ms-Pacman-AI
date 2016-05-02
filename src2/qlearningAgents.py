@@ -31,9 +31,9 @@ class QLearningAgent(ReinforcementAgent):
     """
       Q-Learning Agent
       Parent instance variables
-        - self.epsilon (exploration prob)
+        - self.epsilon (exploration probability)
         - self.alpha (learning rate)
-        - self.discount (discount rate)
+        - self.discount (discount rate = gamma)
     """
     def __init__(self, **args):
         ReinforcementAgent.__init__(self, **args)
@@ -50,6 +50,8 @@ class QLearningAgent(ReinforcementAgent):
         # default - returning 0.0
         return self.qValues[(state,action)]
 
+    # ------------------------------------------------------------------------------------------------#
+    # best action of Q(state,action)
     def getValue(self, state):
         return self.computeValueFromQValues(state)
 
@@ -118,7 +120,7 @@ class QLearningAgent(ReinforcementAgent):
 
     def update(self, state, action, nextState, reward):
         """
-          The parent class calls this to observe a state = action => nextState and reward transition...
+          The parent class calls this to observe a (state,action,nextState) and reward transition...
           Q-Value update:
           used here: Q(state,action) = Q(state,action) + alpha(reward+ discount * bestAction' Q(s',a') - Q(s,a))
           ==

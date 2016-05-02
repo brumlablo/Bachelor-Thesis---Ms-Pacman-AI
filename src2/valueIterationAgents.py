@@ -41,8 +41,8 @@ class ValueIterationAgent(ValueEstimationAgent):
               mdp.getReward(state, action, nextState)
               mdp.isTerminal(state)
         """
-        self.mdp = mdp
-        self.discount = discount
+        self.mdp = mdp # model
+        self.discount = discount # gamma
         self.iterations = iterations
         self.values = util.Counter() # dict with default 0 (used for TERMINAL_STATE type)
         # values structure is dict with (x,y) grid position: value of the position
@@ -81,7 +81,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         return self.values[state]
 
     # ------------------------------------------------------------------------------------------------#
-    # expected future utility from a chance node = q-state
+    # return expected future utility of Q(state,action) (chance node)
     def getQValue(self, state, action):
         return self.computeQValueFromValues(state, action)
 
@@ -91,7 +91,7 @@ class ValueIterationAgent(ValueEstimationAgent):
           value function stored in self.values.
         """
         qval = 0.0
-        # probability = transitionFunction(state,action,nextState)
+        # probability = model.transitionFunction(state,action,nextState)
         for nextState,probability in self.mdp.getTransitionStatesAndProbs(state, action):
             # averaging all nextStates
             # Q_k(state) = suma(probability * (Reward(state, action, nextState) + discountFactor * Value_k(nextState)
@@ -99,7 +99,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         return qval
 
     # ------------------------------------------------------------------------------------------------#
-    # return best possible action = max node
+    # return best possible action (max node)
     def getPolicy(self, state):
         return self.computeActionFromValues(state)
 
