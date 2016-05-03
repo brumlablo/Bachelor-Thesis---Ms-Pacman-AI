@@ -76,6 +76,8 @@ class QLearningAgent(ReinforcementAgent):
         #print "policy - best action value returned: ", actionValue
         return actionValue
 
+    # ------------------------------------------------------------------------------------------------#
+    # EXECUTING POLICIES: return best possible action for state
     def getPolicy(self, state):
         return self.computeActionFromQValues(state)
 
@@ -99,6 +101,8 @@ class QLearningAgent(ReinforcementAgent):
         #print "policyPairs: ", bestPolicy
         return (random.choice(bestPolicy)[0])
 
+    # ------------------------------------------------------------------------------------------------#
+    # TRAINING: return action for state chosen based on epsilon-greedy (random or best possible)
     def getAction(self, state):
         """
           Compute the action to take in the current state.  With
