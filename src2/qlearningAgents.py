@@ -12,11 +12,48 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 #------------------------------------------------------------------------------------------------#
-# BP: imlemented:
+# BP: implemented:
 # Q-Learning agents for
     # gridworld (QLearningAgent)
     # Ms. Pacman (PacmanQAgent)
 # Approximate Q-Learning Agent (ApproximateQAgent)
+
+# AGENTS MANUAL USAGE EXAMPLES
+# QLearningAgent (used with gridworld.py, basic usage examples - see valueiterationsAgents.py)
+#
+# 5 episodes of training, manually
+# python gridworld.py -a q -k 5 -m
+#
+# 20 episodes of training on DiscountGrid, alpha=0.8, epsilon-greedy=0.5
+# python gridworld.py -a q -k 20 -g DiscountGrid --learningRate 0.8 --epsilon 0.5
+
+# MS. PACMAN DEMO - pacman,py basic usage:
+# basic usage examples:
+# more in help: python pacman.py -h
+# basic arguments examples:
+    # no animation: --frameTime 0
+    # quiet = no GUI (only stdout output): -q
+    # -n  or --numGames NumberOfGames
+    # -x  or --numTraining NumberOfTrainingEpisodes
+    # fixed randomSeed: -f
+    # ! alpha, gamma, epsilon set for each agent
+# PacmanQAgent (Ms. Pacman Q-Learning agent, used with pacman.py)
+#
+# 2000 episodes of training, 10 episodes of performing optimal (no epsilon-greedy, from training), smallGrid layout
+# python pacman.py -p PacmanQAgent -x 2000 -n 2010 -l smallGrid
+#
+# only 10 episodes of training on smallGrid
+# python pacman.py -p PacmanQAgent -n 10 -l smallGrid -a numTraining=10
+#
+# ApproximateQAgent (Ms. Pacman Approximate Q-Learning agent, used with pacman.py)
+#
+# 2000 episodes of training, 10 episodes of performing optimal (no epsilon-greedy, from training), smallGrid layout
+# python pacman.py -p ApproximateQAgent -x 2000 -n 2010 -l smallGrid
+#
+# 60 games from which 50 episodes of training
+# python pacman.py -p ApproximateQAgent -a extractor=BetterExtractor ---numGames 60 --numTraining 50 -l mediumGrid
+#
+# python pacman.py -p ApproximateQAgent -a extractor=SimpleExtractor -x 50 -n 60 -l mediumClassic
 #------------------------------------------------------------------------------------------------#
 
 from game import *

@@ -14,15 +14,18 @@
 #------------------------------------------------------------------------------------------------#
 # BP: basic agents implemented here
 
-# REFLEX AGENTS + BASIC AGENTS BEHAVIOUR IMPLEMENTATION
+# AGENTS MANUAL
+# REFLEX AGENTS + BASIC AGENTS
 # basic usage examples:
 # more in help: python pacman.py -h
 # basic arguments examples:
-    # no animation: --frameTime 0
-    # quiet = no GUI (only stdout output): -q
-    # 10 games in a row: -n 10
-    # fixed randomSeed: -f
-# possible layouts: in folder "layouts"
+#     no animation: --frameTime 0
+#     quiet = no GUI (only stdout output): -q
+#     -n NumberOfGames
+#     fixed randomSeed: -f
+# possible layouts: in folder "layouts" e.g smallClassic, mediumClassic, minimaxClassic, openClassic
+#
+# EXAMPLES
 #
 # REFLEX AGENT, 2 ghosts
 # python pacman.py -p ReflexAgent -k 2

@@ -14,6 +14,34 @@
 
 #------------------------------------------------------------------------------------------------#
 # BP: implemented Value Iteration agent
+
+# AGENTS MANUAL
+# VALUE ITERATION + BASIC Q-LEARNING AGENTS
+# basic usage examples:
+# (more in help: python gridworld.py -h)
+    # -g TypeOfGrid: BookGrid (default), BridgeGrid, DiscountGrid, ...
+    # -a agentType: "value" for ValueIterationAgent, "q" for "QLearningAgent"
+    # -i NumberOfIterations: similar to depth, default: 10
+    # -k  NumberOfEpisodes: episodes of performing optimal policy, default = 10
+    # --discount value: gamma, defualt 0.9
+    # --noise value<1: non-deterministic probability
+    # --livingReward value: default 0.0
+    # --epsilon value:probability of actions
+    # --learningRate value: aplha
+#
+# EXAMPLES
+#
+# VALUE ITERATION AGENT - USED WITH gridworld.py
+# default map, 100 iterations, 10 episodes
+# python gridworld.py -a value -i 100 -k 10
+#
+# type of grid: DiscountGrid , 5 iterations, default 10 episodes
+# python gridworld.py -a value -i 5 -g DiscountGrid
+#
+# type of grid: BridgeGrid , 100 iterations, gamma = 0.9, noise =  0.2
+# python gridworld.py -a value -i 100 -g BridgeGrid --discount 0.9 --noise 0.2
+#
+# Q-LEARNING AGENT EXAMPLES n qlearningAgents.py
 #------------------------------------------------------------------------------------------------#
 
 import mdp, util

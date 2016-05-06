@@ -22,7 +22,7 @@ k = kolikrat se ma provest policy = pocet epizod
 python gridworld.py -a value -i 100 -k 10
 python gridworld.py -a value -i 5
 
-BRIDGE GRID ???
+BRIDGE GRID
 python gridworld.py -a value -i 100 -g BridgeGrid --discount 0.9 --noise 0.2
 
 Q-LEARNING GRIDWORLD
