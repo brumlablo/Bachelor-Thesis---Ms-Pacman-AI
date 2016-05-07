@@ -32,12 +32,10 @@ class ValueEstimationAgent(Agent):
       V(s) = max_{a in actions} Q(s,a)
       policy(s) = arg_max_{a in actions} Q(s,a)
 
-      Both ValueIterationAgent and QLearningAgent inherit
-      from this agent. While a ValueIterationAgent has
-      a model of the environment via a MarkovDecisionProcess
-      (see mdp.py) that is used to estimate Q-Values before
-      ever actually acting, the QLearningAgent estimates
-      Q-Values while acting in the environment.
+      parent of:
+        ValueIterationAgent - needs model of the environment from MarkovDecisionProcess (mdp.py),
+                              used to estimate Q-Values before acting
+        QLearningAgent      - estimates Q-Values while acting in the environment
     """
 
     def __init__(self, alpha=1.0, epsilon=0.05, gamma=0.8, numTraining = 10):
@@ -125,6 +123,7 @@ class ReinforcementAgent(ValueEstimationAgent):
         """
         return self.actionFn(state)
 
+    # new transition
     def observeTransition(self, state,action,nextState,deltaReward):
         """
             Called by environment to inform agent that a transition has
@@ -152,7 +151,7 @@ class ReinforcementAgent(ValueEstimationAgent):
             self.accumTestRewards += self.episodeRewards
         self.episodesSoFar += 1
         if self.episodesSoFar >= self.numTraining:
-            # Take off the training wheels
+            # stop training
             self.epsilon = 0.0    # no exploration
             self.alpha = 0.0      # no learning
 
@@ -182,9 +181,6 @@ class ReinforcementAgent(ValueEstimationAgent):
         self.alpha = float(alpha)
         self.discount = float(gamma)
 
-    ################################
-    # Controls needed for Crawler  #
-    ################################
     def setEpsilon(self, epsilon):
         self.epsilon = epsilon
 
@@ -202,18 +198,18 @@ class ReinforcementAgent(ValueEstimationAgent):
         self.lastState = state
         self.lastAction = action
 
-    ###################
-    # Pacman Specific #
-    ###################
+    #######################
+    # Ms. Pacman Specific #
+    #######################
 
-    # conncecting agent's behaviour with Ms. Pacman Game
+    # connecting agent's behaviour with Ms. Pacman Game
     def observationFunction(self, state):
         """
             Successor state where we ended up after our last action. Called by environment...
         """
         if not self.lastState is None:
             reward = state.getScore() - self.lastState.getScore()
-            self.observeTransition(self.lastState, self.lastAction, state, reward)
+            self.observeTransition(self.lastState, self.lastAction, state, reward) # start update of Q-values
         return state
 
     def registerInitialState(self, state):
@@ -229,7 +225,7 @@ class ReinforcementAgent(ValueEstimationAgent):
         self.observeTransition(self.lastState, self.lastAction, state, deltaReward)
         self.stopEpisode()
 
-        # Make sure we have this var
+        # mandatory variables for output
         if not 'episodeStartTime' in self.__dict__:
             self.episodeStartTime = time.time()
         if not 'lastWindowAccumRewards' in self.__dict__:

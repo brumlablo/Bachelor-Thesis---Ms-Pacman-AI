@@ -76,14 +76,10 @@ class ValueIterationAgent(ValueEstimationAgent):
         # values structure is dict with (x,y) grid position: value of the position
         # e.g. [(0,1):-10.0,(5,3):0.0]
 
-        #st = 0
         for k in range(iterations): # iterations + 1 for V0 layer
-            futureValues = self.values.copy() # current values V_k
-            #print "----------------------------",k,"---------------------------"
+            futureValues = self.values.copy() # V_{k+1} <- V_k
             for state in self.mdp.getStates():
-                #print "state: ",st,"...",state
-                # legal actions for state
-                actions = self.mdp.getPossibleActions(state)
+                actions = self.mdp.getPossibleActions(state) # possible actions for state
                 # terminal node test
                 if mdp.isTerminal(state) or len(actions) == 0:
                     futureValues[state] = 0
@@ -93,7 +89,7 @@ class ValueIterationAgent(ValueEstimationAgent):
                 value = float("-inf") # V_{k+1}
                 for action in actions:
                     #print "         action:",action
-                    expectedQValue = 0.0 # suma of q-values = resulting states s'
+                    expectedQValue = 0.0 # suma of q-values for resulting state s'
                     expectedQValue = self.getQValue(state, action)
                     if expectedQValue > value: # best value possible of expected rewards
                         value = expectedQValue
@@ -109,7 +105,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         return self.values[state]
 
     # ------------------------------------------------------------------------------------------------#
-    # return expected future utility of Q(state,action) (chance node)
+    # return expected future utility of Q(state,action) (chance node) from V(state)
     def getQValue(self, state, action):
         return self.computeQValueFromValues(state, action)
 
@@ -119,27 +115,28 @@ class ValueIterationAgent(ValueEstimationAgent):
           value function stored in self.values.
         """
         qval = 0.0
-        # probability = model.transitionFunction(state,action,nextState)
+        # state,probability = model.transitionFunction(state,action,nextState)
         for nextState,probability in self.mdp.getTransitionStatesAndProbs(state, action):
             # averaging all nextStates
-            # Q_k(state) = suma(probability * (Reward(state, action, nextState) + discountFactor * Value_k(nextState)
+            # Q_k(state,action) = suma(probability * (Reward(state, action, nextState) + discountFactor * Value_k(nextState)
             qval += probability * ( self.mdp.getReward(state,action,nextState) + self.discount * self.getValue(nextState))
         return qval
 
     # ------------------------------------------------------------------------------------------------#
-    # return best possible action (max node)
+    # return state policy (max node)
+
+    # called by environment (gridwrold.py) AFTER Value Iteration evaluation (after exploration)
     def getPolicy(self, state):
         return self.computeActionFromValues(state)
 
+    # called by environment (gridwrold.py), returns directly the policy at the state (no exploration)
     def getAction(self, state):
-        "Returns directly the policy at the state (no exploration)."
         return self.computeActionFromValues(state)
 
     def computeActionFromValues(self, state):
         """
           RETURNS BEST POLICY BASED ON Q-VALUES OF STATE
-          (policy = the best action in the given state
-          according to the values currently stored in self.values)
+          (policy = the best action in the given state based on current self.values)
 
           Choosing optimal policy (similar to max node in Expectimax)
           policy* = max action of Q-Value*(state) (state,action,nextState)
