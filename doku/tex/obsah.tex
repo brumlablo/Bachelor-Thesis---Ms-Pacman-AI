@@ -509,7 +509,7 @@ Algoritmus bude implementován dle rovnic z teoretické sekce \ref{teorie:valite
 
 \subsection{Q-Learning}
 \label{navrh:qlearnagent}
-Zatímco metoda Value Iteration má k dispozici Q-Hodnoty z modelu, z nichž si sestavuje vektor V-Hodnot, Q-Learning agent se během tréninku \textbf{aktivně učí} Q-hodnoty akcí (jejich pravděpodobnosti výskytu i odměny) a tím průběžně vytváří vlastní odhad modelu. Na výpočet Q-hodnot má kromě již uvedených parametrů (z předchozí sekce) velký vliv parametr $\epsilon-greedy$, který určuje určuje pravděpodobnost, zda se má provést optimální (pravděpodobnost $1-\epsilon$), či náhodná akce (pravděpodobnost $\epsilon$) \textit{(exploitation/exploration ratio)}. Čím je tento parametr vyšší, tím pravděpodobněji se agent chová dle své akuální optimální akce. Dalším důležitým faktorem je $\alpha$, která ovlivňuje rychlost učení. Čím je větší alfa, tím víc se dává důraz na nové vzorky. Experimentální část práce \ref{experiment} se zaměřuje na co nejvhodnější stanovení těchto parametrů a jejich vliv na kvalitu výslené umělé inteligence pro daný problém.
+Zatímco metoda Value Iteration má k dispozici Q-Hodnoty z modelu, z nichž si sestavuje vektor V-Hodnot, Q-Learning agent se během tréninku \textbf{aktivně učí} Q-hodnoty akcí (jejich pravděpodobnosti výskytu i odměny) a tím průběžně vytváří vlastní odhad modelu. Na výpočet Q-hodnot během tréninku má kromě již uvedených parametrů (z předchozí sekce) velký vliv parametr $\epsilon-greedy$, který určuje určuje pravděpodobnost, zda se má provést optimální (pravděpodobnost $1-\epsilon$), či náhodná akce (pravděpodobnost $\epsilon$) \textit{(exploitation/exploration ratio)}. Čím je tento parametr vyšší, tím pravděpodobněji se agent chová dle své akuální optimální akce. Dalším důležitým faktorem je $\alpha$, která ovlivňuje rychlost učení. Čím je větší alfa, tím víc se dává důraz na nové vzorky. Experimentální část práce \ref{experiment} se zaměřuje na co nejvhodnější stanovení těchto parametrů a jejich vliv na kvalitu výslené umělé inteligence pro daný problém.
 \newline
 Hlavní náplní agenta je sestavit tabulku aktuálních odhadů Q-Hodnot ke všem párům (stav,akce). Tabulka se postupně zaplňuje a obnovuje novými $Q^*$-hodnotami zjišťovanými aktivně po provedení akce z jednoho stavu do svého následníka dle rovnic v sekci \ref{teorie:qlearning} (vyvoláno updatem hodnot).
 
@@ -613,23 +613,23 @@ Právě ohodnocovací funkce se překvapivě stala největším problémem při 
 
 \begin{figure}[!htbp]
 \begin{center}
-  \scalebox{0.85}{\includegraphics{img/reflexthrashV.png}}
+  \scalebox{0.6}{\includegraphics{img/reflexthrashV.png}}
   \caption{Na obrázku lze vidět problematické místo pro ohodnocovací funkci agenta. Zelená čára reprezentuje stejnou manhattonovskou vzdálenost (o velikosti 3 políčka) mezi Ms. Pacman a nebližší kuličkou jídla.}
   \label{img:reflexthrashV}
 \end{center}
 \end{figure}
 
 \section{Základní algorimy}
-Základní algoritmy vč. reflexivního agenta jsou implementovány pro problém Ms. Pacman a jejich spuštění je detailně popsáno v přílohové části manuál \ref{priloha:manualp}. Algoritmy musí mít přehled, která strana je na tahu na základě indexu agenta a také o kolikátou vrstvu střídání Ms. Pacman vs. (1-$N$) duchů se jedná - to zajišťuje jejich instanční proměnná \texttt{depth}. Pro časovou a výpočetní únosnost byla zvolena výchozí hodnota hloubky \texttt{depth} 2. Pro správnou funkcionalitu frameworkového návrhu získávání agentem zvolené akce metodou \texttt{getAction} se musí průběžně vracet nejen aktuální hodnota uzlu, ale i \textbf{akce}, která je pro daného agenta optimální (zda se jedná o maximalizační nebo minimalizační vrstvu (popř. včetně vlivu pravděpodobnosti u \texttt{ExpectimaxAgent})). Během vyhodnocování se souběžně pracuje s polem \texttt{[akce,hodnota]} a následně, až se algoritmy dostanou ke kořeni (agent Ms. Pacman) je vrácena pouze vyhodnocená akce, jež má agent právě provést. Během implementace se ukázalo, že je názornější zakázat agentovi se zastavit (vynechat z vyhodnocení přípustnou akci \texttt{STOP}), aby v případech s podobným ohodnocením stavů, jako u reflexivního agenta bylo jasně vidět zacyklené chování agenta.
-Následující výňatek z kódu ukazuje metodu \texttt{getAction} u agenta \texttt{AlphaBetaAgent}\footnote{Komentáře v kódu jsou psány anglicky, aby navazovaly na framework. Výňatek má komentáře přeloženy.}.
+Základní algoritmy vč. reflexivního agenta jsou implementovány pro problém Ms. Pacman (a její různé \textbf{mapy bludiště} ze složky \texttt{src/layouts}) a jejich spuštění je detailně popsáno v přílohové části manuál \ref{priloha:manualp}. Algoritmy musí mít přehled, která strana je na tahu na základě indexu agenta a také o kolikátou vrstvu střídání Ms. Pacman vs. (1-$N$) duchů se jedná - to zajišťuje jejich instanční proměnná \texttt{depth}. Pro časovou a výpočetní únosnost byla zvolena výchozí hodnota hloubky \texttt{depth} 2. Pro správnou funkcionalitu frameworkového návrhu získávání agentem zvolené akce metodou \texttt{getAction} se musí průběžně vracet nejen aktuální hodnota uzlu, ale i \textbf{akce}, která je pro daného agenta optimální (zda se jedná o maximalizační nebo minimalizační vrstvu (popř. včetně vlivu pravděpodobnosti u \texttt{ExpectimaxAgent})). Během vyhodnocování se souběžně pracuje s polem \texttt{[akce,hodnota]} a následně, až se algoritmy dostanou ke kořeni (agent Ms. Pacman) je vrácena pouze vyhodnocená akce, jež má agent právě provést. Během implementace se ukázalo, že je názornější zakázat agentovi se zastavit (vynechat z vyhodnocení přípustnou akci \texttt{STOP}), aby v případech s podobným ohodnocením stavů, jako u reflexivního agenta bylo jasně vidět zacyklené chování agenta.
+Výňatek z kódu \ref{code:abaction} ukazuje metodu \texttt{getAction} u agenta \texttt{AlphaBetaAgent}\footnote{Komentáře v kódu jsou psány anglicky, aby navazovaly na framework. Výňatek má komentáře přeloženy.}.
 
-\begin{lstlisting}[language=Python,texcl=true]
+\begin{python}[caption={získání akce u \texttt{AlphaBetaAgent}},label={code:abaction}]
 def getAction(self, gameState):
-  # získání hodnot z hlavní funkce AlfaBeta
-  value = self.AlphaBeta(gameState, self.index, 0,
-  float("-inf"), float("inf")) #inicializace parametrů alfa a beta
-  return value[0] # vrácení akce pro hru
-\end{lstlisting}
+   # ziskani hodnot z metody AlfaBeta objektu AlphaBetaAgent
+   value = self.AlphaBeta(gameState, self.index, 0,
+   float("-inf"), float("inf")) # inicializace parametru alfa a beta
+   return value[0] # vraceni akce pro hru
+\end{python}
 
 \subsection{Ohodnocovací funkce}
 Vyhodnocovací funkce následníků \texttt{evaluationFunction} pro agenty \texttt{MinimaxAgent} a~\texttt{AlphaBetaAgent} je založena na jejich skóre, jak již bylo zmíněno v sekci \ref{navrh:minabmaxy}.
@@ -639,8 +639,6 @@ Dále byla implementována lepší vyhodnocovací funkce stavu \texttt{betterEva
   \item \texttt{ghostFactor} - pozitivně vnímá: vystrašený chytitelný duch; negativně vnímá: vzdálenost nejbližšího nevystrašeného ducha menší jak 4 políčka (přičtením duchovy vzdálenosti tak, aby platilo: Čím je blíž, tím je \texttt{ghostFactor} nižší) atp.
 \end{itemize}
 Dohromady tyto faktory společně se skórem stavu dávají finální ohodnocení stavu \texttt{value}, které prochází algoritmem Expectimax.
-\subsection{Mapy a výpis}
-UKAZKA VYPISU + SCREENSHOT MINIMAX MAPY
 
 \section{Framework a MDP problematika}
 Hlavním objektem pro pokročilé agenty je abstraktní objekt \texttt{ValueEstimationAgent} (dědící od základní třídy \texttt{Agent}; v souboru \texttt{learningAgents.py}). Tento agent slouží především pro propojení prostředí problému (Ms. Pacman, gridworld) s Q-hodnotami párů (stav,akce), dále propojení stavu s jeho V-hodnotou ($V(s)$) a nakonec propojení výsledných hodnot s výslednou nalezenou strategiií ($\pi(s)$).
@@ -660,56 +658,83 @@ Abstraktní \texttt{ReinforcementAgent}, který je základním objektem pro vše
 \end{itemize}
 \texttt{ReinforcementAgent} staví na odhadu tabulky Q-Hodnot, protože neobsahuje model a je rodičem objektu řešící Q-Learning pro gridworld problémy \texttt{QLearningAgent}. Podobný agent, avšak s odlišnými vstupními parametry pro problém Ms. Pacman jsou \texttt{PacmanQAgent} a nakonec dále dědící \texttt{ApproximateQAgent}, který implementuje algoritmus Aproximační Q-learning a využívá u toho třídy \texttt{FeatureExtractor} pro implementaci vektoru vlastností pro Ms. Pacman.
 
-\section{Value Iteration agent (\texttt{ValueIterationAgent})}
-Objekt \texttt{ValueIterationAgent} provádí své vyhodnocení V-Hodnot již v konstruktoru a to do pevného počtu iterací. Důvodem opuštění podmínky konvergence je především možnost pozorovat kolik iterací stačí pro optimalitu strategie. Z vypočetních (nutnost stanovit model) a názorných důvodů je tento agent zobrazen výhradně formou \textbf{gridworld} problémů (mřížky hodnot začínající se definovanými odměnami spustitelné pomocí \texttt{gridworld.py} - viz manuál \ref{priloha:manualg}), kde jedno políčko po provedení metody ukazuje svou výslednou V-hodnotu (po provedení počtu daných iterací), po zmáčknutí klávesy (např. "Q") své 4 Q-hodnoty pro každý směr/akci a agent následně provede stanovený počet epizod svého chování (agentovo provedení vyhodnocené strategie). Nejdůležitější proměnná \texttt{values} slouží pro uložení aktuálních V-hodnot ve formě \textit{slovníku} pro každé pole mřížky a její aktuální V-hodnotu např. [(0,1):-10.0,(5,3):0.0]). Po každé iteraci se V-Hodnoty přepíší na aktuální, to lze vidět na výňatku z kódu konstruktoru agenta:
+\section{Value Iteration agent (\texttt{ValueIterationAgent}) a gridworld problémy}
+Objekt \texttt{ValueIterationAgent} provádí své vyhodnocení V-Hodnot již v konstruktoru a to do pevného počtu iterací. Důvodem opuštění podmínky konvergence je především možnost pozorovat kolik iterací stačí pro optimalitu strategie. Z vypočetních (nutnost stanovit model) a názorných důvodů je tento agent zobrazen výhradně formou \textbf{gridworld} problémů (mřížky hodnot začínající se definovanými odměnami spustitelné pomocí \texttt{gridworld.py} - viz manuál \ref{priloha:manualg}), kde jedno políčko po provedení metody ukazuje svou výslednou V-hodnotu (po provedení počtu daných iterací), po zmáčknutí klávesy (např. "Q") své 4 Q-hodnoty pro každý směr/akci a agent následně provede stanovený počet epizod svého chování (agentovo provedení vyhodnocené strategie). Nejdůležitější proměnná \texttt{values} slouží pro uložení aktuálních V-hodnot ve formě \textit{slovníku} pro každé pole mřížky a její aktuální V-hodnotu např. [(0,1):-10.0,(5,3):0.0]). Po každé iteraci se V-Hodnoty přepíší na aktuální, to lze vidět na výňatku z kódu konstruktoru agenta \ref{code:valagent}:
 
-\begin{lstlisting}[language=Python,texcl=true]
-self.mdp = mdp     # MDP model pro gridworld
+\begin{python}[caption={Konstruktor \texttt{ValueIterationAgent}},label={code:valagent}]
+# inicializace instancnich promennych
+self.mdp = mdp			# MDP model pro gridworld
 self.discount = discount     # gamma
-self.iterations = iterations # počet iterací
-self.values = util.Counter() # slovník V-hodnot
+self.iterations = iterations # pocet iteraci
+self.values = util.Counter() # slovnik V-hodnot
 
 for k in range(iterations):
-  futureValues = self.values.copy()   # $V_{k+1} \leftarrow V_k$
-  for state in self.mdp.getStates():  # pro každý stav modelu (pole mřížky)
-    # získej možné akce stavu
-    actions = self.mdp.getPossibleActions(state)
-    # pokud je stav terminální, ulož $V[stav]_{k+1} = 0$ a pokračuj na nový stav
-    if mdp.isTerminal(state) or len(actions) == 0:
-      futureValues[state] = 0
-      continue
-    # získej nejlepší hodnotu z odhadů užitků všech akcí přechodu
-    # = Q-hodnot
-    value = float("-inf")
-    for action in actions:
-      # suma Q-hodnot pro každou akci
-      expectedQValue = 0.0
-      # napojení na model
-      expectedQValue = self.getQValue(state, action)
-      if expectedQValue > value:
-        value = expectedQValue
-    # $V^*(s)$ - nejlepší hodnota očekávaného budoucího užitku
-    futureValues[state] = value
-    self.values = futureValues # přepiš V-Hodnoty na aktuální
-\end{lstlisting}
+   futureValues = self.values.copy()   # $V_{k+1} \leftarrow V_k$
+   for state in self.mdp.getStates():  # pro kazdy stav modelu (1 pole mrizky)
+      # ziskej pripustne akce pro stav
+      actions = self.mdp.getPossibleActions(state)
+      # pokud je stav terminalni, uloz $V[stav]_{k+1} = 0$ a pokracuj na novy stav
+      if mdp.isTerminal(state) or len(actions) == 0:
+         futureValues[state] = 0
+         continue
+      # ziskej nejlepsi hodnotu z odhadu uzitku vsech akci prechodu
+      # = z Q-hodnot
+      value = float("-inf")
+      for action in actions:
+         # suma Q-hodnot pro kazdou akci
+         expectedQValue = 0.0
+         # napojení na model - ziskani Q-hodnot pro stav
+         expectedQValue = self.getQValue(state, action)
+         if expectedQValue > value:
+            value = expectedQValue
+      # $V^*(s)$ - nejlepsi hodnota ocekavaneho budouciho uzitku
+      fut\label{navrh:qlearnagent}ureValues[state] = value
+   self.values = futureValues # prepis V-Hodnoty na aktualni
+\end{python}
 
-Framework nabízí hned několik gridworld problémů, avšak nejzajímavější jsou:
+Framework nabízí hned několik \textbf{gridworld problémů}, avšak nejzajímavější jsou:
 \begin{itemize}
   \item \texttt{BookGrid}, který byl již ukázán v teoretické části (obrázky \ref{img:policy} a \ref{img:qvals}).
-  \item \texttt{DiscountGrid}, problém zahrnující 2 terminální cíle (s pozitivní odměnou) a útes 4 terminálních stavů s negativní odměnou. Agent se potýká s tím, zda jít delší bezpečnou cestou, nebo kratší riskantnější cestou podél útesu. Rozdílné chování agenta je ovlivňováno instanční proměnnou \texttt{gamma} (koeficient odměny), počet provedených iterací a stochastičnost agentových akcí. Proto je tento problém ideální na zkoumání.
-  \item \texttt{BridgeGrid}, problém modelující most do terminálního cíle podél útesů z každé strany.
+  \item \texttt{DiscountGrid}, problém zahrnující 2 terminální cíle (s pozitivní odměnou) a útes 4 terminálních stavů s velmi negativní odměnou. Agent se potýká s tím, zda jít delší bezpečnou cestou, nebo kratší riskantnější cestou podél útesu a také s faktem, že cíle mají rozdílné odměny (vzdálenější má hodnotnější odměnu). Rozdílné chování agenta je ovlivňováno instanční proměnnou \texttt{gamma} (koeficient odměny), počtem provedených iterací a stochastičností agentových akcí. Proto je tento problém ideální na zkoumání.
+  \item \texttt{BridgeGrid}, problém modelující most mezi pozitivními terminálními cíli podél útesů z každé strany. Ukázku tohoto gridu lze vidět na obrázku \ref{img:bridgeGridDefault}.
 \end{itemize}
-Tyto problémy budou experimenálně zkoumány v následující kapitole \ref{exper}.
-\newline
-UKÁZKA GRIDWORLD PROBLÉMŮ- SCREENSHOTY
-\newline
- Výsledné vyhodnocení chování agenta je velmi podobné jako u Q-Learning Agentů (viz ukázka kódu UKÁZKA PROVEDENÍ CHOVÁNÍ u Q-Learnign agenta), avšak lze provést až po ukončení výpočtů V-hodnot (v kódu objektová proměnná \textit{values}) a nevyužívá $\epsilon-greedy$, takže se vždy provede nejlepší možná akce stavu.
+Tyto problémy budou experimenálně otestovány i Q-Learning agentem \texttt{QLearningAgent} v následující kapitole \ref{exper}.
+
+\begin{figure}[!htbp]
+\begin{center}
+  \scalebox{0.35}{\includegraphics{img/bridgeGridDefault.png}}
+  \caption{Screenshot počáteční modelu gridworld problému \texttt{BridgeGrid} pro Value Iteration agenta (Q-Learning agent toto ohodnocení odměn stavů nemá) ukazuje stavy a jejich odměnu. Agent je reprezentovaný modrou tečkou.}
+  \label{img:bridgeGridDefault}
+\end{center}
+\end{figure}
+
+Výsledné provedení chování agenta je velmi podobné jako u Q-Learning Agentů - viz výňatek z kódu \ref{code:qpolicy}, avšak lze pro optimalitu strategie provést až po provedení iterací V-hodnot (v kódu objektová proměnná \textit{values}) a neprovádí trénink (nevyužívá $\epsilon-greedy$), takže se vždy provede nejlepší možná akce stavu na základě odhadů Q-hodnot z modelu.
 
 \section{Q-Learning agenti (\texttt{QLearningAgent},\texttt{PacmanQAgent)}}
-Jak již bylo řešeno, tento agent si musí model odhadnout sám. Využívá k tomu především vhodný poměr prozkoumávání a uplatňování dosud zjištěného odhadu optimální akce z daného stavu (exporation/exploitation ratio). Tento poměr je dán parametrem $\epsilon-greedy$, který určuje náhodnost, zda se má provést optimální (pravděpodobnost $1-\epsilon$), či náhodná akce (pravděpodobnost $\epsilon$). Čím je $\epsilon-greedy$ větší, tím pravděpodobněji se agent chová dle své akuální optimální akce. Dalším důležitým faktorem je alfa($\alpha$), která ovlivňuje především rychlost učení. Čím je větší alfa, tím víc se dává důraz na nové vzorky.
+Jak již bylo řešeno v \ref{navrh:qlearnagent}, tento agent si musí model odhadnout sám na základě získaných odměn při výběru akcí na základě \textit{exporation/exploitation ratio}. Tento poměr je dán instanční proměnnou \texttt{epsilon} a předán funkci \texttt{flipCoin}, jež určí finální rozhodnutí výběru akce. Nastavení defaultních parametrů:
 \newline
-UKÁZKA Z KÓDU - PROVÁDĚNÍ CHOVÁNÍ
+\texttt{QLearningAgent} alpha=1.0, epsilon=0.05, gamma=0.8, numTraining = 10
+\newline
+\texttt{PacmanQAgent)} epsilon = 0.05, gamma = 0.8, alpha = 0.2, numTraining = 0
+
+\begin{python}[caption={Vyhodnocení strategie pro stav během tréninku Q-Learning agentů},label={code:qpolicy}]
+def getAction(self, state):
+   actions = self.getLegalActions(state)
+   # terminalni stav
+   if len(actions) == 0:
+      return None
+   # pravdepodobnost dana $\epsilon-greedy$ 
+   if flipCoin(self.epsilon):
+      # prozkoumavani novych stavu behem treninku
+      return random.choice(actions) # nahodnoa akci pro stav (\textit{exploration})
+   else:
+      return self.getPolicy(state) # nejlepsi mozna akce na zaklade odhadu Q-hodnot (\textit{exploitation})
+\end{python}
+
+
 \section{Aproximační Q-Learning agent (ApproximateQAgent)}
+noactionfn, numTraining=100, epsilon=0.5, alpha=0.5, gamma=1
+\newline
 Tento agent využívá především váh vektoru vlastností ve tříde BetterFeatureExtractor. Jsou zde vzaty v potaz vlastnosti z části \ref{navrh}.
 \newline
 typ vlastnosti - honodta vlastnsti

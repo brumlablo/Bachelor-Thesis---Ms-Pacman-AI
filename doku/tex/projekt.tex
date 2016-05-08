@@ -27,7 +27,62 @@
 \renewcommand{\algorithmicrequire}{\textbf{Vstup:}}
 \renewcommand{\algorithmicensure}{\textbf{Výstup:}}
 \newcommand{\algrule}[1][.2pt]{\par\vskip.5\baselineskip\hrule height #1\par\vskip.5\baselineskip}
+%\usepackage{listings}
+%\usepackage{color}
+%\definecolor{light-gray}{gray}{0.85}
+%\definecolor{my-green}{rgb}{0,0.6,0}
+%\definecolor{ligh-gray}{rgb}{0.5,0.5,0.5}
+%\lstset{
+%	language=Python,
+%	frame=single, framerule=0pt, framesep=5pt,
+%	texcl=true,
+%	commentstyle=\color{my-green},
+%	keepspaces=true, columns = flexible
+%}
+
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{10} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{10}  % for normal
+
+% Custom colors
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+
 \usepackage{listings}
+
+% Python style for highlighting
+\newcommand\pythonstyle{\lstset{
+language=Python,
+basicstyle=\ttm,
+otherkeywords={self},             % Add keywords here
+keywordstyle=\ttb\color{deepblue},
+emph={getAction,AlphaBeta,getPossibleActions,isTerminal,getQValue,getLegalActions,flipCoin,choice,getPolicy},          % Custom highlighting
+emphstyle=\ttb\color{deepred},    % Custom highlighting style
+commentstyle=\color{deepgreen},
+frame=tb, 
+texcl=true,                        % Any extra options here
+showstringspaces=false            % 
+}}
+
+% Python environment
+\lstnewenvironment{python}[1][]
+{
+\pythonstyle
+\lstset{#1}
+}
+{}
+
+% Python for external files
+\newcommand\pythonexternal[2][]{{
+\pythonstyle
+\lstinputlisting[#1]{#2}}}
+
+% Python for inline
+\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
+
+
 % =======================================================================
 % balíček "hyperref" vytváří klikací odkazy v pdf, pokud tedy použijeme pdflatex
 % problém je, že balíček hyperref musí být uveden jako poslední, takže nemůže
