@@ -124,7 +124,6 @@ class ValueIterationAgent(ValueEstimationAgent):
 
     # ------------------------------------------------------------------------------------------------#
     # return state policy (max node)
-
     # called by environment (gridwrold.py) AFTER Value Iteration evaluation (after exploration)
     def getPolicy(self, state):
         return self.computeActionFromValues(state)

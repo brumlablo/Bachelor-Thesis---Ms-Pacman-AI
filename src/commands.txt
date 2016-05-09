@@ -27,7 +27,7 @@ python gridworld.py -a value -i 100 -g BridgeGrid --discount 0.9 --noise 0.2
 
 Q-LEARNING GRIDWORLD
 m = manually
-python gridworld.py -a q -k 5 -m
+python gridworld.py -a q -k 5 -m -g BridgeGrid
 
 Q-LEARNING MS. PACMAN
 

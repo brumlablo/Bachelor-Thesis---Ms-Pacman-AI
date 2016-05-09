@@ -44,7 +44,7 @@ class ValueEstimationAgent(Agent):
         alpha    - learning rate
         epsilon  - exploration rate
         gamma    - discount factor
-        numTraining - number of training episodes, i.e. no learning after these many episodes
+        numTraining - number of training episodes >> no learning after these many episodes
         """
         self.alpha = float(alpha)
         self.epsilon = float(epsilon)
@@ -73,15 +73,11 @@ class ValueEstimationAgent(Agent):
         (or random action based on epsilon-greedy)
 
         policy(state) = arg_max_{action in legal actions} Q(state,action)
-
-        NOTE: If many actions achieve the maximal Q-value,
-        it doesn't matter which is selected.
         """
         util.raiseNotDefined()
 
     def getAction(self, state):
         """
-        state: can call state.getLegalActions()
         return chosen action
         """
         util.raiseNotDefined()
@@ -89,16 +85,11 @@ class ValueEstimationAgent(Agent):
 class ReinforcementAgent(ValueEstimationAgent):
     """
       Abstract Reinforcement Agent: A ValueEstimationAgent
-            which estimates Q-Values (as well as policies) from experience
-            rather than a model
+      which estimates Q-Values (as well as policies) from experience (no model).
 
-        What you need to know:
-                    - The environment will call
-                      observeTransition(state,action,nextState,deltaReward),
-                      which will call update(state, action, nextState, deltaReward)
-                      which you should override.
-        - Use self.getLegalActions(state) to know which actions
-                      are available in a state
+      The environment will call
+      observeTransition(state,action,nextState,deltaReward),
+      which will call update(state, action, nextState, deltaReward) - to be overriden
     """
     ####################################
     #  these functions are overriden   #
@@ -106,8 +97,7 @@ class ReinforcementAgent(ValueEstimationAgent):
 
     def update(self, state, action, nextState, reward):
         """
-                This class will call this function, which you write, after
-                observing a transition and reward
+        called after observing a transition and reward
         """
         util.raiseNotDefined()
 
@@ -117,18 +107,16 @@ class ReinforcementAgent(ValueEstimationAgent):
 
     def getLegalActions(self,state):
         """
-          Get the actions available for a given
-          state. This is what you should use to
-          obtain legal actions for a state
+          actions available for a given state
         """
         return self.actionFn(state)
 
     # new transition
     def observeTransition(self, state,action,nextState,deltaReward):
         """
-            Called by environment to inform agent that a transition has
-            been observed. This will result in a call to self.update
-            on the same arguments
+        Called by environment to inform agent that a transition has
+        been observed. This will result in a call to self.update
+        on the same arguments
         """
         self.episodeRewards += deltaReward
         self.update(state,action,nextState,deltaReward)
@@ -161,7 +149,7 @@ class ReinforcementAgent(ValueEstimationAgent):
     def isInTesting(self):
         return not self.isInTraining()
 
-    def __init__(self, actionFn = None, numTraining=100, epsilon=0.5, alpha=0.5, gamma=1):
+    def __init__(self, actionFn = None, alpha=0.5, epsilon=0.5, gamma=1, numTraining=100):
         """
         actionFn: Function which takes a state and returns the list of legal actions
 
@@ -192,8 +180,8 @@ class ReinforcementAgent(ValueEstimationAgent):
 
     def doAction(self,state,action):
         """
-            Called by inherited class when
-            an action is taken in a state
+        Called by inherited class when
+        an action is taken in a state
         """
         self.lastState = state
         self.lastAction = action
@@ -205,7 +193,7 @@ class ReinforcementAgent(ValueEstimationAgent):
     # connecting agent's behaviour with Ms. Pacman Game
     def observationFunction(self, state):
         """
-            Successor state where we ended up after our last action. Called by environment...
+        Successor state after last action. Called by environment...
         """
         if not self.lastState is None:
             reward = state.getScore() - self.lastState.getScore()
