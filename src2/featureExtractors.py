@@ -125,7 +125,7 @@ class BetterExtractor(FeatureExtractor):
 
         features["bias"] = 1.0
 
-        # compute the location of pacman after he takes the action
+        # successors possition of Ms. Pacman
         x, y = state.getPacmanPosition()
         dx, dy = Actions.directionToVector(action)
         next_x, next_y = int(x + dx), int(y + dy)
@@ -133,16 +133,15 @@ class BetterExtractor(FeatureExtractor):
         for i in range(0,numGhosts):
             gPos = state.getGhostPosition(i+1%(numGhosts+1))
             g = state.getGhostState(i+1%(numGhosts+1))
-            # ghostD = manhattanDistance(gPos,(next_x, next_y))
             if (next_x, next_y) in Actions.getLegalNeighbors(gPos, walls):
-                if g.scaredTimer < 1: # count the number of active ghosts 1-step away
+                if g.scaredTimer < 1:   # number of active ghosts 1-step away
                     features["active-ghosts-1-step-away"] += 1
-                else: # count the number of scared ghosts 1-step away
+                else:                   # number of scared ghosts 1-step away
                     features["scared-ghosts-1-step-away"] += 1
 
         # if there is no danger of ghosts then add the food feature
-        if not features["active-ghosts-1-step-away"] and not features["scared-ghosts-1-step-away"] and food[next_x][next_y]:
-            features["eats-food"] = 1.0
+        if not features["active-ghosts-1-step-away"] and food[next_x][next_y]:
+            features["can-eat"] = 1.0
 
         foodD = closestFood((next_x, next_y), food, walls)
 

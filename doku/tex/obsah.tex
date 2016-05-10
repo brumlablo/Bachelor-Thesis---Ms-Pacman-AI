@@ -1,7 +1,7 @@
 \chapter{Úvod} 
-- -- - -- - -- - -- - -- - --  -- - -- - --  -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- -
+- -- - -- - -- - -- - -- - --  -- - -- - --  -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- -
 \newline
-ÚVOD A ZÁVĚR BUDOU SEPSÁNY AŽ PO DOKONČENÍ VŠECH KAPITOL PRÁCE
+ÚVOD A ZÁVĚR BUDOU ZNOVU PŘEPSÁNY AŽ PO DOKONČENÍ VŠECH KAPITOL PRÁCE
 \newline
   Svět her je pro umělou inteligenci jedno z velkých témat. Hra by nemohla být zábavná, kdyby nepřítel nebyl dostatečně chytrý. Umělá inteligence silného oponenta ve složité hře představuje disciplínu stále otevřenou novým technikám, metodám a možnostem. Výpočetní náročnost takových her staví velkou překážku k vytvoření \textit{ideální} umělé inteligence například pro hru \textit{Go}. Ačkoliv se již v minulosti podařilo překonat člověka například v hře \textit{Šachy}, stále je to malý krůček pro tak velký svět zajímavých rozhodovacích problémů jakým je i Ms. Pacman. Ms. Pacman patří k těmto složitým úlohám nejen rozměrností stavů, jež ve hře můžou nastat, ale především náhodností chování svých oponentů, duchů. Nelze tedy přesně stanovit, jak se daný duch bude v danou situaci chovat, lze jen jaksi předpokládat, tudíž je těžší jednoznačne stanovit, jak se má umělá inteligence Ms. Pacman chovat.
 
@@ -754,7 +754,7 @@ Vzhledem k množství párů (stav,akce) bude Q-Learning agent Ms. Pacman (\text
 \end{figure}
 
 \section{Aproximační Q-Learning agent}
-Agent \texttt{ApproximateQAgent} využívá proměnnou \texttt{weights}, tedy slovník párů \textit{(vlastnost,váha)} (výchozí hodnota váh je rovna $0.0$), kterými se pronásobí její hodnota. Hodnota vlastnosti je získána voláním metody \texttt{getFeatures(state, action)} objektu \texttt{BetterExtractor} (dědící ze základního objektu \texttt{FeatureExtractor})), který ji vrací opět formou slovníku párů \textit{(vlastnost,hodnota)}. Metoda \texttt{getPolicy(state)} zůstává stejná (získání nejlepší možné akce pro stav), avšak místo aby metoda stavěla na získání uložené Q-hodnoty z tabulky (pomocí metody \\* \texttt{getQValue(state, action)}), Q-hodnota se sestaví pomocí váh vektoru vlastností, jak je vidět na výňatku z kódu stejnojmenné metody ~\ref{code:aqqval}.
+Agent \texttt{ApproximateQAgent} využívá proměnnou \texttt{weights}, tedy slovník párů \textit{(vlastnost,váha)} (výchozí hodnota váh je rovna $0.0$), kterými se pronásobí její hodnota. Hodnota vlastnosti je získána voláním metody \texttt{getFeatures(state, action)} objektu \texttt{BetterExtractor} (dědící ze základního objektu \texttt{FeatureExtractor})), který ji vrací opět formou slovníku párů \textit{(vlastnost,hodnota)}, které jsou uloženy v instanční proměnné objektu \texttt{features}. Metoda \texttt{getPolicy(state)} zůstává stejná (získání nejlepší možné akce pro stav), avšak místo aby metoda stavěla na získání uložené Q-hodnoty z tabulky (pomocí metody \\* \texttt{getQValue(state, action)}), Q-hodnota se sestaví pomocí váh vektoru vlastností, jak je vidět na výňatku z kódu stejnojmenné metody ~\ref{code:aqqval}.
 \begin{python}[label={code:aqqval}]
 def getQValue(state, action):
    qvalue = 0.0
@@ -779,15 +779,42 @@ def update(self, state, action, nextState, reward):
       self.getWeights()[i] += self.alpha * difference * features[i]
 \end{python}
 
-Pravděpodobně nejdůležitější pro celého agenta je kvalitní stanovení hodnot pro stav ve vektoru vlastností. Framework nabízí \texttt{SimpleExtractor}, kde se vektor vlastností primárně zaměřuje na všechny duchy bez rozdílu, kteří jsou 1 krok daleko, a následně pak bere v potaz vzdálenost nejbližšího jídla. Agent pak ale bohužel naráží na zbytečné vyhýbání se i vystrašených duchům, jež by mohl sníst. To řeší až vlastní objekt \texttt{BetterExtractor}, který bere v potaz i vystrašenost duchů a blízkost power-upů.
+Pravděpodobně nejdůležitější pro celého agenta je kvalitní stanovení hodnot pro stav ve vektoru vlastností. Framework nabízí několik typů extraktorů vlastností pro vektor vlastností -- např. \texttt{CoordinateExtractor}, který je založený na triviálních vlastnostech typu stav, akce, koordináty stavu na gridworldu Ms. Pacman. Jelikož jsou extraktory navázány na MDP, je k dispozici informace o aktuálním stavu a jeho následníkovi po dané akci. Lze tedy generalizovat daný stav ve hře pomocí nahlédnutí na svého následníka a vlivy, jež ho ovlivňují, než vlastnost koordinát atp. Vlastnosti \texttt{BetterExtractor} se mezi sebou navíc logicky ovlivňují a relevantněji popisují aktuální dění stavu hry. Tento extractor vylepšuje frameworkový \texttt{SimpleExtractor} především tím, že bere v potaz i stav duchů. Vektor vlastností \texttt{SimpleExtractor} se primárně zaměřuje na všechny duchy bez rozdílu. Agent pak ale bohužel naráží na zbytečné vyhýbání se i vystrašených duchům, jež by mohl sníst. \texttt{BetterExtractor} tedy navíc bere v potaz i vystrašenost duchů a blízkost power-upů. Vektor vlastností objektu \texttt{BetterExtractor} popisuje vlastnosti\footnote{hodnota vlastností se také musela pomenšit dělením tak, aby se předešlo divergenci hodnot.}:
+\begin{itemize}
+\item \texttt{"active-ghosts-1-step-away"} - počet aktivních duchů z okolí následníka (vzdálenost 1 krok),
+\item \texttt{"scared-ghosts-1-step-away"} - počet vystrašených duchů z okolí následníka,
+\item \texttt{"can-eat"} - Ms. Pacman může jíst jídlo a nemusí se bát aktivních duchů,
+\item \texttt{"powerup"} - v okolí následníka je powerup a je blízko vystrašený duch,
+\item \texttt{"closest-food"} - vzdálenost nejbližšího jídla.
+\end{itemize}
+Samotná ukázka logické návaznosti vlastností je vidět na výňatku z kódu~\ref{code:aqlbetterfeature}. Výňatek demonstruje, jak jednoduše lze generalizovat stav tak složitého problému jako je Ms. Pacman, aniž by bylo potřeba konkrétně popsat všechny informace o stavu hry. Pouze stačí 5 vlastností s hodnotami a jejich váhy. Není potřeba tabulky Q-hodnot pro každý pár (stav,akce), ani není potřeba iteračně přepočítávat V-hodnoty každého stavu na základě Q-hodnot akcí. Aproximační Q-Learning jde nasadit i na větší mapy a v experimentální části se i ukáže o kolik méně je potřeba tréninku k aproximaci stavů oproti sestavení celé tabulky Q-hodnot. \newline POZNÁMKA: proměnná \texttt{numGhosts} označuje počet duchů, \texttt{(next\_x, next\_y)} jsou koordináty následníka na gridworldu Ms.~Pacman, metoda \texttt{getLegalNeighbors(gPos, walls)} vrací list koordinát dostupných polí z okolí předané pozice \texttt{gPos}.
+\begin{python}[label={code:aqlbetterfeature}]
+for i in range(0,numGhosts):
+   gPos = state.getGhostPosition(i+1%(numGhosts+1)) # ziskani pozice ducha
+   g = state.getGhostState(i+1%(numGhosts+1)) 	# ziskani duchova stavu
+   # zjisti zda je duchova pozice v okoli následnika
+   if (next_x, next_y) in Actions.getLegalNeighbors(gPos, walls):
+      if g.scaredTimer < 1:   # duch aktivni
+         features["active-ghosts-1-step-away"] += 1
+      else:                   # duch je vystraseny
+         features["scared-ghosts-1-step-away"] += 1
 
--PSEUDOKOD BETTERFEATUREXTRACTOR-
+# pokud neni aktivni duch blízko a naslednik obsahuje jidlo
+if not features["active-ghosts-1-step-away"] and food[next_x][next_y]:
+   features["can-eat"] = 1.0
+
+# pokud naslednik obsahuje powerup a je blizko aktivni duch, jez bude po sebrani
+# power-upu ke snezeni
+if((next_x, next_y) in powerups and not features["active-ghosts-1-step-away"]):
+    features["powerup"] = 1.0
+\end{python}
 
 \chapter{Experimenty a srovnání agentů}
 \label{exper}
 Agenty lze srovnat nejlépe podle dosaženého herního skóre.
 \section{Srovnání z hlediska skóre}
 \section{Srovnání z hlediska času}
+\section{Srovnání z hlediska vypočetní náročnosti}
 \section{Výsledky}
 učící křivka (x:skóre,y:počet tréninku)
 
