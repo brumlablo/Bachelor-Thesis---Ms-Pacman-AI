@@ -228,5 +228,5 @@ class ApproximateQAgent(PacmanQAgent):
         # is training finished ?
         if self.episodesSoFar == self.numTraining:
             # print weights for debugging
-            # print self.getWeights()
+            print self.getWeights()
             pass

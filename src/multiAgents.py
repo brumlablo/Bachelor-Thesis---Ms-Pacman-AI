@@ -84,7 +84,8 @@ class ReflexAgent(Agent):
         successorGameState = currentGameState.generatePacmanSuccessor(action) # successor
         newPos = successorGameState.getPacmanPosition() # Ms. Pacman position
         newFoodGrid = successorGameState.getFood().asList() # positions of remaining food
-        newGhostStates = successorGameState.getGhostStates() # ghosts positions
+        newGhostStates = successorGameState.getGhostStates() # ghosts states
+        newGhostStates = successorGameState.getGhostStates() # ghosts states
 
         # evaluation function starting value
         value = 0
