@@ -12,7 +12,7 @@ Praktická část práce je uložena na CD. Obsah CD a jeho popis:
 
 \chapter{Manuál}
 \label{priloha:manual}
-\section{\texttt{pacman.py}}
+\section{Ms. Pacman demo (\texttt{pacman.py})}
 \label{priloha:manualp}
 Pro demo Ms. Pacman byly používány základní parametry:
 \begin{itemize}
@@ -22,11 +22,11 @@ Pro demo Ms. Pacman byly používány základní parametry:
 \item \texttt{-q} minimalistický režim bez grafického rozhraní
 \item \texttt{-t} textový režim bez grafického rozhraní 
 \item \texttt{-f} fixed random seed (pro fixní modelaci náhodnosti scénářů)
-\item \texttt{-n} počet her celkově
-\item \texttt{-x} počet tréninkových epizod
-\item \texttt{-l} druh mapy (ze složky \texttt{src/layouts}) - např. \texttt{smallClassic}, \texttt{mediumClassic}, \newline \texttt{minimaxClassic}, \texttt{openClassic},...
-\item \texttt{-p} druh agenta - např. \texttt{ReflexAgent}, \texttt{ExpectimaxAgent}, \newline \texttt{PacmanQAgent}, \texttt{ApproximateQAgent},...
-\item \texttt{-a arg1=hodnota,arg2=hodnota} agentovy další argumenty,\newline např. hloubka: \texttt{-a depth=3}
+\item \texttt{-n 2010} počet her celkově
+\item \texttt{-x 2000} počet tréninkových epizod
+\item \texttt{-l smallClassic} druh mapy (ze složky \texttt{src/layouts}) - např. \texttt{smallClassic}, \newline \texttt{mediumClassic}, \texttt{minimaxClassic}, \texttt{openClassic},...
+\item \texttt{-p ApproximateQAgent} druh agenta - např. \texttt{ReflexAgent}, \texttt{ExpectimaxAgent}, \newline \texttt{PacmanQAgent}, \texttt{ApproximateQAgent},...
+\item \texttt{-a depth=3,alpha=0.7,epsilon=0.5,discount=0.9} agentovy další parametry,\newline např. hloubka \textbf{depth}, gamma \textbf{discount}
 \end{itemize}
 \subsection{Příklady použití}
 \texttt{ReflexAgent}, 2 nepřátelé, defaultní mapa
@@ -53,23 +53,23 @@ python pacman.py -p ApproximateQAgent -a extractor=BetterExtractor
 -n 60 -x 50 -l mediumClassic
 \end{lstlisting}
 
-\section{\texttt{gridworld.py}}
+\section{Gridworld problémy (\texttt{gridworld.py})}
 \label{priloha:manualg}
-Pro vizualizaci hodnot pokročilých agentů - především agenta \texttt{ValueIterationAgent} byly používány základní parametry:
+Pro vizualizaci hodnot pokročilých agentů - především agenta \texttt{ValueIterationAgent} byly používány základní parametry včetně příkladů hodnot:
 \begin{itemize}
 \item \texttt{-h} pro výpis celé nápovědy a všech možných parametrů
 \item \texttt{-q} minimalistický režim bez grafického rozhraní
 \item \texttt{-t} textový režim bez grafického rozhraní
-\item \texttt{-s} nastavení rychlosti
-\item \texttt{-k} počet epizod
+\item \texttt{-k 10} počet epizod
+\item \texttt{-i 100} počet iterací V-hodnot
 \item \texttt{-v} zobrazení hodnot po každé iteraci
-\item \texttt{-g} druh gridworld problému - např. \texttt{BookGrid}, \texttt{BridgeGrid}, \texttt{DiscountGrid},...
-\item \texttt{-a} druh agenta - \texttt{value} pro Value Iteration, \texttt{q} pro Q-Learning
-\item \texttt{-d} agentovy další argumenty např. hloubka: \texttt{-a depth=3}
-\item \texttt{-r} \texttt{livingReward}, odměna přechodu ze stavu do neterminálního následníka
-\item \texttt{-n} \texttt{noise}, pravděpodobnost přechodu 
-\item \texttt{-e} \texttt{epsilon}, náhodnost akcí při tréninku
-\item \texttt{-l} \texttt{alpha}, rychlost TD učení
+\item \texttt{-g BookGrid} druh gridworld problému - např. \texttt{BookGrid}, \texttt{BridgeGrid}, \texttt{DiscountGrid}
+\item \texttt{-a value} druh agenta - \texttt{value} pro Value Iteration, \texttt{q} pro Q-Learning
+\item \texttt{-d 0.8} velikost koeficientu gamma
+\item \texttt{-r 0.9} \textbf{livingReward}, odměna přechodu ze stavu do neterminálního následníka
+\item \texttt{-n 0.2} \textbf{noise}, pravděpodobnost přechodu 
+\item \texttt{-e 0.5} \textbf{epsilon} (epsilon-greedy), náhodnost akcí při tréninku
+\item \texttt{-l 0.7} \textbf{alpha} (learning rate), rychlost TD učení
 \end{itemize}
 \subsection{Příklady použití}
 \texttt{ValueIterationAgent}, defaultní mapa, 100 iterací, 10 epizod
@@ -91,7 +91,7 @@ python gridworld.py -a q -k 5 -m
 \end{lstlisting}
 \texttt{QLearningAgent}, 20 epizod tréninku na mapě \texttt{DiscountGrid},  \texttt{alpha} = 0.8, \texttt{epsilon} = 0.5
 \begin{lstlisting}[language=Python,texcl=true]
-python gridworld.py -a q -k 20 -g DiscountGrid --learningRate 0.8
+python gridworld.py -a q -k 20 -g DiscountGrid -l 0.8
 --epsilon 0.5
 \end{lstlisting}
 %\chapter{Konfigrační soubor}

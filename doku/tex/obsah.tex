@@ -805,7 +805,8 @@ if not features["active-ghosts-1-step-away"] and food[next_x][next_y]:
 
 # pokud naslednik obsahuje powerup a je blizko aktivni duch, jez bude po sebrani
 # power-upu ke snezeni
-if((next_x, next_y) in powerups and not features["active-ghosts-1-step-away"]):
+if((next_x, next_y) in powerups and not 
+features["active-ghosts-1-step-away"]):
     features["powerup"] = 1.0
 \end{python}
 
