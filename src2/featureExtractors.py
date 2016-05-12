@@ -103,6 +103,8 @@ class SimpleExtractor(FeatureExtractor):
         features.divideAll(10.0)
         return features
 
+#------------------------------------------------------------------------------------------------#
+# BP: implemented enhanced BetterExtractor
 # Improved feature extractor for Ms. Pacman
 class BetterExtractor(FeatureExtractor):
     """
@@ -130,6 +132,7 @@ class BetterExtractor(FeatureExtractor):
         dx, dy = Actions.directionToVector(action)
         next_x, next_y = int(x + dx), int(y + dy)
 
+        # ghost features
         for i in range(0,numGhosts):
             gPos = state.getGhostPosition(i+1%(numGhosts+1))
             g = state.getGhostState(i+1%(numGhosts+1))
@@ -139,19 +142,20 @@ class BetterExtractor(FeatureExtractor):
                 else:                   # number of scared ghosts 1-step away
                     features["scared-ghosts-1-step-away"] += 1
 
+        # food feature
         # if there is no danger of ghosts then add the food feature
         if not features["active-ghosts-1-step-away"] and food[next_x][next_y]:
             features["can-eat"] = 1.0
 
         foodD = closestFood((next_x, next_y), food, walls)
 
+        # powerup feature
         # if there is powerup and active ghost
         if((next_x, next_y) in powerups and not features["active-ghosts-1-step-away"]):
             features["powerup"] = 1.0
 
         if foodD is not None:
-            # make the distance a number less than one otherwise the update
-            # will diverge wildly
+            # make the distance a number less than one otherwise the update divergates
             features["closest-food"] = float(foodD) / (walls.width * walls.height)
 
         features.divideAll(10.0) # to prevent divergetion
