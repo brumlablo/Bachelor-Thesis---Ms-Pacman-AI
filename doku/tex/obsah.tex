@@ -1,25 +1,14 @@
 \chapter{Úvod} 
-- -- - -- - -- - -- - -- - --  -- - -- - --  -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- -
-\newline
-ÚVOD A ZÁVĚR BUDOU ZNOVU PŘEPSÁNY AŽ PO DOKONČENÍ VŠECH KAPITOL PRÁCE
-\newline
-  Svět her je pro umělou inteligenci jedno z velkých témat. Hry byly jako zdroje střetu zájmů oponentů zkoumány již v první pol. 20. století. John von Neumann a Oskar Morgernstern na tyto konfliktní problémy nahlíželi jako matematické příklady, které se dají analyzovat, sestavit jim matematický model a pomocí výpočtů se snažit nalézt optimální strategie pro každého svého účastníka. Hra by nemohla být zábavná, kdyby nepřítel nebyl dostatečně chytrý. Umělá inteligence silného oponenta ve složité hře představuje disciplínu stále otevřenou novým technikám, metodám a možnostem. Výpočetní náročnost takových her staví velkou překážku k vytvoření \textit{ideální} umělé inteligence například pro hru \textit{Go}. Ačkoliv se již v minulosti podařilo překonat člověka například v hře \textit{Šachy}, stále je to malý krůček pro tak velký svět zajímavých rozhodovacích problémů jakým je i Ms. Pacman. Ms. Pacman patří k těmto složitým úlohám nejen rozměrností stavů, jež ve hře můžou nastat, ale především náhodností chování svých oponentů, duchů. Nelze tedy přesně stanovit, jak se daný duch bude v danou situaci chovat, lze jen jaksi předpokládat (například za použitím pravděpodobnosti) duchovo chování, tudíž je těžší jednoznačne stanovit, jak se má umělá inteligence Ms. Pacman chovat.
 
-Strojové učení je mocný nástroj na aktivní stanovení agentovy akce na základě aktuální odměny a trestu. Strojové učení slibuje 
-ale potýká se s ...
+Schopnost inteligentního myšlení je jednou z nejdůležitějších vlasností lidí i zvířat. Vždyť bez inteligence by lidé nedokázali převýšit evolučně zdatnější obyvatele Země. Co to vlastně je? Inteligence se dá chápat jako schopnost (jedince nebo skupiny) klasifikovat a reagovat na okolní vjemy, aktivně s nimi interagovat a dokonce ho využít ve svůj prospěch. Filosofové si již od staletí páry kladou otázku, zda mohou mít stroje vlastní vědomí, stupeň inteligence, či preference. Samotné vědní odvětví umělé inteligence, dále \textit{UI}, bylo postupně rozvíjeno během 20. století, kdy se souběžně s vývojem mj. matematické logiky, teorie algoritmů a především vývojem výpočetní techniky vůbec odkrývaly možnosti UI jako stále rostoucí vědní displíny.
 
-This paper surveys the historical basis of reinforcement learning and some of the current work from a computer science perspective. We give a high-level overview of the field and a taste of some specific approaches. It is, of course, impossible to mention all of the important work in the field; this should not be taken to be an exhaustive account.
+Cílem této práce je vytvořit inteligentní entitu, agenta, který by dokázal pokořit tak složitý rozhodovací problém, jakým je hra Ms. Pacman. Svět her je pro umělou inteligenci jedno z velkých témat. Hry byly jako zdroje střetu zájmů oponentů zkoumány již v první pol. 20. století. John von Neumann a Oskar Morgernstern na tyto konfliktní problémy nahlíželi jako na matematické příklady, které se dají analyzovat, sestavit jim matematický model a pomocí výpočtů se snažit nalézt optimální strategie pro každého svého účastníka. Hra by nemohla být zábavná, kdyby nepřítel nebyl dostatečně chytrý. Umělá inteligence silného oponenta ve složité hře představuje disciplínu stále otevřenou novým technikám, metodám a experimentům. Výpočetní náročnost takových her staví velkou překážku k vytvoření \textit{ideální} umělé inteligence, vždyť teprve v roce 2016 dokázala umělá inteligece \textbf{porazit člověka} ve hře \textit{Go} \cite{uigo}! UI \textit{AlphaGo} byla navrhnuta v rámci projektu \textit{DeepMind} společnosti \textit{Google} a povedlo se ji historicky poprvé drtivě porazit profesionálního hráče. Ačkoliv se již v minulosti podařilo překonat člověka i ve hře \textit{Šachy}, stále je to však malý krůček pro tak velký svět zajímavých rozhodovacích problémů jakým je i Ms. Pacman. Ms. Pacman patří k těmto složitým úlohám nejen rozměrností stavů, jež ve hře můžou nastat, ale především náhodností chování svých oponentů, duchů. Nelze tedy přesně stanovit, jak se daný duch bude v danou situaci chovat, lze jen jaksi předpokládat (například za použitím pravděpodobnosti) duchovo chování, tudíž je těžší jednoznačne stanovit, jak má agent postupovat v takto dynamickém prostředí. Co kdyby se agent Ms. Pacman postupně na základě vjemů z prostředí \textbf{učil} své budoucí chování v podobné situaci? 
+Jedna z kategorií strojového učení (\textit{machine learning}) posilované učení (\textit{reinforcement learning}) je mocný nástroj na aktivní vypočetní stanovení agentovova rozhodnutí na základě aktuální odměny a trestu získaných v daném stavu. Agent Ms. Pacman se bude snažit co nejlépe reagovat na své aktuální okolí tak, aby jeho inteligence překonala problematiku náhodnosti a vypočetní náročnosti této hry. Kvalita agenta bude srovnána s již známými metodami řešení podobných problémů. Dále se práce zaměří na podobné problémy jako je Ms. Pacman a na nich otestuje kvalitu inteligence agenta.
 
-Reinforcement learning is the problem faced by an agent that must learn behavior through trial-and-error interactions with a dynamic environment. The work described here has a strong family resemblance to eponymous work in psychology, but differs considerably in the details and in the use of the word reinforcement. It is appropriately thought of as a class of problems, rather than as a set of techniques.
-
-There are two main strategies for solving reinforcement-learning problems. The first is to search in the space of behaviors in order to find one that performs well in the environment. This approach has been taken by work in genetic algorithms and genetic programming, as well as some more novel search techniques 101. The second is to use statistical techniques and dynamic programming methods to estimate the utility of taking actions in states of the world. This paper is devoted almost entirely to the second set of techniques because they take advantage of the special structure of reinforcement-learning problems that is not available in optimization problems in general. It is not yet clear which set of approaches is best in which circumstances.
-
-The rest of this section is devoted to establishing notation and describing the basic reinforcement-learning model. Section 2 explains the trade-off between exploration and exploitation and presents some solutions to the most basic case of reinforcement-learning problems, in which we want to maximize the immediate reward. Section 3 considers the more general problem in which rewards can be delayed in time from the actions that were crucial to gaining them. Section 4 considers some classic model-free algorithms for reinforcement learning from delayed reward: adaptive heuristic critic and Q-learning. Section 5 demonstrates a continuum of algorithms that are sensitive to the amount of computation an agent can perform between actual steps of action in the environment. Generalization--the cornerstone of mainstream machine learning research--has the potential of considerably aiding reinforcement learning, as described in Section 6. Section 7 considers the problems that arise when the agent does not have complete perceptual access to the state of the environment. Section 8 catalogs some of reinforcement learning's successful applications. Finally, Section 9 concludes with some speculations about important open problems and the future of reinforcement learning.
-
-...
-Cílem této práce je navrhnout a implementovat dostatečně chytrou umělou inteligenci Ms. Pacman a to v podobě inteligentního agenta, který bude co nejlépe reagovat na své aktuální okolí tak, aby jeho inteligence překonala problematiku náhodnosti a vypočetní náročnosti této hry. Kvalita agenta bude srovnána s již známými metodami řešení podobných problémů. Dále se práce zaměří na podobné problémy jako je Ms. Pacman a na nich otestuje kvalitu inteligence agenta. Práce je rozdělena na dvě části, z nichž první se zaměřuje na teoretický základ, popis a klasifikaci samotného problému. Praktická část popisuje návrh a implementaci zmíněných algoritmů a finální experimenty s algoritmy.
+Práce je tedy rozdělena na dva velké celky: teoretickou a praktickou část. Teoretická část práce seznamuje čtenáře se základními pojmy a metodami hraní her v kapitole \ref{teorie:metodyapojmy} a to tak, aby na ně následně mohla navázat nejdůležitější teoretická kapitola \ref{teorie:uciciagent} zaměřující se na důležitou vlastnost agenta -- schopnost učení. Tato kapitola nejdříve pojednává o racionalitě hráče v sekci \ref{sec:racionalita} a popisuje pojem \textit{Markovský rozhodovacích proces} v sekci \ref{sec:mdp}. S těmito pojmy pak pracují již sekce jednotlivých algoritmů UI, například finální vylepšení Q-Learningu: \textit{Aproximační Q-Learning} \ref{sec:qlearning}. Předěl mezi teoretickou a praktickou částí je kapitola \ref{anavrh}, která prakticky rozebírá hru Ms. Pacman a již se detailně věnuje návrhům všech metod zvolených pro implementaci a otestování na demu Ms. Pacman. Praktická část pokračuje implementační kapitolou \ref{realizace}, která popisuje objekový návrh aplikace a především prezentuje implementovaná řešení jednotlivých metod. Kapitola se zaměřuje i na zmíněné další \textit{gridworld} problémy zkoumatelné z hlediska UI, pro které lze také názorně použít zvolené algoritmy. Implementační kapitolu uzavírá popis implementace agenta pro metodu \textit{Aproximační Q-Learning}. Poslední částí práce je kapitola experimentální charakteru \ref{exper}, která se zaměřuje na porovnání jednotlivých agentů na různých typech problémů (vč. Ms. Pacman) a obsahuje finální srovnání časové a vypočetní náročnosti algoritmů.
 
 \chapter{Metody hraní her}
+\label{teorie:metodyapojmy}
 Tato kapitola si klade za cíl seznámit čtenáře s metodami hraní her. Hry úzce souvisí s metodami řešení úloh, zahrnují tedy snahu dostat se z počátečního stavu do cílového, např. za použití posloupnosti nějakých pravidel. 
 
 \section{Základní pojmy}
@@ -91,6 +80,7 @@ Tyto rovnice udávají tzv. \textbf{očekávaný užitek} (\textit{expected util
 \end{figure}
 
 \chapter{Učící agent}
+\label{teorie:uciciagent}
 Tato kapitola se zaměřuje na teoretický podklad hlavního cíle práce, inteligentní formu reaktivního agenta \cite{AI3}.
 \section{Reaktivní agent}
 Reaktivní agent \cite{AI3} se dá představit jako autonomní bot, který reaguje na své aktuální okolní prostředí. Nebere tedy v potaz následky svého konání. Matematicky lze zapsat \textit{šesticí} \cite{AI3} jako: $(S, T, A, vjem, ukon, akce)$, kde:
@@ -113,6 +103,7 @@ U([p_1,S_1;\dots;p_n,S_n]) = \sum_{i}p_iU(S_i)p
 Pro umělou inteligenci hráče je též důležité explicitně stanovit určitá pravidla, ze kterých má hráč vybírat užitek. Předpoklad racionality je hlavní rozdíl teorie her a teorie rozhodování.
 
 \section{Markovský rozhodovací proces}
+\label{sec:mdp}
 Agent se bude pohybovat ve \textit{stochastickém} (náhodném) prostředí, je tedy vhodné si definovat Markovský rozhodovací proces \cite{RLAprox}, dále \textbf{MDP} (\textit{Markov decision process}), který řeší takovéto nedeterministické problémy prohledávání, jedná se o čtveřici:
 $(S,A,T,R)$, kde:
 \begin{itemize}
@@ -126,9 +117,9 @@ Další významný rozdíl je ten, že předchozí metody se snažily o nalezen�
 \begin{align}
 \pi^*: S \to A
 \end{align}
-kde $\pi$ mapuje akci na každý stav a pokud se akce provede (dáno náhodností), maximalizuje očekávaný užitek. \newline
+kde $\pi$ mapuje akci na každý stav a pokud se akce provede (dáno náhodností), maximalizuje očekávaný užitek (akumulací odměn). \newline
 
-Následující algoritmy této kapitoly řeší jak nalézt optimální strategii na základě daného modelu. Tyto algoritmy, nebo též \textit{dynamické programovací techniky} \cite{RLpaper} pak tvoří základy a inspiraci pro algoritmy strojového učení pro MDP prostředí. Algoritmy spoléhají na fakt, že pro modely s exponenciálně snižovanými odměnami (pomocí $\gamma$) a možným až nekonečným počtem stavů lze najít optimální deterministickou strategii  \cite{RLAprox}. Je potřeba ještě ujasnit pojmy \textbf{užitek} a \textbf{hodnota}. Užitek \cite{agents} je definován jako suma koeficientem $\gamma$ snížených odměn tak, aby MDP měl větší šanci skončit (pro agenta je lepší vzít blízkou odměnu co nejdříve, tudíž lépe sbírá odměny). \textbf Hodnota \cite{agents} definuje \textbf{optimální očekávaný užitek} (akumulovaný průměr očekávaných výsledků) ze stavu (pro maximalizační a minimalizační uzly).
+Následující algoritmy této kapitoly řeší jak nalézt optimální strategii na základě daného modelu. Tyto algoritmy, nebo též \textit{dynamické programovací techniky} \cite{RLpaper} pak tvoří základy a inspiraci pro algoritmy strojového učení pro MDP prostředí. Souhrnně se všechny tyto algoritmy dají zařadit do kategorie strojového učení tzv. \textbf{posilovaného učení}, nebo též zpětnovazebního učení (\textit{reinforcement learning}). Algoritmy staví na zpětné vazbě, \textbf{zkušenosti}, a raději než aby stavily na těžce dosažitelné ohodnocovací funkci, stanovují hodnoty stavů a jejich akcí. Algoritmy také spoléhají na fakt, že pro modely s exponenciálně snižovanými odměnami (pomocí $\gamma$) a možným až nekonečným počtem stavů lze najít optimální deterministickou strategii  \cite{RLAprox}. Je potřeba ještě ujasnit pojmy \textbf{užitek} a \textbf{hodnota}. Užitek \cite{agents} je definován jako suma koeficientem $\gamma$ snížených odměn tak, aby MDP měl větší šanci skončit (pro agenta je lepší vzít blízkou odměnu co nejdříve, tudíž lépe sbírá odměny). \textbf Hodnota \cite{agents} definuje \textbf{optimální očekávaný užitek} (akumulovaný průměr očekávaných výsledků) ze stavu (pro maximalizační a minimalizační uzly).
 
 \subsection*{Value iteration a Policy iteration}
 \label{teorie:valiter}
@@ -203,7 +194,7 @@ Další důležitou vlastností agenta bude schopnost \textit{učit se} \cite{RL
 \end{center}
 \end{figure}
 
-Metody strojového učení \cite{RLIntro}: se dělí dle \textbf{závislosti na modelu}
+Metody strojového učení se dělí dle \textbf{závislosti na modelu} \cite{RLIntro} \cite{reifreview}:
 \begin{itemize}
 \item (\textit{model-based}) metoda chce empiricky vytvořit model, který již lze řešit pomocí MDP -- to se děje na základě průběžného výpočtu očekávaného užitku: 
 \begin{enumerate}
@@ -300,7 +291,8 @@ Jak ale agent vybírá, kterou akci provede, aby maximalizoval svůj užitek z t
 Novým pojmem pro metody posilovaného učení je \textbf{lítost} (\textit{regret}) jako míra toho, kolik agenta stály všechny chyby během tréninku (rozdíl mezi očekávanými odměnami a optimálními odměnami). Je snaha tuto co nejvíce míru minimalizovat (optimálně se i učit optimální řešení daného problému).
 
 \subsection*{Approximační Q-Learning}
-Zatímco základní Q-Learning pomohl zbavit se zbytečného přepočítávání hodnot, stále je potřeba si neustále udržovat tabulku všech Q-hodnot. Pro složitou úlohu jakou je Ms. Pacman je tato velká prostorová složitost stavového prostoru stále nevhodná. Z toho důvodu je potřeba \textbf{generalizovat}: naučit se Q-hodnoty malého množství tréninkových stavů a hodnoty generalizovat na podobných situacích. To je důležitá myšlenka metody aproximační Q-Learning a potažmo i strojového učení \cite{RLAprox}:
+\label{sec:qlearning}
+Zatímco základní Q-Learning pomohl zbavit se zbytečného přepočítávání hodnot, stále je potřeba si neustále udržovat tabulku všech Q-hodnot pro každou kombinaci stavu a akce. Pro složitou úlohu jakou je Ms. Pacman je tato velká prostorová složitost stavového prostoru stále nevhodná. Z toho důvodu je potřeba \textbf{generalizovat}: naučit se Q-hodnoty malého množství tréninkových stavů a hodnoty generalizovat na podobných situacích. To je důležitá myšlenka metody aproximační Q-Learning a potažmo i strojového učení \cite{RLAprox}:
 \newline
 popsání stavu pomocí vektoru vlastností (\textit{properties}), vlastosti jsou funkce ze stavů do reálných čísel (např. 0, 1), které zachycují důležité vlastnosti stavu. Následně lze tyto vlastnosti ohonodnotit \textbf{váhou} (\textit{weight}) a sesavit lineární rovnice \cite{RLAprox}:
 \begin{eqnarray}
@@ -337,6 +329,7 @@ Nevýhoda takové generalizace je ale fakt, že je potřeba stanovit co nejlepš
 \end{enumerate}
 
 \chapter{Analýza a návrh}
+\label{anavrh}
 Tato kapitola se podílí na praktické části práce a to především praktické analýze problematiky Ms. Pacman (první část \ref{analyza}) a návrhu \textbf{chování agentů} (druhá část \ref{navrh}).
 
 \section{Analýza}
@@ -588,6 +581,7 @@ Dále bude především potřeba nalézt \textbf{optimální strategii} během e
 Poměňování váh vlastností takto může \textbf{maximalizovat odměny} a dojít tak k lepší strategii, něž byla doposud použita.
 
 \chapter{Realizace}
+\label{realizace}
 Tato kapitola popisuje praktickou část práce a především se zaměřuje na \textbf{implemetace různého chování agentů}.
 
 \section{Zvolené prostředky}
@@ -766,6 +760,7 @@ Již během implementace bylo zjištěno, že vzhledem k množství párů (stav
 \end{figure}
 
 \section{Aproximační Q-Learning agent}
+\label{impl:aproxq}
 Agent \texttt{ApproximateQAgent} využívá proměnnou \texttt{weights}, tedy slovník párů \textit{(vlastnost,váha)} (výchozí hodnota váh je rovna $0.0$), kterými se pronásobí její hodnota. Hodnota vlastnosti je získána voláním metody \texttt{getFeatures(state, action)} objektu \texttt{BetterExtractor} (dědící ze základního objektu \texttt{FeatureExtractor})), který ji vrací opět formou slovníku párů \textit{(vlastnost,hodnota)}, které jsou uloženy v instanční proměnné objektu \texttt{features}. Metoda \texttt{getPolicy(state)} zůstává stejná (získání nejlepší možné akce pro stav), avšak místo aby metoda stavěla na získání uložené Q-hodnoty z tabulky (pomocí metody \\* \texttt{getQValue(state, action)}), Q-hodnota se sestaví pomocí váh vektoru vlastností, jak je vidět na výňatku z kódu stejnojmenné metody ~\ref{code:aqqval}.
 \begin{python}[label={code:aqqval}]
 def getQValue(state, action):
