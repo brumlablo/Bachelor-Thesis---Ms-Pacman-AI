@@ -1,28 +1,96 @@
+%============================================================================
+% tento soubor pouzijte jako zaklad
+% (c) 2008 Michal Bidlo
+% E-mail: bidlom AT fit vutbr cz
+%============================================================================
 % kodovaní: UTF-8 (zmena prikazem iconv, recode nebo cstocs)
 %----------------------------------------------------------------------------
 % zpracování: make, make pdf, make desky, make clean
-% vim: set syntax=tex encoding=latin2:
 %============================================================================
-\documentclass[cover]{fitthesis} % odevzdani do wisu - odkazy, na ktere se da klikat
-%\documentclass[cover,print]{fitthesis} % pro tisk - na odkazy se neda klikat
-%\documentclass[english,print]{fitthesis} % pro tisk - na odkazy se neda klikat
-%      \documentclass[english]{fitthesis}
+% Šablonu upravil: Ing. Jaroslav Dytrych, idytrych@fit.vutbr.cz
+%============================================================================
+\documentclass[]{fitthesis} % bez zadání - pro začátek práce, aby nebyl problém s překladem
+%\documentclass[zadani]{fitthesis} % odevzdani do wisu - odkazy jsou barevné
+%\documentclass[zadani,print]{fitthesis} % pro tisk - odkazy jsou černé
+%\documentclass[english,print]{fitthesis} % pro tisk - odkazy jsou černé
 % * Je-li prace psana v anglickem jazyce, je zapotrebi u tridy pouzit 
 %   parametr english nasledovne:
 %      \documentclass[english]{fitthesis}
-% * Neprejete-li si vysazet na prvni strane dokumentu desky, zruste 
-%   parametr cover
+% * Je-li prace psana ve slovenskem jazyce, je zapotrebi u tridy pouzit 
+%   parametr slovak nasledovne:
+%      \documentclass[slovak]{fitthesis}
 
-% zde zvolime kodovani, ve kterem je napsan text prace
-% "latin2" pro iso8859-2 nebo "cp1250" pro windows-1250, "utf8" pro "utf-8"
-%\usepackage{ucs}
-\usepackage[utf8]{inputenc}
-\usepackage[IL2]{fontenc}
+\usepackage[czech,slovak,english]{babel}
+\usepackage[utf8]{inputenc} %kodovani
+\usepackage[T1]{fontenc}
+\usepackage{cmap}
 \usepackage{url}
 \DeclareUrlCommand\url{\def\UrlLeft{<}\def\UrlRight{>} \urlstyle{tt}}
-\DeclareUnicodeCharacter{00A0}{ }
-%zde muzeme vlozit vlastni balicky
 
+%zde muzeme vlozit vlastni balicky
+\usepackage{listings}
+\usepackage[toc,page,header]{appendix}
+\RequirePackage{titletoc}
+\ifczech
+  \usepackage{ae}
+\fi
+
+\input{pisma.tex}
+
+\DeclareUrlCommand\url{\def\UrlLeft{<}\def\UrlRight{>} \urlstyle{tt}}
+\DeclareUnicodeCharacter{00A0}{ }
+\usepackage{algorithm,algpseudocode}
+\renewcommand{\algorithmiccomment}[1]{\bgroup\hfill//~#1\egroup}
+\renewcommand{\algorithmicrequire}{\textbf{Vstup:}}
+\renewcommand{\algorithmicensure}{\textbf{Výstup:}}
+\newcommand{\algrule}[1][.2pt]{\par\vskip.5\baselineskip\hrule height #1\par\vskip.5\baselineskip}
+
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{10} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{10}  % for normal
+
+% Custom colors
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+
+\usepackage{listings}
+
+% Python style for highlighting
+\newcommand\pythonstyle{\lstset{
+language=Python,
+basicstyle=\ttm,
+otherkeywords={self},             % Add keywords here
+keywordstyle=\ttb\color{deepblue},
+emph={getAction,AlphaBeta,getPossibleActions,isTerminal,getQValue,getLegalActions,flipCoin,choice,getPolicy,getLegalNeighbors,getGhostState,getGhostPosition,getValue,getFeatures,getWeights},          % Custom highlighting
+emphstyle=\ttb\color{deepred},    % Custom highlighting style
+commentstyle=\color{deepgreen},
+frame=tb, 
+texcl=true,                        % Any extra options here
+showstringspaces=false            % 
+}}
+
+% Python environment
+\lstnewenvironment{python}[1][]
+{
+\pythonstyle
+\lstset{#1}
+}
+{}
+
+% Python for external files
+\newcommand\pythonexternal[2][]{{
+\pythonstyle
+\lstinputlisting[#1]{#2}}}
+
+% Python for inline
+\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
+
+% vypne funkci nové šablony, která automaticky nahrazuje uvozovky,
+% aby nebyly prováděny nevhodné náhrady v popisech API apod.
+\csdoublequotesoff
+\usepackage[labelfont=bf]{caption}
 % =======================================================================
 % balíček "hyperref" vytváří klikací odkazy v pdf, pokud tedy použijeme pdflatex
 % problém je, že balíček hyperref musí být uveden jako poslední, takže nemůže
@@ -39,59 +107,72 @@
   \def\pdfBorderAttrs{/Border [0 0 0] }  % bez okrajů kolem odkazů
   \pdfcompresslevel=9
 \fi
+\else % pro tisk budou odkazy, na které se dá klikat, černé
+\ifx\pdfoutput\undefined % nejedeme pod pdflatexem
+\else
+  \usepackage{color}
+  \usepackage[unicode,colorlinks,hyperindex,plainpages=false,pdftex,urlcolor=black,linkcolor=black,citecolor=black]{hyperref}
+  \definecolor{links}{rgb}{0,0,0}
+  \definecolor{anchors}{rgb}{0,0,0}
+  \def\AnchorColor{anchors}
+  \def\LinkColor{links}
+  \def\pdfBorderAttrs{/Border [0 0 0] } % bez okrajů kolem odkazů
+  \pdfcompresslevel=9
+\fi
 \fi
 
 %Informace o praci/projektu
 %---------------------------------------------------------------------------
 \projectinfo{
   %Prace
-  project=SP,            %typ prace BP/SP/DP/DR
+  project=BP,            %typ prace BP/SP/DP/DR
   year=2016,             %rok
   date=\today,           %datum odevzdani
   %Nazev prace
-  title.cs={Inteligentní reaktivní agent \newline pro hru Ms.Pacman},  %nazev prace v cestine
-  title.en={Intelligent reactive agent \newline for the game Ms.Pacman}, %nazev prace v anglictine
+  title.cs={Inteligentní reaktivní agent pro~hru~Ms.~Pac\-man},  %nazev prace v cestine/slovenstine
+  title.en={Intelligent reactive agent for~the~game~Ms.~Pac\-man}, %nazev prace v anglictine
   %Autor
-  author={Barbora Bložoňová},   %jmeno prijmeni autora
+  author={Barbora Bložoňová},   %cele jmeno a prijmeni autora
+  author.name={Barbora},   %jmeno autora (pro citaci)
+  author.surname={Bložoňová},   %prijmeni autora (pro citaci)
   %author.title.p=Bc., %titul pred jmenem (nepovinne)
   %author.title.a=PhD, %titul za jmenem (nepovinne)
   %Ustav
-  department=UITS, % doplnte prislusnou zkratku: UPSY/UIFS/UITS/UPGM
+  department=UITS, % doplnte prislusnou zkratku dle ustavu na zadani: UPSY/UIFS/UITS/UPGM
   %Skolitel
-  supervisor= Martin Drahanský, %jmeno prijmeni skolitele
-  supervisor.title.p={doc. Ing.},   %titul pred jmenem (nepovinne)
+  supervisor=Martin Drahanský, %cele jmeno a prijmeni skolitele
+  supervisor.name={Martin},   %jmeno skolitele (pro citaci)
+  supervisor.surname={Drahanský},   %prijmeni skolitele (pro citaci)
+  supervisor.title.p=doc. Ing,   %titul pred jmenem (nepovinne)
   supervisor.title.a={Ph.D.},    %titul za jmenem (nepovinne)
   %Klicova slova, abstrakty, prohlaseni a podekovani je mozne definovat 
   %bud pomoci nasledujicich parametru nebo pomoci vyhrazenych maker (viz dale)
   %===========================================================================
   %Klicova slova
-  keywords.cs={umělá inteligence, hry s nulovým součtem, hry s neurčitostí, reaktivní agent, Markovské rozhodovací procesy, posilované učení, Q-Learning}, %klicova slova v ceskem jazyce
-  keywords.en={artificial intelligence, zero-sum games, games with uncertainty, reactive agent, Markov decision processes, reinforcement learning, Q-Learning}, %klicova slova v anglickem jazyce
+  %keywords.cs={Klíčová slova v českém jazyce.}, %klicova slova v ceskem ci slovenskem jazyce
+  %keywords.en={Klíčová slova v anglickém jazyce.}, %klicova slova v anglickem jazyce
   %Abstract
-  abstract.cs={Tato práce se zabývá umělou inteligencí pro složitější rozhodovací problémy, jako je hra s neurčitostí Ms. Pacman. Cílem práce je navrhnout inteligentního reaktivního agenta využívajícího metodu strojového učení, demonstrovat jej ve vizuálním demu Ms. Pacman a srovnat se známými informovanými metodami hraní her (Minimax, Alfa-Beta řezy). Práce je rozdělena primárně na dvě části. V teoretické části je řešena problematika metod hraní her, reaktivita agenta a možnosti strojového učení (vše v kontextu Ms. Pacman). Druhá část práce je zaměřena na samotný popis návrhu a implementace agenta a na závěr jeho srovnání se zmíněnými známými metodami hraní her, zhodnocení dosažených výsledků a několik návrhů na vylepšení do budoucna.}, % abstrakt v ceskem jazyce
-  abstract.en={This thesis focuses on artificial intelligence for difficult decision problemes such as the game with uncertainty Ms. Pacman. The aim of this work is to design and implement intelligent reactive agent using a method from the field of reinforcement learning, demonstrate it on visual demo Ms.Pacman and compare with well-known informed methods of playing games (Minimax, AlfaBeta Pruning). The thesis is primarily structured into two parts. The theoretical part deals with adversarial search (in games), reactivity of agent and possibilities of machine learning, all in the context of Ms. Pacman. The second part addresses the design of agent behaviour implementation and finally its comparison to other methods of adversarial search problem, evaluation of results and a few ideas for future improvements.}, % abstrakt v anglickem jazyce
+  %abstract.cs={Výtah (abstrakt) práce v českém jazyce.}, % abstrakt v ceskem ci slovenskem jazyce
+  %abstract.en={Výtah (abstrakt) práce v anglickém jazyce.}, % abstrakt v anglickem jazyce
   %Prohlaseni
-  declaration={Prohlašuji, že jsem tuto bakalářskou práci vypracovala samostatně pod vedením doc. Ing., Dipl.-Ing. Martina Drahanského, Ph.D. Dále prohlašuji, že jsem uvedla všechny literární prameny a publikace, ze kterých jsem čerpala.},
+  %declaration={Prohlašuji, že jsem tuto bakalářskou práci vypracoval samostatně pod vedením pana ...},
   %Podekovani (nepovinne)
-  acknowledgment={Ráda bych podělovala doc. Ing., Dipl.-Ing. Martinu Drahanskému, Ph.D. za jeho odborné vedení, nadhled a celkovou spolupráci. Dále bych ráda poděkovala své rodině za jejich nekonečnou podporu a motivaci.} % nepovinne
+  %acknowledgment={Zde je možné uvést poděkování vedoucímu práce a těm, kteří poskytli odbornou pomoc.} % nepovinne
 }
 
-%Abstrakt (cesky, anglicky)
-%\abstract[cs]{Do tohoto odstavce bude zapsán výtah (abstrakt) práce v českém jazyce.}
-%\abstract[en]{Do tohoto odstavce bude zapsán výtah (abstrakt) práce v anglickém jazyce.}
+%Abstrakt (cesky, slovensky ci anglicky)
+\abstract[cs]{Tato práce se zabývá umělou inteligencí pro složitější rozhodovací problémy, jako je hra s neurčitostí Ms. Pacman. Cílem práce je navrhnout inteligentního reaktivního agenta využívajícího metodu strojového učení, demonstrovat jej ve vizuálním demu Ms. Pacman a srovnat se známými informovanými metodami hraní her (Minimax, Alfa-Beta řezy). Práce je rozdělena primárně na dvě části. V teoretické části je řešena problematika metod hraní her, reaktivita agenta a možnosti strojového učení (vše v kontextu Ms. Pacman). Druhá část práce je zaměřena na samotný popis návrhu a implementace agenta a na závěr jeho srovnání se zmíněnými známými metodami hraní her, zhodnocení dosažených výsledků a několik návrhů na vylepšení do budoucna.}
+\abstract[en]{This thesis focuses on artificial intelligence for difficult decision problemes such as the game with uncertainty Ms. Pacman. The aim of this work is to design and implement intelligent reactive agent using a method from the field of reinforcement learning, demonstrate it on visual demo Ms.Pacman and compare with well-known informed methods of playing games (Minimax, AlfaBeta Pruning). The thesis is primarily structured into two parts. The theoretical part deals with adversarial search (in games), reactivity of agent and possibilities of machine learning, all in the context of Ms. Pacman. The second part addresses the design of agent behaviour implementation and finally its comparison to other methods of adversarial search problem, evaluation of results and a few ideas for future improvements.}
 
-%Klicova slova (cesky, anglicky)
-%\keywords[cs]{Sem budou zapsána jednotlivá klíčová slova v českém jazyce, oddělená čárkami.}
-%\keywords[en]{Sem budou zapsána jednotlivá klíčová slova v anglickém jazyce, oddělená čárkami.}
+%Klicova slova (cesky, slovensky ci anglicky)
+\keywords[cs]{umělá inteligence, hry s nulovým součtem, hry s neurčitostí, reaktivní agent, Expectimax, Markovské rozhodovací procesy, posilované učení, Q-Learning}
+\keywords[en]{artificial intelligence, zero-sum games, games with uncertainty, reactive agent, Expectimax, Markov decision processes, reinforcement learning, Q-Learning}
 
-%Prohlaseni
-%\declaration{Prohlašuji, že jsem tuto bakalářskou práci vypracoval samostatně pod vedením pana X...
-%Další informace mi poskytli...
-%Uvedl jsem všechny literární prameny a publikace, ze kterých jsem čerpal.}
+%Prohlaseni (u anglicky psane prace anglicky, u slovensky psane prace slovensky)
+\declaration{Prohlašuji, že jsem tuto bakalářskou práci vypracovala samostatně pod vedením doc. Ing., Dipl.-Ing. Martina Drahanského, Ph.D. Dále prohlašuji, že jsem uvedla všechny literární prameny a publikace, ze kterých jsem čerpala.}
 
-%Podekovani (nepovinne)
-%\acknowledgment{V této sekci je možno uvést poděkování vedoucímu práce a těm, kteří poskytli odbornou pomoc
-%(externí zadavatel, konzultant, apod.).}
+%Podekovani (nepovinne, nejlepe v jazyce prace)
+\acknowledgment{Ráda bych podělovala doc. Ing., Dipl.-Ing. Martinu Drahanskému, Ph.D. za jeho odborné vedení, nadhled a celkovou spolupráci. Dále bych ráda poděkovala své rodině za jejich nekonečnou podporu a motivaci.}
 
 \begin{document}
   % Vysazeni titulnich stran
@@ -102,7 +183,21 @@
   \tableofcontents
   
   % Seznam obrazku a tabulek (pokud prace obsahuje velke mnozstvi obrazku, tak se to hodi)
+\ifczech
+  \renewcommand\listfigurename{Seznam obrázků}
+\fi
+\ifslovak
+  \renewcommand\listfigurename{Zoznam obrázkov}
+\fi
+
   % \listoffigures
+\ifczech
+  \renewcommand\listtablename{Seznam tabulek}
+\fi
+\ifslovak
+  \renewcommand\listtablename{Zoznam tabuliek}
+\fi
+
   % \listoftables 
 
   % Text prace
@@ -111,16 +206,57 @@
 
   % Pouzita literatura
   % ----------------------------------------------
-\ifczech
+\ifslovak
+  \makeatletter
+  \def\@openbib@code{\addcontentsline{toc}{chapter}{Literatúra}}
+  \makeatother
   \bibliographystyle{czechiso}
-\else 
-  \bibliographystyle{plain}
-%  \bibliographystyle{alpha}
+\else
+  \ifczech
+    \makeatletter
+    \def\@openbib@code{\addcontentsline{toc}{chapter}{Literatura}}
+    \makeatother
+    \bibliographystyle{czechiso}
+  \else 
+    \makeatletter
+    \def\@openbib@code{\addcontentsline{toc}{chapter}{Bibliography}}
+    \makeatother
+    \bibliographystyle{plain}
+  %  \bibliographystyle{alpha}
+  \fi
 \fi
   \begin{flushleft}
   \bibliography{literatura} % viz. literatura.bib
   \end{flushleft}
+
+  % Prilohy
+  % ---------------------------------------------
   \appendix
-  
+\ifczech
+  \renewcommand{\appendixpagename}{Přílohy}
+  \renewcommand{\appendixtocname}{Přílohy}
+  \renewcommand{\appendixname}{Příloha}
+\fi
+\ifslovak
+  \renewcommand{\appendixpagename}{Prílohy}
+  \renewcommand{\appendixtocname}{Prílohy}
+  \renewcommand{\appendixname}{Príloha}
+\fi
+  \appendixpage
+
+\ifslovak
+  \section*{Zoznam príloh}
+  \addcontentsline{toc}{section}{Zoznam príloh}
+\else
+  \ifczech
+    \section*{Seznam příloh}
+    \addcontentsline{toc}{section}{Seznam příloh}
+  \else
+    \section*{List of Appendices}
+    \addcontentsline{toc}{section}{List of Appendices}
+  \fi
+\fi
+  \startcontents[chapters]
+  \printcontents[chapters]{l}{0}{\setcounter{tocdepth}{2}}
   \input{prilohy} % viz. prilohy.tex
 \end{document}

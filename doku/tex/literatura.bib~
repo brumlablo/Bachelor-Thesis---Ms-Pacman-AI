@@ -1,8 +1,7 @@
     @BOOK{RLAprox,
       author =       "Lucian BUSONIU and Robert BABUŠKA and Bart DE SCHUTTER and Damien ERNST",
       title =        "Reinforcement learning and dynamic programming using function approximators",
-      address = 	 "Boca Raton, FL",
-	  publisher =    "CRC Press",
+      publisher =    "CRC Press",
       year =         "2010",
       note =         "{ISBN}~978-1439821084",
     }
@@ -10,8 +9,7 @@
     @BOOK{RLIntro,
       author =       "Richard S. SUTTON and Andrew G. BARTO",
       title =        "Reinforcement Learning: An~Introduction",
-      publisher =    "MIT Press",
-	  address = 	 "Cambridge, Mass.",
+      publisher =    "The MIT Press Cambridge",
       year =         "1998",
       note =         "{ISBN}~978-0262193986",
     }
@@ -20,7 +18,6 @@
       author =       "Vladimír MAŘÍK and Olga ŠTĚPÁNKOVÁ and Jiří LAŽANSKÝ and kol.",
       title =        "Umělá inteligence (1)",
       publisher =    "Academia",
-	  address = 	 "Praha",
       year =         "1993",
       note =         "{ISBN}~80-200-0496-3",
     }
@@ -29,7 +26,6 @@
       author =       "Vladimír MAŘÍK and Olga ŠTĚPÁNKOVÁ and Jiří LAŽANSKÝ and kol.",
       title =        "Umělá inteligence (3)",
       publisher =    "Academia",
-	  address = 	 "Praha",
       year =         "2001",
       note =         "{ISBN}~80-200-0472-6",
     }
@@ -39,7 +35,6 @@
       title =        "MULTIAGENT SYSTEMS: Algorithmic, Game Theoretic, and Logical Foundations",
       publisher =    "Cambridge University Press",
       year =         "2008",
-	  address =		 "New York",
       note =         "{ISBN}~978-0-521-89943-7",
     }
 
@@ -48,6 +43,7 @@
       title =        "BerkeleyX: CS188x\_1 Artificial Intelligence [online]",
       publisher =    "edx",
       year =         "2016-01-15 [cit.~2016-01-17]",
+	  howpublished = "online",
       url=  		 "https://courses.edx.org/courses/BerkeleyX/CS188x\_1/1T2013/",
    }
 
@@ -56,6 +52,7 @@
       title =        "UC Berkeley CS188 Intro to~AI \-\- Course Material [online]",
       publisher =    "UC Berkeley",
       year =         "2016-04-20 [cit.~2016-04-25]",
+	  howpublished = "online",
       url=  	     "http://ai.berkeley.edu",
    }
 
@@ -64,6 +61,7 @@
       title =        	"Heuristics for~grid-maps (Game Programming) [online]",
       publisher =    	"UC Standford \- Red Blob Games",
       year =         	"2016-03-28 [cit.~2016-04-25]",
+	  howpublished = 	"online",
       url=  			"http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html\#heuristics-for-grid-maps",
    }
 
@@ -71,15 +69,15 @@
       author =       "David POOLE and Alan MACKWORTH",  
       title =        "Artificial Intelligence: Foundations of~Computational Agents [online]",
       publisher =    "Cambridge University Press",
-	  address =		 "Cambridge",
       year =         "2010-06-01 [cit.~2016-04-25]",
+	  howpublished = "online",
       url=  		 "http://artint.info/html/ArtInt.html",
       note =         "{ISBN}~978-0-521-51900-7",
    }
 
    @Article{RLpaper,
       author =     "Leslie PACK KAELBLING and Michael L. LITTMAN and Andrew W. MOORE",  
-      title =      "Reinforcement Learning: A~Survey [online]",
+      title =      "Reinforcement Learning: A~Survey",
       journal =    "Journal of Artifcial Intelligence Research",
 	  publisher =  "AI Access Foundation",
       address =    "USA",
@@ -94,7 +92,7 @@
 
   @Article{qlearnspringer,
 	  author=       "Christopher J.C.H. WATKINS and Peter DAYAN",
-	  title=		"Technical Note: Q-Learning [online]",
+	  title=		"Technical Note: Q-Learning",
 	  journal=		"Springer: Machine Learning",
 	  year=			"1992",
 	  volume=		"8",
@@ -107,7 +105,7 @@
 
   @Article{imrewards,
       author=		"Punit PANDEY and Deepshikha PANDEY and Dr. Shishir KUMAR",
-      title=		"Reinforcement Learning by~Comparing Immediate Reward [online]",
+      title=		"Reinforcement Learning by~Comparing Immediate Reward",
       publisher=	"\(IJCSIS\) International Journal of Computer Science and Information Security",
       year=			"2010",
       volume=		"8",
@@ -116,38 +114,5 @@
       number=		"5",
 	  url=			"http://arxiv.org/pdf/1009.2566.pdf",
   }
-
-   @MISC{uigo, 
-      title =        "AlphaGo, The first computer program to ever beat a professional player at the game Go. [online]",
-      publisher =    "Google Inc.",
-      year =         "2016-03-15 [cit.~2016-05-12]",
-      url=  	     "https://deepmind.com/alpha-go",
-   }
-
-  @Book{reifreview,
-      author=		"Oded MAIMON and Shahar COHEN",
-      title=		"A Review of Reinforcement Learning Methods. Data Mining and Knowledge Discovery Handbook [online]",
-      publisher=	"Springer US",
-      address = 	"Boston, MA",
-	  year=			"2010",
-	  numpages =    "401",
-	  note =        "{ISBN}~978-0-387-09822-7",
-	  doi=			"10.1007/978-0-387-09823-4_20",
-	  url=			"http://link.springer.com/10.1007/978-0-387-09823-4_20",
-  }
-
-  @Article{reiftutorial,
-      author=		"Abhijit GOSAVI",
-      title=		"Reinforcement Learning: A Tutorial Survey and Recent Advances [online]",
-      year=			"2009",
-	  journal = 	"INFORMS Journal on Computing",
-      volume = 		"21",
-      number = 		"2",
-      citpages=		"178--192",
-	  issn = 		"1091-9856",
-	  doi = 		"10.1287/ijoc.1080.0305",
-	  url=			"http://pubsonline.informs.org/doi/10.1287/ijoc.1080.0305",
-  }
-
 
 

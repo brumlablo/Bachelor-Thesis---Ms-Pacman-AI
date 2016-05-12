@@ -11,6 +11,8 @@
 # Student side autograding was added by Brad Miller, Nick Hay, and
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
+#------------------------------------------------------------------------------------------------#
+# BP: slightly edited
 
 import util
 from graphicsUtils import *
@@ -70,7 +72,7 @@ GRID_SIZE = -1
 GRID_HEIGHT = -1
 MARGIN = -1
 
-def setup(gridworld, title = "Gridworld Display", size = 120):
+def setup(gridworld, title = "IBP GRIDWORLD PROBLEMS", size = 120):
     global GRID_SIZE, MARGIN, SCREEN_WIDTH, SCREEN_HEIGHT, GRID_HEIGHT
     grid = gridworld.grid
     WINDOW_SIZE = size
