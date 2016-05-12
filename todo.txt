@@ -1,7 +1,4 @@
-remove all autograder and testclasses stuff
-remove crawler
-connect to src folders
 start experiments: gridworld, ms.pacman
 finish experiments chapter
+remove analysis
 finish zaver
-1 beta reader

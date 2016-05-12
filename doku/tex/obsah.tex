@@ -802,14 +802,14 @@ Samotná ukázka logické návaznosti vlastností je vidět na výňatku z kódu
 for i in range(0,numGhosts):
    gPos = state.getGhostPosition(i+1%(numGhosts+1)) # ziskani pozice ducha
    g = state.getGhostState(i+1%(numGhosts+1)) 	# ziskani duchova stavu
-   # zjisti zda je duchova pozice v okoli následnika
+   # zjisti zda je duchova pozice v okoli naslednika
    if (next_x, next_y) in Actions.getLegalNeighbors(gPos, walls):
       if g.scaredTimer < 1:   # duch aktivni
          features["active-ghosts-1-step-away"] += 1
       else:                   # duch je vystraseny
          features["scared-ghosts-1-step-away"] += 1
 
-# pokud neni aktivni duch blízko a naslednik obsahuje jidlo
+# pokud neni aktivni duch blizko a naslednik obsahuje jidlo
 if not features["active-ghosts-1-step-away"] and food[next_x][next_y]:
    features["can-eat"] = 1.0
 
@@ -842,5 +842,4 @@ approximator, though slow, would be better in long run as compared to the
 version that uses lookup table. This would happen because as the state space
 grows, the memory requirement for storing various states would also grow
 exponentially rendering the lookup table version useless.
-The limitation of our approach was that we used linea
 
