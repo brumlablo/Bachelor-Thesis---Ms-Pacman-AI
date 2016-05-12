@@ -22,7 +22,7 @@ K dosažení každého uzlu je potřeba vydat nějaké úsilí, \textbf{cenu} \c
 \begin{figure}[h]
 \begin{center}
   \scalebox{0.7}{\includegraphics{img/statespace.png}}
-  \caption{Ukázka stavového prostoru pro hru Pacman. Každý pohyb Pacmana znamená nový stav hry, tedy uzel. Modrý obdélník ohraničuje počáteční stav, kořen, a zelený obdelník ohraničuje možné koncové stavy, listy.}
+  \caption{Ukázka stavového prostoru pro hru Pacman. Každý pohyb Pacmana znamená nový stav hry, tedy uzel. Modrý obdélník ohraničuje počáteční stav, kořen, a zelený obdelník ohraničuje možné koncové stavy, listy. Převzato a upraveno z volně dostupných prezentací kurzu \cite{berkeley}.}
   \label{img:stavp}
 \end{center}
 \end{figure}
@@ -74,14 +74,15 @@ Tyto rovnice udávají tzv. \textbf{očekávaný užitek} (\textit{expected util
 \begin{figure}[!htbp]
 \begin{center}
   \scalebox{0.35}{\includegraphics{img/expectimax.png}}
-  \caption{Na obrázku lze vidět ukázku vyhodnocování uzlů a výslednou cestu $A_1$, kterou si algoritmus posléze zvolí.}
+  \caption[]{Na obrázku lze vidět ukázku vyhodnocování uzlů a výslednou cestu $A_1$, kterou si algoritmus posléze zvolí. Převzato a upraveno z webu \footnotemark{}.}
   \label{img:expectimax}
 \end{center}
 \end{figure}
+\footnotetext{\url{http://agents.csie.ntu.edu.tw/\~yjhsu/courses/u0220/1997/10-29/img28.gif}}
 
 \chapter{Učící agent}
 \label{teorie:uciciagent}
-Tato kapitola se zaměřuje na teoretický podklad hlavního cíle práce, inteligentní formu reaktivního agenta \cite{AI3}.
+Tato kapitola se zaměřuje na teoretický podklad hlavního cíle práce, inteligentní formu reaktivního agenta \cite{AI3} a jeho prostředí.
 \section{Reaktivní agent}
 Reaktivní agent \cite{AI3} se dá představit jako autonomní bot, který reaguje na své aktuální okolní prostředí. Nebere tedy v potaz následky svého konání. Matematicky lze zapsat \textit{šesticí} \cite{AI3} jako: $(S, T, A, vjem, ukon, akce)$, kde:
 \begin{itemize}
@@ -96,7 +97,7 @@ Agent představuje účastníka hry (hráče).
 
 \section{Racionalita}
 \label{sec:racionalita}
-Každý hráč má nějaký cíl a k němu vedoucí strategii. Strategie se skládá z hráčových akcí a voleb, které pro hráče vedou k vlastnímu užitku (\textit{utility}), potažmo výhře. Hráč se potýká s různými stavy ve hře a snaží se z nich vytěžit co nejvíce na základě svých preferencí \cite{berkeley}. Pokud tyto hráčovy preference dodržují axiomy dle \cite{mas}, zaručují tak hráčův cíl, maximalizaci očekávané hodnoty \textit{užitkové funkce}:
+Každý hráč má nějaký cíl a k němu vedoucí \textbf{strategii}. Strategie se skládá z hráčových akcí a voleb, které pro hráče vedou k vlastnímu užitku (\textit{utility}), potažmo výhře. Hráč se potýká s různými stavy ve hře a snaží se z nich vytěžit co nejvíce na základě svých preferencí \cite{berkeley}. Pokud tyto hráčovy preference dodržují axiomy dle \cite{mas}, zaručují tak hráčův cíl, maximalizaci očekávané hodnoty \textit{užitkové funkce}:
 \begin{align}
 U([p_1,S_1;\dots;p_n,S_n]) = \sum_{i}p_iU(S_i)p
 \end{align}
@@ -112,14 +113,14 @@ $(S,A,T,R)$, kde:
 \item $T(s,a,s^\prime)$ je \textbf{přechodová funkce} (\textit{transition function}), nebo též \textit{model}, tedy pravděpodobnost přechodu ze stavu $s$ do $s^\prime$ ($P(s^\prime| s, a) $),
 \item $R(s,a,s^\prime)$ je  \textbf{odměnová funkce} (\textit{reward function}), tedy funkce vracející odměnu přechodu ze stavu $s$ do $s^\prime$;  s ní souvisí exponenciální snižování hodnot odměn koeficientem $\gamma$ (\textit{discount}).
 \end{itemize}
-Důležitý rozdíl proti předchozím metodám hraní her je fakt, že výsledná hodnota aktuálního stavu závisí pouze na aktuálním stavu a jeho akci, ne na jeho historii.
+Důležitý rozdíl proti předchozím metodám hraní her je fakt, že výsledná hodnota aktuálního stavu závisí pouze na aktuálním stavu a jeho akci, ne na jeho historii \cite{reiftutorial}.
 Další významný rozdíl je ten, že předchozí metody se snažily o nalezení optimálního plánu nebo sekvence akcí z počátečního stavu až do cíle. V MDP modelu přechody stavů nezávísí na hodnotách minulých stavů, ani na agentových minulých akcích, MDP hledá \textbf{optimální strategii} (\textit{policy}) pouze pro stavy budoucí (následníky) \cite{agents}:
 \begin{align}
 \pi^*: S \to A
 \end{align}
 kde $\pi$ mapuje akci na každý stav a pokud se akce provede (dáno náhodností), maximalizuje očekávaný užitek (akumulací odměn). \newline
 
-Následující algoritmy této kapitoly řeší jak nalézt optimální strategii na základě daného modelu. Tyto algoritmy, nebo též \textit{dynamické programovací techniky} \cite{RLpaper} pak tvoří základy a inspiraci pro algoritmy strojového učení pro MDP prostředí. Souhrnně se všechny tyto algoritmy dají zařadit do kategorie strojového učení tzv. \textbf{posilovaného učení}, nebo též zpětnovazebního učení (\textit{reinforcement learning}). Algoritmy staví na zpětné vazbě, \textbf{zkušenosti}, a raději než aby stavily na těžce dosažitelné ohodnocovací funkci, stanovují hodnoty stavů a jejich akcí. Algoritmy také spoléhají na fakt, že pro modely s exponenciálně snižovanými odměnami (pomocí $\gamma$) a možným až nekonečným počtem stavů lze najít optimální deterministickou strategii  \cite{RLAprox}. Je potřeba ještě ujasnit pojmy \textbf{užitek} a \textbf{hodnota}. Užitek \cite{agents} je definován jako suma koeficientem $\gamma$ snížených odměn tak, aby MDP měl větší šanci skončit (pro agenta je lepší vzít blízkou odměnu co nejdříve, tudíž lépe sbírá odměny). \textbf Hodnota \cite{agents} definuje \textbf{optimální očekávaný užitek} (akumulovaný průměr očekávaných výsledků) ze stavu (pro maximalizační a minimalizační uzly).
+Následující algoritmy této kapitoly řeší jak nalézt optimální strategii na základě daného modelu. Tyto algoritmy, nebo též \textit{dynamické programovací techniky} \cite{RLpaper} pak tvoří základy a inspiraci pro algoritmy strojového učení pro MDP prostředí. Souhrnně se všechny tyto algoritmy dají zařadit do kategorie strojového učení tzv. posilovaného učení, nebo též zpětnovazebního učení (\textit{reinforcement learning}). Algoritmy staví na zpětné vazbě, \textbf{zkušenosti}, a raději než aby stavily na těžce dosažitelné ohodnocovací funkci, stanovují hodnoty stavů a jejich akcí. Algoritmy také spoléhají na fakt, že pro modely s exponenciálně snižovanými odměnami (pomocí $\gamma$) a možným až nekonečným počtem stavů lze najít optimální deterministickou strategii  \cite{RLAprox}. Je potřeba ještě ujasnit pojmy \textbf{užitek} a \textbf{hodnota}. Užitek \cite{agents} je definován jako suma koeficientem $\gamma$ snížených odměn tak, aby MDP měl větší šanci skončit (pro agenta je lepší vzít blízkou odměnu co nejdříve, tudíž lépe sbírá odměny). Hodnota \cite{agents} definuje \textbf{optimální očekávaný užitek} (akumulovaný průměr očekávaných výsledků) ze stavu (pro maximalizační a minimalizační uzly).
 
 \subsection*{Value iteration a Policy iteration}
 \label{teorie:valiter}
@@ -157,8 +158,8 @@ Na obrázku \ref{img:policy} lze vidět optimální strategie (reprezentovány z
 
 \begin{figure}[!htbp]
 \begin{center}
-  \scalebox{0.8}{\includegraphics{img/policy.png}}
-  \caption{Problém představuje pole o velikosti 12 polí (z nichž šedé je nedosažitelné), 4 směry možnosti chůze a dva koncové stavy s odměnami ohodnocenými -1 a 1. Problém je stochastický, přechod ze stavu do následníka se provede dle své pravděpodobnosti v přechodové funkci. Již po 5 iteracích je vidět optimální strategie, reprezentovaná šipkou směru (agent začíná v levém spodním rohu), vypočtena pomocí hodnoty $V_{5}$ každého pole.}
+  \scalebox{0.9}{\includegraphics{img/policy.png}}
+  \caption{Problém představuje pole o velikosti 12 polí (z nichž šedé je nedosažitelné), 4 směry možnosti chůze a dva koncové stavy s odměnami ohodnocenými -1 a 1. Problém je stochastický, přechod ze stavu do následníka se provede dle své pravděpodobnosti v přechodové funkci. Již po 5 iteracích je vidět optimální strategie, reprezentovaná šipkou směru (agent začíná v levém spodním rohu), vypočtena pomocí hodnoty $V_{5}$ každého pole. Hodnoty pro vlastní obrázek jsou převzaty z volně dostupných prezentací kurzu \cite{berkeley}.}
   \label{img:policy}
 \end{center}
 \end{figure}
@@ -168,8 +169,8 @@ MDP lze též reprezentovat prohledávacím stromem, viz obrázek \ref{img:mdptr
 
 \begin{figure}[ht]
 \begin{center}
-  \scalebox{0.8}{\includegraphics{img/qvallls.png}}
-  \caption{Ukázka Q-hodnot pro předešlý grid-world problém (po 5. iteraci). Q-hodnoty se počítají pro každou možnou akci ze stavu do následníka, proto jsou pro jedno políčko na hracím plánu 4 pro každý směr, kam může agent jít.}
+  \scalebox{0.9}{\includegraphics{img/qvallls.png}}
+  \caption{Ukázka Q-hodnot pro předešlý grid-world problém (po 5. iteraci). Q-hodnoty se počítají pro každou možnou akci ze stavu do následníka, proto jsou pro jedno políčko na hracím plánu 4 pro každý směr, kam může agent jít. Hodnoty pro vlastní obrázek jsou převzaty z volně dostupných prezentací kurzu \cite{berkeley}.}
   \label{img:qvals}
 \end{center}
 \end{figure}
@@ -177,7 +178,7 @@ MDP lze též reprezentovat prohledávacím stromem, viz obrázek \ref{img:mdptr
 \begin{figure}[ht]
 \begin{center}
   \scalebox{0.75}{\includegraphics{img/mdptree.jpg}}
-  \caption{Na obrázku lze vidět analogii MDP Value Iteration k Expectimaxu \cite{RLIntro}.}
+  \caption{Na obrázku lze vidět analogii MDP Value Iteration k Expectimaxu \cite{RLIntro}. Obrázek převzat z volně dostupných prezentací kurzu \cite{berkeley}.}
   \label{img:mdptree}
 \end{center}
 \end{figure}
@@ -189,7 +190,7 @@ Další důležitou vlastností agenta bude schopnost \textit{učit se} \cite{RL
 \begin{figure}[!htbp]
 \begin{center}
   \scalebox{0.5}{\includegraphics{img/learningagent.png}}
-  \caption{Agent využívající strojové učení.}
+  \caption{Agent využívající strojové učení. Obrázek přeložen a převzat z volně dostupných prezentací kurzu \cite{berkeley}.}
   \label{img:learningagent}
 \end{center}
 \end{figure}
@@ -238,7 +239,7 @@ Dalším dělicím kritériem je \textbf{řízení akcí}:
   \begin{figure}[!htbp]
   \begin{center}
     \scalebox{0.5}{\includegraphics{img/policyeval.jpg}}
-    \caption{Policy iteration metoda s potřebnými proměnnými (pomocí strategie $\pi$(s) se dostávám ze stavu $s$ do jeho následníka $(s^\prime)$).}
+    \caption{Policy iteration metoda s potřebnými proměnnými (pomocí strategie $\pi$(s) se dostávám ze stavu $s$ do jeho následníka $(s^\prime)$). Obrázek převzat z volně dostupných prezentací kurzu \cite{berkeley}.}
     \label{img:policyeval}
   \end{center}
   \end{figure}
@@ -279,7 +280,7 @@ Následně se provede aktualizace (update) TD učení, kde $\alpha$ nyní předs
     \end{align}
 \end{enumerate}
 Q-Learning konverguje k optimální strategii, i když následuje posloupnost neoptimálních akcí \cite{qlearnspringer}. Tento jev se nazývá \textit{off-policy learning} \cite{RLIntro}.
-Jak ale agent vybírá, kterou akci provede, aby maximalizoval svůj užitek z tréninku? Je nutné zvolit dobrý poměr mezi zjišťováním terénu (\textit{exporation}) a využíváním již zjištěných aktuálních dobrých strategií (\textit{exploitation}) \cite{RLpaper}. Dobrý poměr lze řešit několika způsoby \cite{berkeley}:
+Jak ale agent vybírá, kterou akci provede, aby maximalizoval svůj užitek z tréninku? Je nutné zvolit \textbf{dobrý poměr} mezi zjišťováním terénu (\textit{exporation}) a využíváním již zjištěných aktuálních dobrých strategií (\textit{exploitation}) \cite{RLpaper}. Dobrý poměr lze řešit několika způsoby \cite{berkeley}:
 \begin{itemize}
   \item Zavedením koeficientu $\varepsilon-greedy$ pro výběr náhodných akcí (vůči optimálním). Výhodné je ovšem koeficient časem zmenšovat, aby nedocházelo k nelogičnostem akcí.
   \item Využitím \textbf{explorační funkce}, která bere v potaz nejen budoucí užitek stavu $U$, ale i množství navštívění stavu $N$. Díky tomu se prozkoumají stavy, jejichž dosud zjištěná špatná hodnota ještě není úplně stabilní (málo výskytů). Funkce tedy snižuje důležitost opakujících se stavů a dává větší důraz na neprozkoumané stavy. Nakonec s tímto skončit, výsledná aktualizace hodnot (update) potom vypadá:
@@ -344,10 +345,11 @@ Pro účely této práce se bere v potaz zjednodušení původní hry na vizuá
 \begin{figure}[!htbp]
 \begin{center}
   \scalebox{0.9}{\includegraphics{img/Mspacman.png}}
-  \caption{Screenshot 1. levelu originální verze Ms. Pacman.}
+  \caption[]{Screenshot 1. levelu originální verze Ms. Pacman. Převzato a upraveno z webu \footnotemark{}.}
   \label{img:mspac}
 \end{center}
 \end{figure}
+\footnotetext{\url{https://upload.wikimedia.org/wikipedia/en/6/6c/Mspacman.png}}
 
 \subsection*{Klasifikace dema Ms. Pacman z hlediska Teorie her}
 Ms. Pacman je hra, tzn. strategická interakce mezi 2 a více hráči, kteří chtějí dosáhnout optimálního výsledku ve hře.
@@ -370,10 +372,11 @@ Pro výpočet vzdáleností bude použita tzv. \textit{manhattonovská metrika} 
 \begin{figure}[!htbp]
 \begin{center}
   \scalebox{0.08}{\includegraphics{img/manhattan.png}}
-  \caption{Červená, modrá i žlutá čára reprezentují stejnou manhattonskou vzdálenost o velikosti 12 (narozdíl od Euklidovské vzdálenosti reprezentované zelenou čárou.)}
-  \label{img:manhattanDist}
+  	\caption[]{Červená, modrá i žlutá čára reprezentují stejnou manhattonskou vzdálenost o velikosti 12 (narozdíl od Euklidovské vzdálenosti reprezentované zelenou čárou). Převzato z webu \footnotemark{}.}
+	\label{img:manhattanDist}
 \end{center}
 \end{figure}
+\footnotetext{\url{https://upload.wikimedia.org/wikipedia/commons/0/08/Manhattan_distance.svg}}
 
 \subsection*{Minimax, AlfaBeta řezy}
 \label{navrh:minabmaxy}
@@ -382,7 +385,7 @@ Pro základní algoritmy bylo nutné vzít v potaz větší počet minimalizují
 \begin{figure}[!htbp]
 \begin{center}
   \scalebox{0.3}{\includegraphics{img/playersminimax.png}}
-  \caption{Ukázka střídání hráčů na stromu algoritmu Minimax.}
+  \caption{Ukázka střídání hráčů na stromu algoritmu Minimax. Obrázek převzat a upraven na základě volně dostupných prezentací kurzu \cite{berkeley}.}
   \label{img:playersminimax}
 \end{center}
 \end{figure}
@@ -621,7 +624,7 @@ Právě ohodnocovací funkce se překvapivě stala největším problémem při 
 \begin{figure}[!htbp]
 \begin{center}
   \scalebox{0.6}{\includegraphics{img/reflexthrashV.png}}
-  \caption{Na obrázku lze vidět problematické místo pro ohodnocovací funkci agenta. Zelená čára reprezentuje stejnou manhattonovskou vzdálenost (o velikosti 3 políčka) mezi Ms. Pacman a nebližší kuličkou jídla.}
+  \caption{Na screenshotu lze vidět problematické místo pro ohodnocovací funkci agenta. Zelená čára reprezentuje stejnou manhattonovskou vzdálenost (o velikosti 3 políčka) mezi Ms. Pacman a nebližší kuličkou jídla.}
   \label{img:reflexthrashV}
 \end{center}
 \end{figure}
