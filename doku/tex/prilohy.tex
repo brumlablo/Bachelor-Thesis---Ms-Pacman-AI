@@ -22,7 +22,7 @@ Pro demo Ms. Pacman byly používány základní parametry:
 \item \texttt{-q} minimalistický režim bez grafického rozhraní
 \item \texttt{-t} textový režim bez grafického rozhraní 
 \item \texttt{-f} fixed random seed (pro fixní modelaci náhodnosti scénářů)
-\item \texttt{-n 2010} počet her celkově
+\item \texttt{-n 2010} počet epizod celkově
 \item \texttt{-x 2000} počet tréninkových epizod
 \item \texttt{-l smallClassic} druh mapy (ze složky \texttt{src/layouts}) - např. \texttt{smallClassic}, \newline \texttt{mediumClassic}, \texttt{minimaxClassic}, \texttt{openClassic},...
 \item \texttt{-p ApproximateQAgent} druh agenta - např. \texttt{ReflexAgent}, \texttt{ExpectimaxAgent}, \newline \texttt{PacmanQAgent}, \texttt{ApproximateQAgent},...
@@ -38,7 +38,7 @@ python pacman.py -p ReflexAgent -k 2
 python pacman.py -p ExpectimaxAgent -l smallClassic -a depth=3,
 -n 5 -q
 \end{lstlisting}
-\texttt{PacmanQAgent}, 2000 epizod tréninku, 10 zobrazených epizod provádení optimální strategie, na mapě \texttt{smallGrid}
+\texttt{PacmanQAgent}, 2000 epizod tréninku, 10 zobrazených epizod provádění optimální strategie, na mapě \texttt{smallGrid}
 \begin{lstlisting}[language=Python,texcl=true]
 python pacman.py -p PacmanQAgent -x 2000 -n 2010 -l smallGrid
 \end{lstlisting}
@@ -47,10 +47,10 @@ python pacman.py -p PacmanQAgent -x 2000 -n 2010 -l smallGrid
 python pacman.py -p PacmanQAgent -n 10 -l smallGrid -a
 numTraining=10
 \end{lstlisting}
-\texttt{ApproximateQAgent} 60 epizod z nichž 50 trénink (10 zobrazených epizod provádení optimální strategie), na mapě \texttt{mediumGrid}, použitý lepší Extractor vlastností
+\texttt{ApproximateQAgent} 100 epizod z nichž 90 trénink (10 zobrazených epizod provádění optimální strategie), na mapě \texttt{mediumGrid}, použitý lepší Extractor vlastností
 \begin{lstlisting}[language=Python,texcl=true]
 python pacman.py -p ApproximateQAgent -a extractor=BetterExtractor
--n 60 -x 50 -l mediumClassic
+-n 100 -x 90 -l mediumClassic
 \end{lstlisting}
 
 \section{Gridworld problémy (\texttt{gridworld.py})}
@@ -72,11 +72,11 @@ Pro vizualizaci hodnot pokročilých agentů - především agenta \texttt{Value
 \item \texttt{-l 0.7} \textbf{alpha} (learning rate), rychlost TD učení
 \end{itemize}
 \subsection{Příklady použití}
-\texttt{ValueIterationAgent}, defaultní mapa, 100 iterací, 10 epizod
+\texttt{ValueIterationAgent}, defaultní mapa, 100 iterací, 10 epizod celkem
 \begin{lstlisting}[language=Python,texcl=true]
 python gridworld.py -a value -i 100 -k 10
 \end{lstlisting}
-\texttt{ValueIterationAgent}, typ gridworld problému \texttt{DiscountGrid}, 5 iterací, 10 defaultních epizod
+\texttt{ValueIterationAgent}, typ gridworld problému \texttt{DiscountGrid}, 5 iterací, 10 epizod (výchozí)
 \begin{lstlisting}[language=Python,texcl=true]
 python gridworld.py -a value -i 5 -g DiscountGrid
 \end{lstlisting}
