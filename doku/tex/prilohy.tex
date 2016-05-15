@@ -22,6 +22,7 @@ Pro demo Ms. Pacman byly používány základní parametry:
 \item \texttt{-q} minimalistický režim bez grafického rozhraní
 \item \texttt{-t} textový režim bez grafického rozhraní 
 \item \texttt{-f} fixed random seed (pro fixní modelaci náhodnosti scénářů)
+\item \texttt{-z 0.7} míra zvětšení grafiky (\textit{zoom})
 \item \texttt{-n 2010} počet epizod celkově
 \item \texttt{-x 2000} počet tréninkových epizod
 \item \texttt{-l smallClassic} druh mapy (ze složky \texttt{src/layouts}) - např. \texttt{smallClassic}, \newline \texttt{mediumClassic}, \texttt{minimaxClassic}, \texttt{openClassic},...
@@ -58,8 +59,10 @@ python pacman.py -p ApproximateQAgent -a extractor=BetterExtractor
 Pro vizualizaci hodnot pokročilých agentů - především agenta \texttt{ValueIterationAgent} byly používány základní parametry včetně příkladů hodnot:
 \begin{itemize}
 \item \texttt{-h} pro výpis celé nápovědy a všech možných parametrů
+\item \texttt{-m} manuální režim (pro řízení agentova chování při epizodách)
 \item \texttt{-q} minimalistický režim bez grafického rozhraní
 \item \texttt{-t} textový režim bez grafického rozhraní
+\item \texttt{-z 0.7} míra zvětšení grafiky (\textit{zoom})
 \item \texttt{-k 10} počet epizod
 \item \texttt{-i 100} počet iterací V-hodnot
 \item \texttt{-v} zobrazení hodnot po každé iteraci

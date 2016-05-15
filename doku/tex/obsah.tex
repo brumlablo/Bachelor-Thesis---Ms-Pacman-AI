@@ -5,7 +5,7 @@ Schopnost inteligentního myšlení je jednou z nejdůležitějších vlasností
 Cílem této práce je vytvořit inteligentní entitu, agenta, který by dokázal pokořit tak složitý rozhodovací problém, jakým je \textit{real-time} hra Ms. Pacman. Svět her je pro umělou inteligenci jedno z velkých témat. Hry byly jako zdroje střetu zájmů oponentů zkoumány již v první pol. 20. století. John von Neumann a Oskar Morgernstern na tyto konfliktní problémy nahlíželi jako na matematické příklady, které se dají analyzovat, sestavit jim matematický model a pomocí výpočtů se snažit nalézt optimální strategie pro každého svého účastníka. Hra by nemohla být zábavná, kdyby nepřítel nebyl dostatečně chytrý. Umělá inteligence silného oponenta ve složité hře představuje disciplínu stále otevřenou novým technikám, metodám a experimentům. Výpočetní náročnost takových her staví velkou překážku k vytvoření \textit{ideální} umělé inteligence, vždyť teprve v roce 2016 dokázala umělá inteligece \textbf{porazit člověka} ve hře \textit{Go} \cite{uigo}! UI \textit{AlphaGo} byla navrhnuta v rámci projektu \textit{DeepMind} společnosti \textit{Google} a povedlo se ji historicky poprvé drtivě porazit profesionálního hráče. Ačkoliv se již v minulosti podařilo překonat člověka i ve hře \textit{Šachy}, stále je to však malý krůček pro tak velký svět zajímavých rozhodovacích problémů jakým je i Ms. Pacman. Ms. Pacman patří k těmto složitým úlohám nejen rozměrností stavů, jež ve hře můžou nastat, ale především náhodností chování svých oponentů, duchů. Nelze tedy přesně stanovit, jak se daný duch bude v danou situaci chovat, lze jen jaksi předpokládat (například za použitím pravděpodobnosti) duchovo chování, tudíž je těžší jednoznačne stanovit, jak má agent postupovat v takto dynamickém prostředí. Co kdyby se agent Ms. Pacman postupně na základě vjemů z prostředí \textbf{učil} své budoucí chování v podobné situaci? 
 Jedna z kategorií strojového učení (\textit{machine learning}) posilované učení (\textit{reinforcement learning}) je mocný nástroj na aktivní vypočetní stanovení agentovova rozhodnutí na základě aktuální odměny a trestu získaných v daném stavu. Agent Ms. Pacman se bude snažit co nejlépe reagovat na své aktuální okolí tak, aby jeho inteligence překonala problematiku náhodnosti a vypočetní náročnosti této hry. Kvalita agenta bude srovnána s již známými metodami řešení podobných problémů. Dále se práce zaměří na podobné problémy jako je Ms. Pacman a na nich otestuje kvalitu inteligence agenta.
 
-Práce je tedy rozdělena na dva velké celky: teoretickou a praktickou část. Teoretická část práce seznamuje čtenáře se základními pojmy a metodami hraní her v kapitole \ref{teorie:metodyapojmy} a to tak, aby na ně následně mohla navázat nejdůležitější teoretická kapitola \ref{teorie:uciciagent} zaměřující se na důležitou vlastnost agenta -- schopnost učení. Tato kapitola nejdříve pojednává o racionalitě hráče v sekci \ref{sec:racionalita} a popisuje pojem \textit{Markovský rozhodovacích proces} v sekci \ref{sec:mdp}. S těmito pojmy pak pracují již sekce jednotlivých algoritmů UI, například finální vylepšení Q-Learningu: \textit{Aproximační Q-Learning} \ref{sec:qlearning}. Předěl mezi teoretickou a praktickou částí je kapitola \ref{anavrh}, která prakticky rozebírá hru Ms. Pacman a již se detailně věnuje návrhům všech metod zvolených pro implementaci a otestování na demu Ms. Pacman. Praktická část pokračuje implementační kapitolou \ref{realizace}, která popisuje objekový návrh aplikace a především prezentuje implementovaná řešení jednotlivých metod. Kapitola se zaměřuje i na zmíněné další \textit{gridworld} problémy zkoumatelné z hlediska UI, pro které lze také názorně použít zvolené algoritmy. Implementační kapitolu uzavírá popis implementace agenta pro metodu \textit{Aproximační Q-Learning}. Poslední částí práce je kapitola experimentální charakteru \ref{exper}, která se zaměřuje na porovnání jednotlivých agentů na různých typech problémů (vč. Ms. Pacman) a obsahuje finální srovnání časové a vypočetní náročnosti algoritmů.
+Práce je tedy rozdělena na dva velké celky: teoretickou a praktickou část. Teoretická část práce seznamuje čtenáře se základními pojmy a metodami hraní her v kapitole \ref{teorie:metodyapojmy} a to tak, aby na ně následně mohla navázat nejdůležitější teoretická kapitola \ref{teorie:uciciagent} zaměřující se na důležitou vlastnost agenta -- schopnost učení. Tato kapitola nejdříve pojednává o racionalitě hráče v sekci \ref{sec:racionalita} a popisuje pojem \textit{Markovský rozhodovacích proces} v sekci \ref{sec:mdp}. S těmito pojmy pak pracují již sekce jednotlivých algoritmů UI, například finální vylepšení Q-Learningu: \textit{Aproximační Q-Learning} \ref{sec:qlearning}. Předěl mezi teoretickou a praktickou částí je kapitola \ref{anavrh}, která prakticky rozebírá hru Ms. Pacman a již se detailně věnuje návrhům všech metod zvolených pro implementaci a otestování na demu Ms. Pacman. Vzhledem k primárnímu zaměření této práce na UI byl využit framework Ms. Pacman, se kterým seznamuje praktická část práce implementační kapitola \ref{realizace}. Tato kapitola tedy řeší objekový návrh aplikace a především prezentuje implementovaná řešení jednotlivých metod. Kapitola se zaměřuje i na zmíněné další \textit{gridworld} problémy zkoumatelné z hlediska UI, pro které lze také názorně použít zvolené algoritmy. Implementační kapitolu uzavírá popis implementace agenta pro metodu \textit{Aproximační Q-Learning}. Poslední částí práce je kapitola experimentální charakteru \ref{exper}, která se zaměřuje na porovnání jednotlivých agentů na různých typech problémů (vč. Ms. Pacman) a obsahuje finální srovnání časové a vypočetní náročnosti algoritmů.
 
 \chapter{Metody hraní her}
 \label{teorie:metodyapojmy}
@@ -821,25 +821,68 @@ features["active-ghosts-1-step-away"]):
 \end{python}
 
 \chapter{Experimenty a srovnání agentů}
-\label{exper}
-Agenty lze srovnat nejlépe podle dosaženého herního skóre.
-\section{Srovnání z hlediska skóre}
-\section{Srovnání z hlediska času}
-\section{Srovnání z hlediska vypočetní náročnosti}
-\section{Výsledky}
-učící křivka (x:skóre,y:počet tréninku)
+-TATO ČÁST NENÍ DOKONČENA,BUDOU SE DOPLŇOVAT TABULKY A GRAFY, ZATÍM ZDE JSOU VELMI STROHÉ TEXTY ZJIŠTĚNÝCH VÝSLEDKŮ a POPISŮ EXPERIMENTŮ-
+
+
+Tato závěrečná kapitola praktické části práce se zaměřuje na experimenty a srovnání chování agentů na demu Ms. Pacman, v poslední části \ref{exper:grid} dále zkoumá vztahy Q a V-hodnot na názornějším zobrazení mřížky gridworld problémů a v neposlední řadě pozoruje vlivy parametrů (jako např. $\alpha$) na iteligenci a učení agentů pro daný gridworld problém. Experimenty byly tedy primárně vedeny na těchto dvou nezávislých demech.
+
+Agenty lze srovnat nejlépe podle průměrného dosaženého herního skóre v době vykonávání optimální strategie (trénink se nepočítá). U učících agentů bude též pozorován počet iterací, za jak dlouho jsou schopni uspět alespoň ve dvou třetinách z celkového počtu her. Touto mírou jsou následně prohlášeni za \textit{úspěšné}. 
+
+Pro testování chování agentů na demu Ms. Pacman bylo vybráno několik rozdílných map. Pro porovnání všech agentů včetně vypočetně nejnáročnějšího \texttt{PacmanQAgent} byla zvolena již zmíněná menší mapa \texttt{smallGrid} \label{img:smallL}. Dále byla vybrána zajímavá mapa \texttt{trappedClassic}, kdy je Ms.Pacman již od začátku hry obklíčena nepřáteli (obrázek \ref{img:trapped}). Jako zatěžkávací test iteligence agentů slouží mapa \texttt{trickyClassic}, viz obrázek \label{img:tricky}. Tato mapa o větším rozměru 20x13 polí obsahuje 3 nepřátele, 6 power-upů a především problematické místo o velikosti 5x4 polí plných kuliček jídla, které je navíc nebezpečně blízko poli zrodu nepřátel (\textit{spawning point}).
+
+\section{Srovnání z hlediska časové a vypočetní náročnosti}
+Aplikace byla z důvodu vypočetní náročnosti testována na stolním počítači s procesorem AMD FX-6300 o frekvenci 4 GHz a operační pamětí 8 GB. Jako operační systém je nainstalována linuxová distribuce \textit{ArchLinux} (64-bit). Za výchozí míru zatížení systému aplikací bylo zvoleno procentuální vytížení paměti systému, které názorně ukazuje požadavky programu. Každý agent si danou mapu zkusil celkem 100 krát a během této doby bylo zapsána nějvětší hodnota vytížení paměti.
+
+Základní agenti měli několika násobně vyšší vypočetní požadavky, avšak základní Q-Learningový agent je během tréninku dokonce převýšil.
+-TABULKA AGENTŮ A JEJICH VYTÍŽENÍ PAMĚTI-
+
+
+Agentovi je též měřen průměrný čas strávený hraním každé hry. Je nutno upozornit, že chování duchů je každou hru jiné, tudíž nelze jasně říct ideální čas, který by měl agent ve hře strávit, avšak pouze nastínit, kolik průměrně trvá ideální řešení a porovnat tuto hodnotu s průmerným agentovým časem stráveným ve hře.
+
+Základní agenti strávili nepoměrně více času ve hře a to především vlivem jejich ohodnocovací funkce užitku stavu.
+-TABULKA AGENTŮ A JEJICH PRŮMĚRNÝ ČAS HRY-
+
+\section{Srovnání všech agentů na mapě \texttt{smallGrid}} 
+MinimaxAgent a AlphaBetaAgent si při hloubce 2 nevedli vůbec dobře, to zlepšila až hloubka, ale výpočetní doba se zmnohonásobila. Expectimax agent si vedl velmi dobře. Q-Learningový agent získal své optimální chování při cca 1350 iteracích. Aproximační Q-Learning již při 50 iteracích, avšak jeho kvalita se poté příliš nezlepšovala.
+
+100 her: graf (x:průměrné skóre,y:agenti s ruznymi hloubkami vc ucicih agentu s dosazenou optimalni strategii )
+
+Q-Agenti učící křivka (x:průměrné skóre,y:počet iterací tréninku+vykonavani optimalni strategie)
+
+\section{Srovnání agentů na mapě \texttt{trappedClassic}}
+Tato mapa je zajímavá především kvůli sebevražedným pokusům základních agentů (MinimaxAgent, AlphaBetaAgent). Tito agenti si deterministicky spočtou své naděje na přežití a raději se zabijí a skončí tak hru. Naproti tomu ExpectimaxAgent počítá i s náhodou. Aproximační Q-Learningový agent potřebuje 1000 iterací pro naučení semioptimální strategie.
+\begin{figure}[!htbp]
+\begin{center}
+  \scalebox{0.35}{\includegraphics{img/trappedClassic.png}}
+  \caption{Screenshot mapy \texttt{trappedClassic}.}
+  \label{img:trapped}
+\end{center}
+\end{figure}
+
+100 her: graf (x:průměrné skóre,y:agenti s ruznymi hloubkami vc ucicih agentu s dosazenou optimalni strategii )
+
+\section{Zatěžkávací zkouška na mapě \texttt{trickyClassic}}
+\begin{figure}[!htbp]
+\begin{center}
+  \scalebox{0.35}{\includegraphics{img/trickyClassic.png}}
+  \caption{Screenshot mapy \texttt{trickyClassic}.}
+  \label{img:tricky}
+\end{center}
+\end{figure}
+
+\section{Vliv parametrů na demo Ms. Pacman}
+Nezjištěn nějak zásadní vliv alfy, nebo gammy. Epsilon značně negativně ovlivňuje délku učení.
+
+\section{Vliv parametrů gridworld problémy}
+Zkoumány 3 problémy a vliv alpha, epsilon-greedy, gamma, livingReward a noise. ROZEBRAT VLIVY PARAMETRŮ A DOPLNIT
+
+\label{exper:grid}
+
+\section{Výsledky experimentů}
+Ukázalo se, že Value Iteration agent dokáže vypočíst své hodnoty rychleji oproti Q-Learningu. Pro reálné problémy však 
+Q-learning vypočítává hodnoty svých akcí optimálně a to i v případech, kdy Value Iteration nemusí přijít na správné chování (\texttt{BridgeGrid} problém). Ukázalo se taky, že Aproximační Q-Learning dokáže mnohem rychleji získat určitý level inteligence, oproti němu Q-Learning agent těžce zaostává mnohonásobným počtem iterací nutných pro optimalitu svých akcí. Postupně rostoucí tabulka hodnot párů (stav,akce) Q-learning agenta si navíc exponenciálně nárokuje víc a víc vypočetního výkonu až do té míry, že přístup do této tabulky není vypočetně použitelný pro mapy větší jak \texttt{smallGrid} atp. Experimenty též pozitivně ukázaly, že \texttt{ExpectimaxAgent} dokáže poměrně  kvalitně vyhodnocovat chování svých stochastických nepřátel. Problém u tohoto agenta nastává v nedokonalé ohodnocovací funkci, agent se často zbytečně zasekává v rozích. To řeší až Q-Learningoví agenti, kteří se své optimální chování postupně naučili. 
 
 \chapter{Závěr}
--PŘEPSAT-
-Cílem toho semestrálního projektu bylo nastudovat problematiku metod hraní her ve vztahu k učícímu agentovi pro hru Ms. Pacman a navrhnout metodu řešení problému. Ms. Pacman. Nastudování teorie pomohlo především k definici a klasifikaci samotné hry jako problému umělé inteligence, a následném stanovení návrhu řešení problematiky metodou Aproximační Q-Learning. Tato metoda řeší stochastické chování duchů a pomůže výrazně eliminovat problém velké vypočetní náročnosti stavového prostoru Ms. Pacman. Jak si metoda s takto složitou problematikou poradí bude nejlépe vidět při srovnání její efektivity například s metodou Expectimax. Práce mě naučila především nebát se složitějších matematických vzorců a problémů a též určitý vhled do možností strojového učení.
-
-It have been shown that value iteration algorithm performs faster and better
-as compared to both the variants of Q-learning algorithm. However in more
-realistic settings, the value iteration might not be able to find the optimal
-solution while the Q-learning algorithm would perform better. It is also
-shown that the implementation of Q-learning algorithm that uses function
-approximator, though slow, would be better in long run as compared to the
-version that uses lookup table. This would happen because as the state space
-grows, the memory requirement for storing various states would also grow
-exponentially rendering the lookup table version useless.
+-BUDE JESTE PREPSAN-
+Cílem této bakalářské práce bylo navrhnout dostatečne chytrou umělou inteligenci, která by si dokázala poradit i s tak komplexním problém jako je hra Ms. Pacman. Nejdříve byla nastudována problematika metod hraní her a techniky strojového učení ve vztahu k učícímu agentovi. Nastudování teorie pomohlo především k definici a klasifikaci samotné hry jako problému umělé inteligence, a následném stanovení návrhu řešení problematiky metodami Q-Learning a Aproximační Q-Learning. Tyto metoda řeší stochastické chování duchů a především druhá metoda pomohla výrazně eliminovat problém velké vypočetní náročnosti stavového prostoru hry. V práci byli také navrhnuti a implementováni základní agenti, kteří byli srovnáni se učícími agenty. Efektivita učících agentů byla takto srovnána například s agentem imlementujícím metodu Expectimax. Navíc byly experimentálně zkoumány parametry ovlivňující jejich chování a také sestaveny vlastnosti pro vektor vlastností agenta Aproximačního Q-Learningu. Práce mě naučila především nebát se složitějších matematických vzorců a problémů a též určitý vhled do možností strojového učení.
 
