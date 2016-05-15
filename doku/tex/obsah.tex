@@ -345,7 +345,7 @@ Pro účely této práce se bere v potaz zjednodušení původní hry na vizuá
 \begin{figure}[!htbp]
 \begin{center}
   \scalebox{0.9}{\includegraphics{img/Mspacman.png}}
-  \caption[]{Screenshot 1. levelu originální verze Ms. Pacman. Převzato a upraveno z webu \footnotemark{}.}
+  \caption[]{Screenshot 1. levelu originální verze Ms. Pacman. Převzato z webu \footnotemark{}.}
   \label{img:mspac}
 \end{center}
 \end{figure}
@@ -821,6 +821,7 @@ features["active-ghosts-1-step-away"]):
 \end{python}
 
 \chapter{Experimenty a srovnání agentů}
+\label{exper}
 -TATO ČÁST NENÍ DOKONČENA,BUDOU SE DOPLŇOVAT TABULKY A GRAFY, ZATÍM ZDE JSOU VELMI STROHÉ TEXTY ZJIŠTĚNÝCH VÝSLEDKŮ a POPISŮ EXPERIMENTŮ-
 
 
@@ -831,7 +832,7 @@ Agenty lze srovnat nejlépe podle průměrného dosaženého herního skóre v d
 Pro testování chování agentů na demu Ms. Pacman bylo vybráno několik rozdílných map. Pro porovnání všech agentů včetně vypočetně nejnáročnějšího \texttt{PacmanQAgent} byla zvolena již zmíněná menší mapa \texttt{smallGrid} \label{img:smallL}. Dále byla vybrána zajímavá mapa \texttt{trappedClassic}, kdy je Ms.Pacman již od začátku hry obklíčena nepřáteli (obrázek \ref{img:trapped}). Jako zatěžkávací test iteligence agentů slouží mapa \texttt{trickyClassic}, viz obrázek \label{img:tricky}. Tato mapa o větším rozměru 20x13 polí obsahuje 3 nepřátele, 6 power-upů a především problematické místo o velikosti 5x4 polí plných kuliček jídla, které je navíc nebezpečně blízko poli zrodu nepřátel (\textit{spawning point}).
 
 \section{Srovnání z hlediska časové a vypočetní náročnosti}
-Aplikace byla z důvodu vypočetní náročnosti testována na stolním počítači s procesorem AMD FX-6300 o frekvenci 4 GHz a operační pamětí 8 GB. Jako operační systém je nainstalována linuxová distribuce \textit{ArchLinux} (64-bit). Za výchozí míru zatížení systému aplikací bylo zvoleno procentuální vytížení paměti systému, které názorně ukazuje požadavky programu. Každý agent si danou mapu zkusil celkem 100 krát a během této doby bylo zapsána nějvětší hodnota vytížení paměti.
+Aplikace byla z důvodu vypočetní náročnosti testována na stolním počítači s procesorem AMD FX-6300 o frekvenci 4 GHz a operační paměti 8 GB. Jako operační systém je nainstalována linuxová distribuce \textit{ArchLinux} (64-bit). Za výchozí míru zatížení systému aplikací bylo zvoleno procentuální vytížení paměti systému, které názorně ukazuje požadavky programu. Každý agent si danou mapu zkusil celkem 100 krát a během této doby bylo zapsána nějvětší hodnota vytížení paměti.
 
 Základní agenti měli několika násobně vyšší vypočetní požadavky, avšak základní Q-Learningový agent je během tréninku dokonce převýšil.
 -TABULKA AGENTŮ A JEJICH VYTÍŽENÍ PAMĚTI-
