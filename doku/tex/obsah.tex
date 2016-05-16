@@ -670,6 +670,7 @@ Důležitými metodami jsou:
 \texttt{ReinforcementAgent} staví na odhadu tabulky Q-Hodnot, protože neobsahuje model a je rodičem objektu řešící Q-Learning pro gridworld problémy \texttt{QLearningAgent}. Podobný agent, avšak s odlišnými vstupními parametry pro problém Ms. Pacman jsou \texttt{PacmanQAgent} a nakonec dále dědící \texttt{ApproximateQAgent}, který navíc implementuje algoritmus Aproximační Q-learning a využívá u toho třídy \texttt{FeatureExtractor} pro implementaci vektoru vlastností pro Ms. Pacman.
 
 \section{Value Iteration agent a gridworld problémy}
+\label{impl:valgrid}
 Objekt \texttt{ValueIterationAgent} provádí své vyhodnocení V-Hodnot již v konstruktoru a to do pevného počtu iterací. Důvodem opuštění podmínky konvergence je především možnost pozorovat kolik iterací stačí pro optimalitu strategie. Z vypočetních (nutnost stanovit model) a názorných důvodů je tento agent zobrazen výhradně formou \textbf{gridworld} problémů (mřížky hodnot začínající se definovanými odměnami spustitelné pomocí \texttt{gridworld.py} -- viz manuál \ref{priloha:manualg}), kde jedno políčko po provedení metody ukazuje svou výslednou V-hodnotu (po provedení počtu daných iterací), po zmáčknutí klávesy (např. "Q") své 4 Q-hodnoty pro každý směr/akci a agent následně provede stanovený počet epizod svého chování (agentovo provedení vyhodnocené strategie). 
 Průběh implementace tohoto agenta byla pravděpodobně nejdelší co vůbec do praktického pochopení iterativního charakteru V-hodnot. Během implementace se ukázalo, že vektor hodnot stavů stačí ukládat pouze do jedné proměné a po každé iteraci jej znovu přepisovat. Původní myšlenka totiž byla, že vektor si bude ukládat i jakousi částečnou historii stavů včetně Q-hodnot, ze kterých jsou V-hodnoty sestavovány. Tento nápad byl po naprogramování okamžitě zavržen vzhledem k jeho výpočetní náročnosti a celkové nerelevantnosti k MDP problémům. Vždyť právě myšlenka MDP je pouze vycházet z přechodů z aktuálních stavů do jejich následníků. Ustanovila se tedy jedna nejdůležitější instanční proměnná \texttt{values} sloužící pro uložení aktuálních V-hodnot ve formě \textit{slovníku} pro každé pole mřížky a její aktuální V-hodnotu např. [(0,1):-10.0,(5,3):0.0]). Po každé iteraci se V-Hodnoty \textbf{přepíší} na aktuální, to lze vidět na výňatku z kódu konstruktoru agenta \ref{code:valagent}:
 
@@ -725,13 +726,13 @@ Tyto problémy budou experimenálně otestovány i Q-Learning agentem \texttt{QL
 \section{Q-Learning agenti}
 Jelikož bude Q-Learning nasazen jak na gridworld problémy, tak na Ms. Pacman, je potřeba tyto agenty rozlišovat na základě jejich vstupních parametrů, které byly poskytnuty frameworkem:
 \begin{itemize}
-\item pro \texttt{QLearningAgent}: alpha = 0.5, epsilon = 0.5, gamma = 1.
-\item pro \texttt{PacmanQAgent} a \texttt{ApproximateQAgent}: alpha = 0.2, epsilon = 0.05, gamma = 0.8.
+\item pro \texttt{QLearningAgent}: \texttt{alpha} = 0.5, \texttt{epsilon} = 0.5, \texttt{gamma} = 1.0.
+\item pro \texttt{PacmanQAgent} a \texttt{ApproximateQAgent}: \texttt{alpha} = 0.2, \texttt{epsilon} = 0.05, \texttt{gamma} = 0.8.
 \end{itemize}
 Po analýze těchto parametrů se došlo k těmto závěrům:
 \begin{enumerate}
-\item Parametry pro gridworld problémy jsou nastaveny do výchozích hodnot, které budou během experimentování často měněny, takže příliš nezáleží jejich výchozí hodnotách.
-\item Parametry pro Ms. Pacman byly experimentálně zjištěny autory frameworku tak, aby se Ms. Pacman učila spíše pomaleji (velmi malá hodnota parametru alpha) a měla následně uživatelem nastavený delší trénink, spíše málo experimentovala (vliv malé hodnoty parametru epsilon) a snažila se spíše co nejrychleji sníst kuličky jídla (vliv sníženého parametru gamma).
+\item Parametry pro gridworld problémy jsou nastaveny do výchozích hodnot, které budou během experimentování měněny, takže příliš nezáleží jejich výchozí hodnotách.
+\item Parametry pro Ms. Pacman byly experimentálně zjištěny autory frameworku tak, aby se Ms. Pacman učila spíše pomaleji (velmi malá hodnota parametru alpha) a měla následně uživatelem nastavený delší trénink, spíše málo experimentovala (vliv malé hodnoty parametru epsilon) a snažila se spíše co nejrychleji sníst kuličky jídla (vliv sníženého parametru gamma). Parametr \texttt{livingReward} je v demu Ms. Pacman záporná odměna při její neaktivitě (když nejsou nejseny kuličky jídla).
 \end{enumerate}
 Jak již bylo řešeno v \ref{navrh:qlearnagent}, tito agenti si musí model odhadnout sami na základě získaných odměn při výběru akcí na pomocí \textit{exporation/exploitation ratio}. Tento poměr je dán instanční proměnnou \texttt{epsilon} a předán funkci \texttt{flipCoin}, jež určí finální rozhodnutí výběru akce. Pokud se má provést aktuální akce, volá se pro stav metoda \texttt{getPolicy(state)}, která na základě tabulky Q-hodnot (Q-hodnota je vracena přímo opět metodou \texttt{getQValue(state, action)} narozdíl od \textbf{ValueIterationAgent}, který si Q-hodnotu musí nejdříve sestavit na základě modelu, jak je vidět v návrhu pseudokódu \ref{alg:valiterq}).
 
@@ -822,14 +823,12 @@ features["active-ghosts-1-step-away"]):
 
 \chapter{Experimenty a srovnání agentů}
 \label{exper}
--TATO ČÁST NENÍ DOKONČENA,BUDOU SE DOPLŇOVAT TABULKY A GRAFY, ZATÍM ZDE JSOU VELMI STROHÉ TEXTY ZJIŠTĚNÝCH VÝSLEDKŮ a POPISŮ EXPERIMENTŮ-
 
+Tato závěrečná kapitola praktické části práce se zaměřuje na experimenty a srovnání chování agentů na demu Ms. Pacman, v poslední části \ref{exper:grid} dále zkoumá vztahy Q a V-hodnot na názornějším zobrazení mřížky gridworld problémů a v neposlední řadě pozoruje vlivy parametrů (jako např. $\gamma$) na inteligenci agentů pro daný gridworld problém. Experimenty byly tedy primárně vedeny na těchto dvou nezávislých demech. Pro obrázky této kapitoly byla z kapacitních důvodů práce přidána příloha \ref{pril:experobr}.
 
-Tato závěrečná kapitola praktické části práce se zaměřuje na experimenty a srovnání chování agentů na demu Ms. Pacman, v poslední části \ref{exper:grid} dále zkoumá vztahy Q a V-hodnot na názornějším zobrazení mřížky gridworld problémů a v neposlední řadě pozoruje vlivy parametrů (jako např. $\alpha$) na iteligenci a učení agentů pro daný gridworld problém. Experimenty byly tedy primárně vedeny na těchto dvou nezávislých demech.
+Agenty lze srovnat nejlépe podle průměrného dosaženého herního skóre v době vykonávání optimální strategie (trénink se nepočítá). U učících agentů bude též pozorován počet epizod, za jak dlouho jsou schopni uspět alespoň ve dvou třetinách z celkového počtu her. Touto mírou jsou následně prohlášeni za \textit{úspěšné}.
 
-Agenty lze srovnat nejlépe podle průměrného dosaženého herního skóre v době vykonávání optimální strategie (trénink se nepočítá). U učících agentů bude též pozorován počet iterací, za jak dlouho jsou schopni uspět alespoň ve dvou třetinách z celkového počtu her. Touto mírou jsou následně prohlášeni za \textit{úspěšné}. 
-
-Pro testování chování agentů na demu Ms. Pacman bylo vybráno několik rozdílných map. Pro porovnání všech agentů včetně vypočetně nejnáročnějšího \texttt{PacmanQAgent} byla zvolena již zmíněná menší mapa \texttt{smallGrid} \label{img:smallL}. Dále byla vybrána zajímavá mapa \texttt{trappedClassic}, kdy je Ms.Pacman již od začátku hry obklíčena nepřáteli (obrázek \ref{img:trapped}). Jako zatěžkávací test iteligence agentů slouží mapa \texttt{trickyClassic}, viz obrázek \label{img:tricky}. Tato mapa o větším rozměru 20x13 polí obsahuje 3 nepřátele, 6 power-upů a především problematické místo o velikosti 5x4 polí plných kuliček jídla, které je navíc nebezpečně blízko poli zrodu nepřátel (\textit{spawning point}).
+Pro testování chování agentů na demu Ms. Pacman bylo vybráno několik rozdílných map. Pro porovnání všech agentů včetně vypočetně nejnáročnějšího \texttt{PacmanQAgent} byla zvolena již zmíněná menší mapa \texttt{smallGrid} \label{img:smallL}. Dále bude zmíněna zajímavá mapa \texttt{trappedClassic}, kdy je Ms.Pacman již od začátku hry obklíčena nepřáteli (obrázek \ref{img:trapped} v příloze \ref{pril:experobr}). Jako zatěžkávací test iteligence agentů slouží mapa \texttt{trickyClassic}, viz obrázek \ref{img:tricky}. Tato mapa o větším rozměru 20x13 polí obsahuje 3 nepřátele, 6 power-upů a především problematické místo o velikosti 5x4 polí plných kuliček jídla, které je navíc nebezpečně blízko poli zrodu nepřátel (\textit{spawning point}).
 
 \section{Srovnání z hlediska časové a vypočetní náročnosti}
 Aplikace byla z důvodu vypočetní náročnosti testována na stolním počítači s procesorem AMD FX-6300 o frekvenci 4 GHz a operační paměti 8 GB. Jako operační systém je nainstalována linuxová distribuce \textit{ArchLinux} (64-bit). Za výchozí míru zatížení systému aplikací bylo zvoleno procentuální vytížení paměti systému, které názorně ukazuje požadavky programu. Každý agent si danou mapu zkusil celkem 100 krát a během této doby bylo zapsána nějvětší hodnota vytížení paměti.
@@ -843,45 +842,43 @@ Agentovi je též měřen průměrný čas strávený hraním každé hry. Je nu
 Základní agenti strávili nepoměrně více času ve hře a to především vlivem jejich ohodnocovací funkce užitku stavu.
 -TABULKA AGENTŮ A JEJICH PRŮMĚRNÝ ČAS HRY-
 
-\section{Srovnání všech agentů na mapě \texttt{smallGrid}} 
-MinimaxAgent a AlphaBetaAgent si při hloubce 2 nevedli vůbec dobře, to zlepšila až hloubka, ale výpočetní doba se zmnohonásobila. Expectimax agent si vedl velmi dobře. Q-Learningový agent získal své optimální chování při cca 1350 iteracích. Aproximační Q-Learning již při 50 iteracích, avšak jeho kvalita se poté příliš nezlepšovala.
+\section{Srovnání agentů na mapách \texttt{smallGrid} a \texttt{trappedClassic}} 
+\texttt{MinimaxAgent} a \texttt{AlphaBetaAgent} si při hloubce 2 nevedli vůbec dobře, to řešilo až zvýšení hloubky na hodnotu 3. Výpočetní doba se však znatělně zvedla. \texttt{ExpectimaxAgent} si vedl velmi dobře i hlubkou 2. Q-Learningový agent \texttt{PacmanQAgent} se stal úspěšný při cca 1350 iteracích, avšak jeho roustoucí výpočetní nároky byly již zde patrné. \texttt{ApproximateQAgent} uspěl již při 50 iteracích, avšak jeho kvalita se narůstajícím počtem vzorků tréninku příliš nezlepšovala. Tato stagnace vektoru vlastností je zapříčiněna samotným charakterem aproximační funkce, avšak do budoucna by se velmi hodile lépe prověřit a upravit jednotlivé vlastnosti vektoru.
 
 100 her: graf (x:průměrné skóre,y:agenti s ruznymi hloubkami vc ucicih agentu s dosazenou optimalni strategii )
 
 Q-Agenti učící křivka (x:průměrné skóre,y:počet iterací tréninku+vykonavani optimalni strategie)
 
-\section{Srovnání agentů na mapě \texttt{trappedClassic}}
-Tato mapa je zajímavá především kvůli sebevražedným pokusům základních agentů (MinimaxAgent, AlphaBetaAgent). Tito agenti si deterministicky spočtou své naděje na přežití a raději se zabijí a skončí tak hru. Naproti tomu ExpectimaxAgent počítá i s náhodou. Aproximační Q-Learningový agent potřebuje 1000 iterací pro naučení semioptimální strategie.
-\begin{figure}[!htbp]
-\begin{center}
-  \scalebox{0.35}{\includegraphics{img/trappedClassic.png}}
-  \caption{Screenshot mapy \texttt{trappedClassic}.}
-  \label{img:trapped}
-\end{center}
-\end{figure}
+Kromě přechozí mapy bylo zkoumáno chování agentů  i na mapě \texttt{trappedClassic}. Tato mapa je zajímavá především kvůli sebevražedným pokusům základních agentů \texttt{MinimaxAgent} a \texttt{AlphaBetaAgent}. Agenti si deterministicky spočtou své naděje na přežití a raději se zabijí a skončí tak hru. Naproti tomu \texttt{ExpectimaxAgent} a pokročilí agenti počítají s náhodou. Tato mapa posloužila jako příklad velkého rozdílu vyhodnocení chování základních a pokročilých agentů.
 
-100 her: graf (x:průměrné skóre,y:agenti s ruznymi hloubkami vc ucicih agentu s dosazenou optimalni strategii )
 
 \section{Zatěžkávací zkouška na mapě \texttt{trickyClassic}}
-\begin{figure}[!htbp]
-\begin{center}
-  \scalebox{0.35}{\includegraphics{img/trickyClassic.png}}
-  \caption{Screenshot mapy \texttt{trickyClassic}.}
-  \label{img:tricky}
-\end{center}
-\end{figure}
+
+I zde se ukázalo, že Aproximační Q-Learning dokáže mnohem rychleji získat určitý level inteligence, oproti němu Q-Learning agent těžce zaostává mnohonásobným počtem iterací nutných pro svou úspěšnost. Postupně rostoucí tabulka hodnot párů (stav,akce) Q-learning agenta si navíc exponenciálně nárokuje víc a víc vypočetního výkonu až do té míry, že přístup do této tabulky není vypočetně použitelný pro mapy větší jak \texttt{smallGrid} atp. Experimenty též pozitivně ukázaly, že \texttt{ExpectimaxAgent} dokáže poměrně  kvalitně vyhodnocovat chování svých stochastických nepřátel. Problém u tohoto agenta nastává v nedokonalé ohodnocovací funkci, agent se často zbytečně zasekává v rozích. To řeší až Q-Learningoví agenti, kteří se své optimální chování postupně učí. 
+
 
 \section{Vliv parametrů na demo Ms. Pacman}
 Nezjištěn nějak zásadní vliv alfy, nebo gammy. Epsilon značně negativně ovlivňuje délku učení.
 
-\section{Vliv parametrů gridworld problémy}
-Zkoumány 3 problémy a vliv alpha, epsilon-greedy, gamma, livingReward a noise. ROZEBRAT VLIVY PARAMETRŮ A DOPLNIT
-
+\section{Gridworld problémy a jejich parametry}
 \label{exper:grid}
+Jak již bylo řečeno v sekci \ref{impl:valgrid}, závěrečné experimenty se prováděly na 3 popsaných problémech (\texttt{BookGrid}, \texttt{BridgeGrid}, \texttt{DiscountGrid}). Výchozími hodnotami parametrů experimentů jsou \texttt{alpha} = 0.5, \texttt{epsilon} = 0.5, \texttt{gamma} = 1.0, \texttt{livingReward} = 0.0 (pro jednodušší vyhodnocení experimentů a urychlení jednání agenta), \texttt{noise} = 0.2, z nichž se při experimentování vycházelo při poměňování hodnot posledních třech parametrů a sledování jejich vlivu výslednou strategii především na agenta \texttt{ValueIterationAgent}.
 
-\section{Výsledky experimentů}
-Ukázalo se, že Value Iteration agent dokáže vypočíst své hodnoty rychleji oproti Q-Learningu. Pro reálné problémy však 
-Q-learning vypočítává hodnoty svých akcí optimálně a to i v případech, kdy Value Iteration nemusí přijít na správné chování (\texttt{BridgeGrid} problém). Ukázalo se taky, že Aproximační Q-Learning dokáže mnohem rychleji získat určitý level inteligence, oproti němu Q-Learning agent těžce zaostává mnohonásobným počtem iterací nutných pro optimalitu svých akcí. Postupně rostoucí tabulka hodnot párů (stav,akce) Q-learning agenta si navíc exponenciálně nárokuje víc a víc vypočetního výkonu až do té míry, že přístup do této tabulky není vypočetně použitelný pro mapy větší jak \texttt{smallGrid} atp. Experimenty též pozitivně ukázaly, že \texttt{ExpectimaxAgent} dokáže poměrně  kvalitně vyhodnocovat chování svých stochastických nepřátel. Problém u tohoto agenta nastává v nedokonalé ohodnocovací funkci, agent se často zbytečně zasekává v rozích. To řeší až Q-Learningoví agenti, kteří se své optimální chování postupně naučili. 
+Nejdříve se zkoumaly vztahy mezi Q a V-hodnotami pro agenty \texttt{ValueIterationAgent} a \texttt{QLearningAgent}. Postupně bylo oveřeno, že mřížka V-hodnot gridworld problémů udává, jak (průměrně) dobrý je tento stav pro agenta \texttt{ValueIterationAgent}, pokud bude agent dodržovat svou aktuální strategii pro stav. Akumulovaná V-hodnota stavu tedy udává maximální Q-hodnotu stavu a už nebere v potaz ostatní nižší Q-hodnoty pro zbylé možné akce daného stavu. Problém metody Value Iteration tedy nastává například tehdy, když Q-hodnota akce stavu je špatná (menší než ostatní), avšak V-hodnota ji přesto stále bere v potaz a neustále iterativně vyhodnocuje, ačkoliv vyhodnocení špatné Q-hodnoty akce již nemá vliv na V-hodnotu. Dalším problémem je částá situace, kdy metoda Value Iteration již nalezla optimální strategii, avšak její V-hodnoty se stále zbytečně mění a přepočítávají (přepočet hodnot a následný výpočet optimální strategie jsou provázány). Dokonce bylo zjišteno, že minimální přepočet hodnot pro alespoň semi-optimální strategii agenta Value Iteration je tolik iterací $k$, kolik agentovi nejméně zabere dostat se do úspěšného terminálního stavu (!). Pro např. \texttt{BookGrid} tak stačilo pouze 6 iterací V-hodnot, jak lze vidět na obrázku \ref{img:valiter6}.
+
+Dále bylo na základě poměňování parametrů \texttt{noise}, \texttt{livingReward} a \texttt{gamma} zjištěno, že \texttt{ValueIterationAgent} dokázal přejít most do lépe ohodnoceného terminálního stavu gridworld problému \texttt{BridgeGrid} \ref{img:bridgeGridDefault} pouze, když se stochastičnost akcí (\texttt{noise}) potlačila na hodnotu 0.01 a méně a koeficient odměny \texttt{gamma} zvedl na hodnotu 0.8 a výše a \texttt{livingReward} nastavil na hodnotu alespoň -0.2, aby agent na mostě co nejdéle zůstával. Zajímavým zjištěním také bylo, že pokud se agentovi nastavil parametr stochastičnosti \texttt{noise} na větší hodnotu (např. 0.8), výsledná strategie všech neterminálních částí mostu raději ukazovala sebevražedně do útesu. Je tedy vhodnější spíše omezovat tento parametr, aby byly výsledky alespoň trochu průkazné. 
+
+Názornějším výchozím bodem pro výpočet strategie jsou 4 Q-learningové Q-hodnoty pro každý stav, neboť reflektují průměrný užitek každé akce stavu a navíc z nich takto lze jednodušeji získat optimální strategii. Bylo též ověřeno, že metoda Q-Learning je schopna postupně navyšovat odhady Q-hodnot svých optimálních akcí i přesto, že agent právě riskoval a nepodstoupil optimální akci (skočil z útesu, narazil do stěny atp.). Překvapením bylo, že \texttt{QLearningAgent} potřeboval pro \texttt{BridgeGrid}  (s podobným nastavením paremetrů jako předchozí agent a \texttt{epsilon} = 0.9) minimálně cca 1000 epizod tréninku. Výsledné Q-hodnoty jsou vidět na  obrázku \ref{img:bridgeq} (strategie pro stavy jsou dány nejvyší Q-hodnotou stavu, proto není nutné je uvádět).
+
+Problém \texttt{DiscountGrid} se ukázal jako nejprůkaznější z těchto třech gridworld problémů. Postupně bylo zjištěno, že:
+\begin{itemize}
+\item Záporná hodnota \texttt{livingReward} přinutí agenta víc riskovat a pokoušet se o přejítí kratší cesty podél útesu, aby rychle ukončil epizodu (preferuje kratší cestu). Naopak kladná hodnota podněcuje agenta k podnikání spíše bezpečnější alternativy -- vyhnutí se útesu, potažmo až k nekonečnému průchodu deskou (dokud není náhodně poslán do terminálního stavu).
+\item Pokud se zvýší koeficient \texttt{gamma} (např. na hodnotu 0.9), agent není tolik postižen snižováním odměn a preferuje delší cesty k terminálnímu uzlům a naopak.
+\item Stochastičnost \texttt{noise} často zabraňuje nalezení optimální strategie, avšak zvýšení tohoto parametru alespooň na 20 \% šanci náhodné akce pomáhá agentům kvalitněji sestavit V a Q-hodnoty.
+\end{itemize}
+Až tento experiment definitivně prokázal, jak klíčové jsou testované parametry pro výslednou strategii agenta \texttt{ValueIterationAgent}. Příklad strategie, kdy agent preferuje riskovat kratší cestu podél útesu ke vzdálenejšímu, ale hodnotnějšímu terminálnímu uzlu, je vidět na obrázku \ref{img:discountPolicy}. Opět se také projevilo, že \texttt{QLearningAgent} potřeboval vždy stejně nebo více epizod tréninku. Navíc se výsledná strategie daných parametrů často neslučovala se strategií \texttt{ValueIterationAgent}. Stejné parametry, ale rozdílná průběžná strategie Q-learningu lze vidět na obrázku \ref{img:discountPolicyQ}.
+
+Experimenty gridworld světa překvapivě ukázaly, že \texttt{ValueIterationAgent} dokáže vypočíst své hodnoty za méně epizod oproti Q-Learningu. Gridworld problémy jsou však jednoduché modely světa a pro reálné problémy, kdy obvykle není k dispozici model, se musí vycházet z pokročilejších metod strojového učení počínaje algoritmem Q-learning. Nejdůležitější je fakt, že tento algoritmus vypočítává hodnoty svých akcí optimálně a to i v případech, kdy Value Iteration nemusí přijít na výsledné optimální chování. Bohužel jeho exponenciálně rostoucí výpočetní náročnost se jeví jako největší problém.
 
 \chapter{Závěr}
 -BUDE JESTE PREPSAN-

@@ -62,7 +62,7 @@ Pro vizualizaci hodnot pokročilých agentů - především agenta \texttt{Value
 \item \texttt{-m} manuální režim (pro řízení agentova chování při epizodách)
 \item \texttt{-q} minimalistický režim bez grafického rozhraní
 \item \texttt{-t} textový režim bez grafického rozhraní
-\item \texttt{-z 0.7} míra zvětšení grafiky (\textit{zoom})
+\item \texttt{-w 120} pixelový rozměr políčka mřížky (lepší nastavit například na 120 px, jinak je mřížka příliš velká)
 \item \texttt{-k 10} počet epizod
 \item \texttt{-i 100} počet iterací V-hodnot
 \item \texttt{-v} zobrazení hodnot po každé iteraci
@@ -83,20 +83,72 @@ python gridworld.py -a value -i 100 -k 10
 \begin{lstlisting}[language=Python,texcl=true]
 python gridworld.py -a value -i 5 -g DiscountGrid
 \end{lstlisting}
-\texttt{ValueIterationAgent}, typ gridworld problému \texttt{BridgeGrid}, 100 iterací, \texttt{gamma} = 0.9, \texttt{noise} =  0.2
+\texttt{ValueIterationAgent}, překonání gridworld problému \texttt{BridgeGrid}, 1000 iterací, \texttt{gamma} = 0.9, \texttt{noise} =  0.1
 \begin{lstlisting}[language=Python,texcl=true]
-python gridworld.py -a value -i 100 -g BridgeGrid --discount 0.9
---noise 0.2
+python gridworld.py -a value -i 1000 -g BridgeGrid --discount 0.9
+--noise 0.01
 \end{lstlisting}
-\texttt{QLearningAgent}, 5 epizod tréninku, manuálně
+\texttt{QLearningAgent}, 5 epizod celkově, manuálně
 \begin{lstlisting}[language=Python,texcl=true]
 python gridworld.py -a q -k 5 -m
 \end{lstlisting}
-\texttt{QLearningAgent}, 20 epizod tréninku na mapě \texttt{DiscountGrid},  \texttt{alpha} = 0.8, \texttt{epsilon} = 0.5
+\texttt{QLearningAgent}, 20 epizod na problému \texttt{DiscountGrid}, \texttt{alpha} = 0.8, \texttt{epsilon} = 0.5
 \begin{lstlisting}[language=Python,texcl=true]
 python gridworld.py -a q -k 20 -g DiscountGrid -l 0.8
 --epsilon 0.5
 \end{lstlisting}
+
+\chapter{Přídavné obrázky k experimentům}
+\label{pril:experobr}
+\begin{figure}[!htbp]
+\begin{center}
+  \scalebox{0.35}{\includegraphics{img/trappedClassic.png}}
+  \caption{Screenshot mapy \texttt{trappedClassic}.}
+  \label{img:trapped}
+\end{center}
+\end{figure}
+
+\begin{figure}[!htbp]
+\begin{center}
+  \scalebox{0.35}{\includegraphics{img/trickyClassic.png}}
+  \caption{Screenshot zatěžkávací mapy \texttt{trickyClassic}.}
+  \label{img:tricky}
+\end{center}
+\end{figure}
+
+\label{pril:experobr}
+\begin{figure}[!htbp]
+\begin{center}
+  \scalebox{0.4}{\includegraphics{img/valiter6.png}}
+  \caption{Screenshot 6 iterací Value Iteration pro gridworld problém \texttt{BookGrid}.}
+  \label{img:valiter6}
+\end{center}
+\end{figure}
+
+\begin{figure}[!htbp]
+\begin{center}
+  \scalebox{0.35}{\includegraphics{img/bridgeq.png}}
+  \caption{Screenshot Q-hodnot agenta \texttt{QLearningAgent} po 1000 epizodách na \texttt{BridgeGrid}.}
+  \label{img:bridgeq}
+\end{center}
+\end{figure}
+
+\begin{figure}[!htbp]
+\begin{center}
+  \scalebox{0.35}{\includegraphics{img/discountPolicy.png}}
+  \caption{Screenshot V-hodnot agenta \texttt{ValueIterationAgent} na \texttt{DiscountGrid}. Agent zde preferuje vzdálenější terminální uzel kratší cestou, ačkoliv riskuje pád z útesu.}
+  \label{img:discountPolicy}
+\end{center}
+\end{figure}
+
+\begin{figure}[!htbp]
+\begin{center}
+  \scalebox{0.35}{\includegraphics{img/discountPolicyQ.png}}
+  \caption{Screenshot průběžných Q-hodnot agenta \texttt{QLearningnAgent} na \texttt{DiscountGrid}. Agent zde preferuje vzdálenější terminální uzel a delší bezpečnější cestu.}
+  \label{img:discountPolicyQ}
+\end{center}
+\end{figure}
+
 %\chapter{Konfigrační soubor}
 %\chapter{RelaxNG Schéma konfiguračního soboru}
 %\chapter{Plakat}
