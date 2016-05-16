@@ -826,9 +826,9 @@ features["active-ghosts-1-step-away"]):
 
 Tato závěrečná kapitola praktické části práce se zaměřuje na experimenty a srovnání chování agentů na demu Ms. Pacman, v poslední části \ref{exper:grid} dále zkoumá vztahy Q a V-hodnot na názornějším zobrazení mřížky gridworld problémů a v neposlední řadě pozoruje vlivy parametrů (jako např. $\gamma$) na inteligenci agentů pro daný gridworld problém. Experimenty byly tedy primárně vedeny na těchto dvou nezávislých demech. Pro obrázky této kapitoly byla z kapacitních důvodů práce přidána příloha \ref{pril:experobr}.
 
-Agenty lze srovnat nejlépe podle průměrného dosaženého herního skóre v době vykonávání optimální strategie (trénink se nepočítá). U učících agentů bude též pozorován počet epizod, za jak dlouho jsou schopni průměrně uspět alespoň ve dvou třetinách z celkového počtu her. Touto mírou jsou následně prohlášeni za \textit{úspěšné}.
+Agenty lze srovnat nejlépe podle průměrného dosaženého herního skóre v době vykonávání optimální strategie (trénink se nepočítá). U učících se agentů bude též pozorován počet epizod, za jak dlouho jsou schopni průměrně uspět v alespoň ve dvou třetinách z celkového počtu her. Touto mírou jsou následně prohlášeni za \textit{úspěšné}.
 
-Pro testování chování agentů na demu Ms. Pacman bylo vybráno několik rozdílných map. Pro porovnání všech agentů včetně vypočetně nejnáročnějšího \texttt{PacmanQAgent} byla zvolena již zmíněná menší mapa \texttt{smallGrid} \label{img:smallL}. Dále bude zmíněna zajímavá mapa \texttt{trappedClassic}, kdy je Ms.Pacman již od začátku hry obklíčena nepřáteli (obrázek \ref{img:trapped} v příloze \ref{pril:experobr}). Jako zatěžkávací test iteligence agentů slouží mapa \texttt{trickyClassic}, viz obrázek \ref{img:tricky}. Tato mapa o větším rozměru 20x13 polí obsahuje 3 nepřátele, 6 power-upů a především problematické místo o velikosti 5x4 polí plných kuliček jídla, které je navíc nebezpečně blízko poli zrodu nepřátel (\textit{spawning point}).
+Pro testování chování agentů na demu Ms. Pacman bylo vybráno několik rozdílných map. Pro porovnání všech agentů včetně výpočetně nejnáročnějšího \texttt{PacmanQAgent} byla zvolena již zmíněná menší mapa \texttt{smallGrid} \label{img:smallL}. Dále bude zmíněna zajímavá mapa \texttt{trappedClassic}, kdy je Ms.Pacman již od začátku hry obklíčena nepřáteli (obrázek \ref{img:trapped} v příloze \ref{pril:experobr}). Jako zatěžkávací test iteligence agentů slouží mapa \texttt{trickyClassic}, viz obrázek \ref{img:tricky}. Tato mapa o větším rozměru 20x13 polí obsahuje 3 nepřátele, 6 power-upů a především problematické místo o velikosti 5x4 polí plných kuliček jídla, které je navíc nebezpečně blízko poli zrodu nepřátel (\textit{spawning point}).
 
 \section{Srovnání z vypočetní náročnosti}
 Aplikace byla z důvodu vypočetní náročnosti testována na stolním počítači s procesorem AMD FX-6300 o frekvenci 4 GHz a operační paměti 8 GB. Jako operační systém je nainstalována linuxová distribuce \textit{ArchLinux} (64-bit). Za výchozí míru zatížení systému aplikací bylo zvoleno procentuální vytížení paměti systému, která ukazuje zvyšující se požadavky algoritmů. Každý agent si danou mapu zkusil celkem 100 krát a během této doby bylo zapsána nějvětší hodnota vytížení paměti.
@@ -881,19 +881,19 @@ Jak lze vidět z nízkého průměrného skóre a nevalné úspěšnosti, \textt
 
 \begin{figure}[!htbp]
 \begin{center}
-  \includegraphics[height=150px,width=400px]{charts/smallGrid_score.png}
-  \includegraphics[height=150px,width=400px]{charts/smallGrid_winrate.png}
+  \includegraphics[height=170px,width=400px]{charts/smallGrid_score.png}
+  \includegraphics[height=170px,width=400px]{charts/smallGrid_winrate.png}
   \caption{Srovnání agentů na menší mapě.}
   \label{chart:sg}
 \end{center}
 \end{figure}
 
 Druhou částí experimentů bylo zkoumání, kolik je potřeba epizod tréninku, aby byli učící agenti úspěšní (vyhrávali ve většině případů). Procentuální úspěšnosti agentů jsou vidět na grafu \ref{chart:episodes}. Q-Learningový agent \texttt{PacmanQAgent} se stal úspěšný při již při cca 1300 epizodách tréninku, avšak jeho roustoucí výpočetní nároky byly již na takto malé mapě zde patrné. Optimalita agentových akcí při tomto počtu iterací překonala agenta \texttt{ApproximateQAgent}. Poslední agent však dokázal optimalizovat své akce a dosáhnout úspěšnosti již při při cca 25 epizodách tréninku (!). Bohužel narozdíl od Q-learningového agenta, inteligence agenta se narůstajícím počtem vzorků tréninku příliš nezlepšovala. Reakcí na tento nezdar byly pro vektor vlastností \texttt{BetterExtractor} provedeny další experimenty, které potvrdili stagnaci výsledků. Tato částečná stagnace úspěšnosti je zapříčiněna samotným charakterem aproximační funkce, avšak do budoucna by bylo potřeba určitě znovu prověřit a upravit vyhodnocení jednotlivých vlastnosti vektoru. 
-
+\newpage
 \begin{figure}[!htbp]
 \begin{center}
-  \includegraphics[height=150px]{charts/smallgrid_iter_q.png}
-  \includegraphics[height=150px]{charts/smallgrid_iter_approxq.png}
+  \includegraphics[height=147px]{charts/smallgrid_iter_q.png}
+  \includegraphics[height=147px]{charts/smallgrid_iter_approxq.png}
   \caption{Srovnání úspěšnosti vůči počtu epizod metody Q-Learning a Aproximační Q-Learning. }
   \label{chart:episodes}
 \end{center}
@@ -901,22 +901,22 @@ Druhou částí experimentů bylo zkoumání, kolik je potřeba epizod tréninku
 
 \begin{figure}[!htbp]
 \begin{center}
-	\includegraphics[height=150px]{charts/betterext_winrate.png}
+	\includegraphics[height=160px]{charts/betterext_winrate.png}
   	\caption{Stagnace výsledků vektoru vlastností Aproximačního Q-Learningu. }
   \label{chart:episodes}
 \end{center}
 \end{figure}
 
-Kromě předchozí mapy bylo zkoumáno chování agentů  i na mapě \texttt{trappedClassic}. Během experimentů se ukázalo, že je tato mapa zajímavá především kvůli sebevražedným pokusům základních agentů \texttt{MinimaxAgent} a \texttt{AlphaBetaAgent}. Agenti si pesimisticky spočtou své naděje na přežití a raději se zabijí a skončí tak hru, ačkoliv jejich nepřítel stochastický. Naproti tomu \texttt{ExpectimaxAgent} a pokročilí agenti počítají s náhodou. Tato mapa posloužila jako příklad velkého rozdílu vyhodnocení chování základních agentů.
+Kromě předchozí mapy bylo zkoumáno chování agentů  i na mapě \texttt{trappedClassic}. Během experimentů se ukázalo, že je tato mapa zajímavá především kvůli sebevražedným pokusům základních agentů \texttt{MinimaxAgent} a \texttt{AlphaBetaAgent}. Agenti si pesimisticky spočtou své naděje na přežití a raději se zabijí a skončí tak hru, ačkoliv je jejich nepřítel stochastický. Naproti tomu \texttt{ExpectimaxAgent} a pokročilí agenti počítají s náhodou. Tato mapa posloužila jako příklad velkého rozdílu vyhodnocení chování základních agentů.
 
 \section{Zatěžkávací zkouška na mapě \texttt{trickyClassic}}
 
-Tato mapa slouží především jako zatěžkávací test pro agenty zvládající její výpočetní náročnost (problémy byly zmíněny v úvodní části této kapitoly). Jak je vidět na grafech \ref{chart:tc} \texttt{ReflexAgent} již nedokázal poradit s otevřenými plochami mapy a větším množstvím nepřátel této velké mapy. \texttt{ExpectimaxAgent} dokázal vyhrát alespoň ve 30 \% případů a udržet si již poměrně vysoké průměrné skóre nad 1000 bodů. Experimenty tedy ukázaly, že kvalita ohodnocovací funkce tohoto agenta je nedostačující pro takto náročnou mapu. Agent se také často zbytečně zasekával v rozích. To řeší až \texttt{ApproximateQAgent}, který se své optimální chování postupně naučil už po cca 100 epizodách tréninku. Tabulka Q-Learningového agenta tuto mapu nedokázala pojmout a agent nedokázal uspět ani po 3000 epizodách tréninku, proto není zanesen do grafu. \texttt{ApproximateQAgent} zde jasně prokázal, že dokáže rychle získat  určitý level inteligence, oproti němu \texttt{PacmanQAgent} těžce zaostává mnohonásobným počtem iterací nutných pro svou úspěšnost a neúnosností své tabulky Q-hodnot\footnote{Postupně rostoucí tabulka hodnot párů (stav,akce) Q-learning agenta si exponenciálně nárokuje víc a víc vypočetního výkonu až do té míry, že přístup do této tabulky není vypočetně použitelný pro větší mapu.}.
+Tato mapa slouží především jako zatěžkávací test pro agenty zvládající její výpočetní náročnost (problémy byly zmíněny v úvodní části této kapitoly). Jak je vidět na grafech \ref{chart:tc} \texttt{ReflexAgent} si již nedokázal poradit s otevřenými plochami mapy a větším množstvím nepřátel této velké mapy. \texttt{ExpectimaxAgent} dokázal vyhrát alespoň ve 30 \% případů a udržet si již poměrně vysoké průměrné skóre nad 1000 bodů. Experimenty tedy ukázaly, že kvalita ohodnocovací funkce tohoto agenta je nedostačující pro takto náročnou mapu. Agent se také často zbytečně zasekával v rozích. To řeší až \texttt{ApproximateQAgent}, který se své optimální chování postupně naučil už po cca 100 epizodách tréninku. Naopak tabulka Q-Learningového agenta tuto mapu nedokázala pojmout a agent nedokázal uspět ani po 2000 epizodách tréninku, proto není zanesen do grafu. \texttt{ApproximateQAgent} zde jasně prokázal, že dokáže rychle získat určitou úroveň inteligence, oproti němu \texttt{PacmanQAgent} těžce zaostává mnohonásobným počtem iterací nutných pro svou úspěšnost a neúnosností své tabulky Q-hodnot\footnote{Postupně rostoucí tabulka hodnot párů (stav,akce) Q-learning agenta si exponenciálně nárokuje víc a víc vypočetního výkonu až do té míry, že přístup do této tabulky není vypočetně použitelný pro větší mapu.}.
 
 \begin{figure}[!htbp]
 \begin{center}
-  \includegraphics[height=150px,width=400px]{charts/trickyClassic_score.png}
-  \includegraphics[height=150px,width=400px]{charts/trickyClassic_winrate.png}
+  \includegraphics[height=170px,width=400px]{charts/trickyClassic_score.png}
+  \includegraphics[height=170px,width=400px]{charts/trickyClassic_winrate.png}
   \caption{Srovnání agentů na zatěžkávací mapě.}
   \label{chart:tc}
 \end{center}
@@ -934,7 +934,7 @@ Názornějším výchozím bodem pro výpočet strategie jsou 4 Q-learningové Q
 
 Problém \texttt{DiscountGrid} se ukázal jako nejprůkaznější z těchto třech gridworld problémů. Postupně bylo zjištěno, že:
 \begin{itemize}
-\item Záporná hodnota \texttt{livingReward} přinutí agenta víc riskovat a pokoušet se o přejítí kratší cesty podél útesu, aby rychle ukončil epizodu (preferuje kratší cestu). Naopak kladná hodnota podněcuje agenta k podnikání spíše bezpečnější alternativy -- vyhnutí se útesu, potažmo až k nekonečnému průchodu deskou (dokud není náhodně poslán do terminálního stavu).
+\item Záporná hodnota \texttt{livingReward} přinutí agenta víc riskovat a pokoušet se o přejití kratší cesty podél útesu, aby rychle ukončil epizodu (preferuje kratší cestu). Naopak kladná hodnota podněcuje agenta k podnikání spíše bezpečnější alternativy -- vyhnutí se útesu, potažmo až k nekonečnému průchodu deskou (dokud není náhodně poslán do terminálního stavu).
 \item Pokud se zvýší koeficient \texttt{gamma} (např. na hodnotu 0.9), agent není tolik postižen snižováním odměn a preferuje delší cesty k terminálnímu uzlům a naopak.
 \item Stochastičnost \texttt{noise} často zabraňuje nalezení optimální strategie, avšak zvýšení tohoto parametru alespooň na 20 \% šanci náhodné akce pomáhá agentům kvalitněji sestavit V a Q-hodnoty.
 \end{itemize}
@@ -944,5 +944,5 @@ Experimenty gridworld světa překvapivě ukázaly, že \texttt{ValueIterationAg
 
 \chapter{Závěr}
 -BUDE JESTE PREPSAN-
-Cílem této bakalářské práce bylo navrhnout dostatečne chytrou umělou inteligenci, která by si dokázala poradit i s tak komplexním problém jako je hra Ms. Pacman. Nejdříve byla nastudována problematika metod hraní her a techniky strojového učení ve vztahu k učícímu agentovi. Nastudování teorie pomohlo především k definici a klasifikaci samotné hry jako problému umělé inteligence, a následném stanovení návrhu řešení problematiky metodami Q-Learning a Aproximační Q-Learning. Tyto metoda řeší stochastické chování duchů a především druhá metoda pomohla výrazně eliminovat problém velké vypočetní náročnosti stavového prostoru hry. V práci byli také navrhnuti a implementováni základní agenti, kteří byli srovnáni se učícími agenty. Efektivita učících agentů byla takto srovnána například s agentem imlementujícím metodu Expectimax. Navíc byly experimentálně zkoumány parametry ovlivňující jejich chování a také sestaveny vlastnosti pro vektor vlastností agenta Aproximačního Q-Learningu. Práce mě naučila především nebát se složitějších matematických vzorců a problémů a též určitý vhled do možností strojového učení.
+Cílem této bakalářské práce bylo navrhnout dostatečne chytrou umělou inteligenci, která by si dokázala poradit i s tak komplexním problém jako je hra Ms. Pacman. Nejdříve byla nastudována problematika metod hraní her a techniky strojového učení ve vztahu k učícímu agentovi. Nastudování teorie pomohlo především k definici a klasifikaci samotné hry jako problému umělé inteligence, a následném stanovení návrhu řešení problematiky metodami Q-Learning a Aproximační Q-Learning. Tyto metoda řeší stochastické chování duchů a především druhá metoda pomohla výrazně eliminovat problém velké vypočetní náročnosti stavového prostoru hry. V práci byli také navrhnuti a implementováni základní agenti, kteří byli srovnáni se učícími agenty. Efektivita učících se agentů byla takto srovnána například s agentem imlementujícím metodu Expectimax. Navíc byly experimentálně zkoumány parametry ovlivňující jejich chování a také sestaveny vlastnosti pro vektor vlastností agenta Aproximačního Q-Learningu. Práce mě naučila především nebát se složitějších matematických vzorců a problémů a též určitý vhled do možností strojového učení.
 

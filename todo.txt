@@ -1,4 +1,0 @@
-start experiments: gridworld, ms.pacman
-finish experiments chapter
-remove analysis
-finish zaver
