@@ -30,8 +30,8 @@
 # REFLEX AGENT, 2 ghosts
 # python pacman.py -p ReflexAgent -k 2
 #
-# MINIMAX AGENT, special layout
-# python pacman.py -p MinimaxAgent -l minimaxClassic
+# MINIMAX AGENT, special suicidal layout
+# python pacman.py -p MinimaxAgent -l mediumGrid
 #
 # ALPHABETA AGENT
 # python pacman.py -p AlphaBetaAgent -l trappedClassic -a depth=3 -q -n 10
@@ -47,21 +47,21 @@ import random, util
 from game import Agent
 
 #------------------------------------------------------------------------------------------------#
-# basic REFLEX agent
+# simple Reflex agent
 class ReflexAgent(Agent):
-    """
-      simple reflex agent - chooses an action at each choice point by examining
-      its alternatives via a state evaluation function
-    """
+
+    # chooses an action at each choice point by examining its alternatives via a state evaluation function
 
     # method for getting agent's chosen action
     def getAction(self, state):
         """
-        getAction chooses among the best options according to the evaluation function.
+        NOTES:
+            getAction chooses among the best options according to the evaluation function
 
-        getAction takes a current GameState and returns some Directions.X for some X
-        in the posible actions {North, South, West, East, Stop}
+            getAction takes a current GameState and returns some Directions.X for some X
+            in the posible actions {North, South, West, East, Stop}
         """
+
         # collect legal moves and successor states
         legalMoves = state.getLegalActions()
 
@@ -76,10 +76,9 @@ class ReflexAgent(Agent):
 
     # evaluation function for ReflexAgent
     def evaluationFunction(self, currentGameState, action):
-        """
-        evaluation function takes in the current and proposed successor
-        GameStates(from pacman.py) and returns a number, where higher numbers are better.
-        """
+
+        # evaluation function evaluates the current and proposed successor GameStates
+
         # getting successor GameSate needed info
         successorGameState = currentGameState.generatePacmanSuccessor(action) # successor
         newPos = successorGameState.getPacmanPosition() # Ms. Pacman position
@@ -132,8 +131,8 @@ class ReflexAgent(Agent):
         return finalValue
 
 
-# default evaluation function for furure agents - returns just current score
-# (for adversarial search agents (not reflex agents)...)
+# default evaluation function for future agents - returns just current score
+# (for adversarial search agents (not simple reflex agent)...)
 def scoreEvaluationFunction(currentGameState):
     return currentGameState.getScore()
 
@@ -179,8 +178,8 @@ class MinimaxAgent(MultiAgentSearchAgent):
         # pair (action,value)
         value = ["", float("-inf")]
         for action in state.getLegalActions(agentIndex):
-            # if action == Directions.STOP:
-            #    continue
+            if action == Directions.STOP:
+                continue
 
             tmp = self.Minimax(state.generateSuccessor(agentIndex, action), agentIndex + 1, depth)
             # getting value
@@ -395,21 +394,16 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
             # expected action and value
             expectedValue[0] = action
             #print "tmp: ", tmp, "probability[action]: ", probability[action]," agent: ", agentIndex, "depth: ", depth
-            try:
-                expectedValue[1] += tmp * probability[action]
-            except:
-                 # print "-----------------------PROBLEM!!!-------------------------"
-                 # print "tmp: ",tmp,"probability[action]: ",probability[action],"ev[1]: ",expectedValue[1], "action: ",action, " agent: ", agentIndex, "depth: ", depth
-                 # print "----------------------------------------------------------"
-                 pass
+
+            expectedValue[1] += tmp * probability[action]
+
         #print "minexpval: ", expectedValue, " agent: ", agentIndex
         return list(expectedValue)
 
     # main method override - returns agent action from current GameState
     def getAction(self, gameState):
-        """
-          NOTE: this agent is using betterEvaluationFunction()
-        """
+
+        # NOTE: this agent is using betterEvaluationFunction()
         self.agentsNum = gameState.getNumAgents()
         value = self.Expectimax(gameState, self.index, 0)
         #print "FINAL ACTION: ",value[0]
@@ -484,7 +478,6 @@ def betterEvaluationFunction(currentGameState):
 
     value += foodFactor + ghostFactor
     #print "ghostFactor: ", ghostFactor, "+ foodFactor: ", foodFactor, ") => FINALLY: ", value
-    #print value
     return value
 
 # Abbreviation

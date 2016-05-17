@@ -16,6 +16,7 @@
 # Q-Learning agents for
     # gridworld (QLearningAgent)
     # Ms. Pacman (PacmanQAgent)
+#
 # Approximate Q-Learning Agent (ApproximateQAgent)
 
 # AGENTS MANUAL USAGE EXAMPLES
@@ -24,8 +25,12 @@
 # 5 episodes of training, manually
 # python gridworld.py -a q -k 5 -m
 #
+# 1000 episodes of training on BridgeGrid, alpha=0.2, epsilon-greedy=0.9, noise 0.001
+# python gridworld.py -a q -k 1000 -g BridgeGrid -l 0.2 -e 0.9 -n 0.001
+#
+#
 # 20 episodes of training on DiscountGrid, alpha=0.8, epsilon-greedy=0.5
-# python gridworld.py -a q -k 20 -g DiscountGrid --learningRate 0.8 --epsilon 0.5
+# python gridworld.py -a q -k 20 -g DiscountGrid -l 0.8 -e 0.5
 
 # MS. PACMAN DEMO - pacman,py basic usage:
 # basic usage examples:
@@ -36,10 +41,10 @@
     # -n  or --numGames NumberOfGames
     # -x  or --numTraining NumberOfTrainingEpisodes
     # fixed randomSeed: -f
-    # ! alpha, gamma, epsilon set for each agent
+    # ! alpha, gamma, epsilon setting
 # PacmanQAgent (Ms. Pacman Q-Learning agent, used with pacman.py)
 #
-# 2000 episodes of training, 10 episodes of performing optimal (no epsilon-greedy, from training), smallGrid layout
+# 2000 episodes of quiet training, 10 episodes of performing optimal (no epsilon-greedy, from training), smallGrid layout
 # python pacman.py -p PacmanQAgent -x 2000 -n 2010 -l smallGrid
 #
 # only 10 episodes of training on smallGrid
@@ -47,13 +52,12 @@
 #
 # ApproximateQAgent (Ms. Pacman Approximate Q-Learning agent, used with pacman.py)
 #
-# 2000 episodes of training, 10 episodes of performing optimal (no epsilon-greedy, from training), smallGrid layout
-# python pacman.py -p ApproximateQAgent -x 2000 -n 2010 -l smallGrid
+# 35 games from which 25 quiet episodes of training using BetterExtractor
+# python pacman.py -p ApproximateQAgent -a extractor=BetterExtractor -l smallGrid -n 35 -x 25
 #
-# 60 games from which 50 episodes of training
-# python pacman.py -p ApproximateQAgent -a extractor=BetterExtractor ---numGames 60 --numTraining 50 -l mediumGrid
-#
-# python pacman.py -p ApproximateQAgent -a extractor=SimpleExtractor -x 50 -n 60 -l mediumClassic
+# 110 games from which 100 quiet episodes of training
+# python pacman.py -p ApproximateQAgent -a extractor=BetterExtractor -l trickyClassic -n 110 -x 90
+
 #------------------------------------------------------------------------------------------------#
 
 from game import *
@@ -63,12 +67,10 @@ from featureExtractors import *
 import random,util,math
 
 #------------------------------------------------------------------------------------------------#
-# Q-Learning Agent for gridworld
+# basic Q-Learning Agent for gridworld
 class QLearningAgent(ReinforcementAgent):
     """
-      Q-Learning Agent
-      NOTE:
-      parent instance variables:
+    parent instance variables:
         epsilon (exploration probability)
         alpha (learning rate)
         discount (discount rate = gamma)
@@ -158,18 +160,14 @@ class QLearningAgent(ReinforcementAgent):
         self.discount * self.getValue(nextState)) - self.qValues[(state,action)])
 
 #------------------------------------------------------------------------------------------------#
-# Q-Learning Agent for Ms. Pacman ( == QLearningAgent, different default parameters)
+# basic Q-Learning Agent for Ms. Pacman ( == QLearningAgent, different default parameters)
 class PacmanQAgent(QLearningAgent):
 
     def __init__(self, alpha=0.2, epsilon=0.05, gamma=0.8, numTraining=0, **args):
         """
-        NOTE:
-        defualt params can be changed from the pacman.py CLI e.g.:
-            python pacman.py -p PacmanQLearningAgent -a epsilon=0.1
-
         alpha    - learning rate
-        epsilon  - exploration rate
-        gamma    - discount factor
+        epsilon  - exploration rate (probabity of random actions)
+        gamma    - discount factor (coefficient)
         numTraining - number of training episodes, i.e. no learning after these many episodes
         """
         args['epsilon'] = epsilon
@@ -188,9 +186,6 @@ class PacmanQAgent(QLearningAgent):
 #------------------------------------------------------------------------------------------------#
 # Aproximate Q-Learning Agent for Ms. Pacman
 class ApproximateQAgent(PacmanQAgent):
-    """
-       ApproximateQLearningAgent
-    """
 
     # init featureExtractor, weights and agent
     def __init__(self, extractor='IdentityExtractor', **args):

@@ -12,8 +12,6 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
-"Feature extractors for Pacman game states"
-
 #------------------------------------------------------------------------------------------------#
 # BP: implemented BetterExtractor for ApproximateQAgent
 
@@ -105,7 +103,7 @@ class SimpleExtractor(FeatureExtractor):
 
 #------------------------------------------------------------------------------------------------#
 # BP: implemented enhanced BetterExtractor
-# Improved feature extractor for Ms. Pacman
+# Improved feature extractor for Ms. Pacman states
 class BetterExtractor(FeatureExtractor):
     """
     - if food will be eaten (in next state)
@@ -155,9 +153,9 @@ class BetterExtractor(FeatureExtractor):
             features["powerup"] = 1.0
 
         if foodD is not None:
-            # make the distance a number less than one otherwise the update divergates
+            # make the distance a number less than one otherwise the update values diverge
             features["closest-food"] = float(foodD) / (walls.width * walls.height)
 
         features.divideAll(10.0) # to prevent divergetion
-        return features
+        return features # returns features and their current values
 

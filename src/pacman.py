@@ -41,7 +41,7 @@ The keys are 'a', 's', 'd', and 'w' to move (or arrow keys).  Have fun!
 """
 
 #------------------------------------------------------------------------------------------------#
-# BP: slightly edited to print time of each game + average
+# BP: slightly edited to print number of episode (1 game) and average time of each game (after 100 games or finally)
 
 from game import GameStateData
 from game import Game
