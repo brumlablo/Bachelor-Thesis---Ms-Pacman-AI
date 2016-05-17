@@ -20,14 +20,13 @@
 # John DeNero (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
 # For more info, see http://inst.eecs.berkeley.edu/~cs188/sp09/pacman.html
 
+#------------------------------------------------------------------------------------------------#
+# BP: variable for total game time added to the Game object
+
 from util import *
 import time, os
 import traceback
 import sys
-
-#######################
-# Parts worth reading #
-#######################
 
 class Agent:
     """
@@ -530,6 +529,7 @@ class Game:
         self.agentTimeout = False
         import cStringIO
         self.agentOutput = [cStringIO.StringIO() for agent in agents]
+        self.totalGameTime = time.time() # save total game time
 
     def getProgress(self):
         if self.gameOver:

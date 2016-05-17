@@ -39,6 +39,10 @@ code to run a game.  This file is divided into three sections:
 To play your first game, type 'python pacman.py' from the command line.
 The keys are 'a', 's', 'd', and 'w' to move (or arrow keys).  Have fun!
 """
+
+#------------------------------------------------------------------------------------------------#
+# BP: slightly edited to print time of each game + average
+
 from game import GameStateData
 from game import Game
 from game import Directions
@@ -49,7 +53,7 @@ import util, layout
 import sys, types, time, random, os
 
 ###################################################
-# YOUR INTERFACE TO THE PACMAN WORLD: A GameState #
+# INTERFACE TO THE MS. PACMAN WORLD: A GameState  #
 ###################################################
 
 class GameState:
@@ -272,6 +276,7 @@ class ClassicGameRules:
         self.timeout = timeout
 
     def newGame( self, layout, pacmanAgent, ghostAgents, display, quiet = False, catchExceptions=False):
+        self.totalGameTime = time.time()
         agents = [pacmanAgent] + ghostAgents[:layout.getNumGhosts()]
         initState = GameState()
         initState.initialize( layout, len(ghostAgents) )
@@ -289,11 +294,19 @@ class ClassicGameRules:
         if state.isLose(): self.lose(state, game)
 
     def win( self, state, game ):
-        if not self.quiet: print "Pacman emerges victorious! Score: %d" % state.data.score
+        self.totalGameTime = time.time() - self.totalGameTime
+        game.totalGameTime = self.totalGameTime
+        if not self.quiet:
+            print "Pacman emerges victorious! Score: %d" % state.data.score
+            print "Total game time: ",self.totalGameTime
         game.gameOver = True
 
     def lose( self, state, game ):
-        if not self.quiet: print "Pacman died! Score: %d" % state.data.score
+        self.totalGameTime = time.time() - self.totalGameTime
+        game.totalGameTime = self.totalGameTime
+        if not self.quiet:
+            print "Pacman died! Score: %d" % state.data.score
+            print "Total game time: ",self.totalGameTime
         game.gameOver = True
 
     def getProgress(self, game):
@@ -642,6 +655,7 @@ def runGames( layout, pacman, ghosts, display, numGames, record, numTraining = 0
         else:
             gameDisplay = display
             rules.quiet = False
+        print '-------------------------------------',i,'---------------------------------------------'
         game = rules.newGame( layout, pacman, ghosts, gameDisplay, beQuiet, catchExceptions)
         game.run()
         if not beQuiet: games.append(game)
@@ -658,10 +672,15 @@ def runGames( layout, pacman, ghosts, display, numGames, record, numTraining = 0
         scores = [game.state.getScore() for game in games]
         wins = [game.state.isWin() for game in games]
         winRate = wins.count(True)/ float(len(wins))
-        print 'Average Score:', sum(scores) / float(len(scores))
-        print 'Scores:       ', ', '.join([str(score) for score in scores])
-        print 'Win Rate:      %d/%d (%.2f)' % (wins.count(True), len(wins), winRate)
-        print 'Record:       ', ', '.join([ ['Loss', 'Win'][int(w)] for w in wins])
+        avgGameTime = 0.0
+        for game in games:
+            avgGameTime += game.totalGameTime
+        print '---------------------------------------------------------------------------------------'
+        print 'Average game time:    ', (avgGameTime / float(numGames))
+        print 'Average Score:        ', sum(scores) / float(len(scores))
+        print 'Scores:               ', ', '.join([str(score) for score in scores])
+        print 'Win Rate:              %d/%d (%.2f)' % (wins.count(True), len(wins), winRate)
+        print 'Record:               ', ', '.join([ ['Loss', 'Win'][int(w)] for w in wins])
 
     return games
 
