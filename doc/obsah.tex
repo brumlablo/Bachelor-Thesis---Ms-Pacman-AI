@@ -934,7 +934,7 @@ Problém \texttt{DiscountGrid} se ukázal jako nejprůkaznější z těchto tře
 \begin{itemize}
 \item Záporná hodnota \texttt{livingReward} přinutí agenta víc riskovat a pokoušet se o přejítí kratší cesty podél útesu, aby rychle ukončil epizodu (preferuje kratší cestu). Naopak kladná hodnota podněcuje agenta k podnikání spíše bezpečnější alternativy -- vyhnutí se útesu, potažmo až k nekonečnému průchodu deskou (dokud není náhodně poslán do terminálního stavu).
 \item Pokud se zvýší koeficient \texttt{gamma} (např. na hodnotu 0.9), agent není tolik postižen snižováním odměn a preferuje delší cesty k terminálnímu uzlům a naopak.
-\item Stochastičnost \texttt{noise} často zabraňuje nalezení optimální strategie, avšak zvýšení tohoto parametru alespooň na 20 \% šanci náhodné akce pomáhá agentům kvalitněji sestavit V a Q-hodnoty.
+\item Stochastičnost \texttt{noise} často zabraňuje nalezení optimální strategie, avšak zvýšení tohoto parametru alespoň na 20 \% šanci náhodné akce pomáhá agentům kvalitněji sestavit V a Q-hodnoty.
 \end{itemize}
 Až tento experiment definitivně prokázal, jak klíčové jsou testované parametry pro výslednou strategii agenta \texttt{ValueIterationAgent}. Příklad strategie, kdy agent preferuje riskovat kratší cestu podél útesu ke vzdálenejšímu, ale hodnotnějšímu terminálnímu uzlu, je vidět~na obrázku \ref{img:discountPolicy}. Opět se také projevilo, že \texttt{QLearningAgent} potřeboval vždy stejně nebo více epizod tréninku. Navíc se výsledná strategie daných parametrů často neslučovala se strategií \texttt{ValueIterationAgent}. Stejné parametry, ale rozdílná průběžná strategie Q-learningu lze vidět na~obrázku \ref{img:discountPolicyQ}.
 

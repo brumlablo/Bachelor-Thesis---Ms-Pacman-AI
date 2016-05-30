@@ -1,0 +1,55 @@
+--------------------------------------------------------------------------------
+ ___  _______  _______    
+|   ||  _    ||       |   
+|   || |_|   ||    _  |   
+|   ||       ||   |_| |   
+|   ||  _   | |    ___|   
+|   || |_|   ||   |       
+|___||_______||___|       									
+ __   __  _______        _______  _______  _______  __   __  _______  __    _ 
+|  |_|  ||       |      |       ||   _   ||       ||  |_|  ||   _   ||  |  | |
+|       ||  _____|      |    _  ||  |_|  ||       ||       ||  |_|  ||   |_| |
+|       || |_____       |   |_| ||       ||       ||       ||       ||       |
+|       ||_____  | ___  |    ___||       ||      _||       ||       ||  _    |
+| ||_|| | _____| ||   | |   |    |   _   ||     |_ | ||_|| ||   _   || | |   |
+|_|   |_||_______||___| |___|    |__| |__||_______||_|   |_||__| |__||_|  |__|
+--------------------------------------------------------------------------------
+Bachelor thesis - Intelligent reactive agent for game Ms. Pacman.
+COMMANDS FOR DEMONSTRATION
+--------------------------------------------------------------------------------
+
+MS.PACMAN
+
+python pacman.py -p ReflexAgent -l openClassic
+
+python pacman.py -p ExpectimaxAgent -l smallClassic -a depth=3 -n 2
+
+python pacman.py -p ExpectimaxAgent -l mediumGrid -a depth=2 -n 10 -q
+
+python pacman.py -p PacmanQAgent -n 10 -l smallGrid -a numTraining=10
+
+python pacman.py -p PacmanQAgent -x 2000 -n 2010 -l smallGrid
+
+python pacman.py -p ApproximateQAgent -a extractor=BetterExtractor -n 35 -x 25 -l smallClassic
+
+python pacman.py -p ExpectimaxAgent -l mediumClassic
+
+python pacman.py -p ApproximateQAgent -a extractor=BetterExtractor -n 100 -x 90 -l mediumClassic
+
+--------------------------------------------------------------------------------
+
+GRIDWORLD
+
+python gridworld.py -a value -i 100 -k 6 -v
+
+python gridworld.py -a q -k 6
+
+python gridworld.py -a value -i 5 -g DiscountGrid -w 125 -v -d 0.9 -l 2.5
+
+python gridworld.py -a value -i 4 -g BridgeGrid -d 0.9 -n 0.1 -e 0.9
+
+python gridworld.py -a value -i 6 -g BridgeGrid -d 0.9 -n 0.1 -e 0.9
+
+python gridworld.py -a q -k 100 -g BridgeGrid -d 0.9 -n 0.1 -e 0.9
+
+--------------------------------------------------------------------------------
